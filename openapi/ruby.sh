@@ -21,7 +21,7 @@ set -o pipefail
 ARGC=$#
 
 if [ $# -ne 2 ]; then
-    echo "Usage:\n\n\tjavascript.sh OUTPUT_DIR SETTING_FILE_PATH"
+    echo "Usage:\n\n\truby.sh OUTPUT_DIR SETTING_FILE_PATH"
     echo "\nSetting file should define KUBERNETES_BRANCH, CLIENT_VERSION, and PACKAGE_NAME\n"
     exit 1
 fi
@@ -43,4 +43,4 @@ popd > /dev/null
 source "${SCRIPT_ROOT}/client-generator.sh"
 source "${SETTING_FILE}"
 
-CLIENT_LANGUAGE=javascript; CLEANUP_DIRS=(docs src target gradle); kubeclient::generator::generate_client "${OUTPUT_DIR}"
+CLIENT_LANGUAGE=ruby; CLEANUP_DIRS=(docs lib spec); kubeclient::generator::generate_client "${OUTPUT_DIR}"

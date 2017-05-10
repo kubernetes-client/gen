@@ -1,9 +1,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.kubernetes</groupId>
-    <artifactId>client-javascript</artifactId>
+    <artifactId>client-ruby</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <name>client-javascript</name>
+    <name>client-ruby</name>
     <url>http://kubernetes.io</url>
     <build>
         <plugins>
@@ -18,18 +18,20 @@
                         </goals>
                         <configuration>
                             <inputSpec>${generator.spec.path}</inputSpec>
-                            <language>javascript</language>
-                            <gitUserId>kubernetes-incubator</gitUserId>
-                            <gitRepoId>client-javascript</gitRepoId>
+                            <language>ruby</language>
+                            <gitUserId>kubernetes-client</gitUserId>
+                            <gitRepoId>ruby</gitRepoId>
                             <configOptions>
-                                <projectName>kubernetes-js-client</projectName>
-                                <projectDescription>Javascript client for Kubernetes.</projectDescription>
-                                <projectVersion>${generator.client.version}</projectVersion>
-                                <projectLicenseName>Apache V2</projectLicenseName>
+                                <gemName>kubernetes</gemName>
+                                <moduleName>Kubernetes</moduleName>
+                                <gemVersion>${generator.client.version}</gemVersion>
+                                <gemLicense>Apache V2</gemLicense>
+                                <gemHomepage>https://kubernetes.io</gemHomepage>
+                                <gemSummary>Kubernetes ruby client.</gemSummary>
+                                <gemDescription>Kubernetes offtial ruby client to talk to kubernetes clusters.</gemDescription>
+                                <gemAuthor>Kubernetes authors</gemAuthor>
+                                <gemAuthorEmail>kubernetes-sig-api-machinery@googlegroups.com</gemAuthorEmail>
                                 <sortParamsByRequiredFlag>true</sortParamsByRequiredFlag>
-                                <modelPackage>${generator.package.name}.models</modelPackage>
-                                <apiPackage>${generator.package.name}.apis</apiPackage>
-                                <invokerPackage>${generator.package.name}</invokerPackage>
                             </configOptions>
                             <output>${generator.output.path}</output>
                         </configuration>
