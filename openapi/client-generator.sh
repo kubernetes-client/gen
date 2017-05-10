@@ -60,9 +60,5 @@ kubeclient::generator::generate_client() {
     echo "--- Generating client ..."
     mvn -f "${SCRIPT_ROOT}/${CLIENT_LANGUAGE}.xml" clean generate-sources -Dgenerator.spec.path="${output_dir}/swagger.json" -Dgenerator.output.path="${output_dir}" -D=generator.client.version="${CLIENT_VERSION}" -D=generator.package.name="${PACKAGE_NAME}"
 
-    echo "--- Patching generated code..."
-    find "${output_dir}/test" -type f -name \*.py -exec sed -i 's/\bclient/kubernetes.client/g' {} +
-    find "${output_dir}/" -type f -name \*.md -exec sed -i 's/\bclient/kubernetes.client/g' {} +
-    find "${output_dir}/" -type f -name \*.md -exec sed -i "s/kubernetes.client-${CLIENT_LANGUAGE}/client-${CLIENT_LANGUAGE}/g" {} +
     echo "---Done."
 }
