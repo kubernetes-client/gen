@@ -26,6 +26,13 @@ are normally:
 - `CLIENT_VERSION`: Client version string. e.g. 1.0.0b1
 - `PACKAGE_NAME`: Package name for the generated client. e.g. "kubernetes"
 
-Settings may differ from language to language. Refer to language script's help page for
-more information.
+Recommended structure is to generate client in a folder called `kubernetes` at the root of
+the client repo and put all settings in a file named `settings` at the root of the repo.
+If you followed these recommendations, you can simply run autoupdate script anywhere inside
+the client repo:
+
+```bash
+cd ${CLIENT_ROOT}/...
+${GEN_REPO_ROOT}/openapi/autoupdate.sh
+```
 
