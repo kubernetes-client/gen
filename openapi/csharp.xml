@@ -41,6 +41,8 @@
           <argument>${generator.client.version}</argument>
           <argument>-OutputDirectory</argument>
           <argument>${generator.output.path}</argument>
+          <argument>-AddCredentials</argument>
+          <argument>true</argument>
         </arguments>
       </configuration>
     </plugin>
