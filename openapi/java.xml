@@ -47,6 +47,7 @@
                 <library>okhttp-gson</library>
               </configOptions>
               <output>${generator.output.path}</output>
+              <templateDirectory>${generator.template.directory}</templateDirectory>
             </configuration>
           </execution>
         </executions>
@@ -74,5 +75,6 @@
     <generator.spec.path>swagger.json</generator.spec.path>
     <generator.package.name>client</generator.package.name>
     <generator.client.version>1.0-snapshot</generator.client.version>
+    <generator.template.directory>templates/java</generator.template.directory>
   </properties>
 </project>
