@@ -47,4 +47,4 @@ popd > /dev/null
 source "${SCRIPT_ROOT}/client-generator.sh"
 source "${SETTING_FILE}"
 
-CLIENT_LANGUAGE=java; CLEANUP_DIRS=(docs src gradle); kubeclient::generator::generate_client "${OUTPUT_DIR}"
+CLIENT_LANGUAGE=java; CLEANUP_DIRS=(docs src/test src/main/java/io/kubernetes/client/apis src/main/java/io/kubernetes/client/models src/main/java/io/kubernetes/client/auth gradle); kubeclient::generator::generate_client "${OUTPUT_DIR}"
