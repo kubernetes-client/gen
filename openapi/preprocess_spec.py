@@ -27,7 +27,9 @@ WATCH_OP_SUFFIX = "List"
 LIST_OP_PREFIX = "list"
 WATCH_QUERY_PARAM_NAME = "watch"
 
-TPR_SPEC_PATH = os.path.join(os.path.dirname(__file__), 'thirdpartypaths.json')
+CUSTOM_OBJECTS_SPEC_PATH = os.path.join(
+    os.path.dirname(__file__),
+    'custom_objects_spec.json')
 
 _ops = ['get', 'put', 'post', 'delete', 'options', 'head', 'patch']
 
@@ -97,17 +99,17 @@ def strip_tags_from_operation_id(operation, _):
     operation['operationId'] = operation_id
 
 
-def add_thirdparty_resource_paths(spec):
-    with open(TPR_SPEC_PATH, 'r') as third_party_spec_file:
-        third_party_spec = json.loads(third_party_spec_file.read())
-    for path in third_party_spec.keys():
+def add_custom_objects_spec(spec):
+    with open(CUSTOM_OBJECTS_SPEC_PATH, 'r') as custom_objects_spec_file:
+        custom_objects_spec = json.loads(custom_objects_spec_file.read())
+    for path in custom_objects_spec.keys():
         if path not in spec['paths'].keys():
-            spec['paths'][path] = third_party_spec[path]
+            spec['paths'][path] = custom_objects_spec[path]
     return spec
 
 
 def process_swagger(spec):
-    spec = add_thirdparty_resource_paths(spec)
+    spec = add_custom_objects_spec(spec)
 
     apply_func_to_spec_operations(spec, strip_tags_from_operation_id)
 
