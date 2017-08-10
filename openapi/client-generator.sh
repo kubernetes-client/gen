@@ -24,6 +24,12 @@ set -o pipefail
 # Generates client.
 # Required env vars:
 #   CLEANUP_DIRS: List of directories to cleanup before generation for this language
+#   KUBERNETES_BRANCH: Kubernetes branch name to get the swagger spec from
+#   CLIENT_VERSION: Client version. Will be used in the comment sections of the generated code
+#   PACKAGE_NAME: Name of the client package.
+#   CLIENT_LANGUAGE: Language of the client. ${CLIENT_LANGUAGE}.xml should exists.
+# Optional env vars:
+#   SWAGGER_CODEGEN_COMMIT: swagger-codegen-version
 # Input vars:
 #   $1: output directory
 kubeclient::generator::generate_client() {
@@ -32,6 +38,8 @@ kubeclient::generator::generate_client() {
     : "${CLIENT_VERSION?Must set CLIENT_VERSION env var}"
     : "${PACKAGE_NAME?Must set PACKAGE_NAME env var}"
     : "${CLIENT_LANGUAGE?Must set CLIENT_LANGUAGE env var}"
+
+    SWAGGER_CODEGEN_COMMIT="${SWAGGER_CODEGEN_COMMIT:-v2.3.0}"
 
     local output_dir=$1
     pushd "${output_dir}" > /dev/null
@@ -42,23 +50,22 @@ kubeclient::generator::generate_client() {
     local SCRIPT_ROOT=`pwd`
     popd > /dev/null
 
-    if ! which mvn > /dev/null 2>&1; then
-      echo "Maven is not installed."
-      exit
-    fi
-
     mkdir -p "${output_dir}"
 
-    echo "--- Downloading and pre-processing OpenAPI spec"
-    python "${SCRIPT_ROOT}/preprocess_spec.py" "${KUBERNETES_BRANCH}" "${output_dir}/swagger.json"
+    echo "--- Building docker image..."
+    docker build "${SCRIPT_ROOT}" -t "kubernetes-${CLIENT_LANGUAGE}-client-gen:v1" \
+        --build-arg SWAGGER_CODEGEN_COMMIT="${SWAGGER_CODEGEN_COMMIT}" \
+        --build-arg GENERATION_XML_FILE="${CLIENT_LANGUAGE}.xml"
 
-    echo "--- Cleaning up previously generated folders"
-    for i in ${CLEANUP_DIRS[@]}; do
-        rm -rf "${output_dir}/${i}"
-    done
-
-    echo "--- Generating client ..."
-    mvn -f "${SCRIPT_ROOT}/${CLIENT_LANGUAGE}.xml" clean generate-sources -Dgenerator.spec.path="${output_dir}/swagger.json" -Dgenerator.output.path="${output_dir}" -D=generator.client.version="${CLIENT_VERSION}" -D=generator.package.name="${PACKAGE_NAME}"
+    echo "--- Running generator inside container..."
+    docker run \
+        -e CLEANUP_DIRS \
+        -e KUBERNETES_BRANCH \
+        -e CLIENT_VERSION \
+        -e PACKAGE_NAME \
+        -e SWAGGER_CODEGEN_COMMIT \
+        -v "${output_dir}:/output_dir" \
+        "kubernetes-${CLIENT_LANGUAGE}-client-gen:v1" "/output_dir"
 
     echo "---Done."
 }
