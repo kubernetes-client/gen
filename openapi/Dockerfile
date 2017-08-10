@@ -15,6 +15,7 @@
 FROM maven:3.5-jdk-7
 ARG SWAGGER_CODEGEN_COMMIT
 ARG GENERATION_XML_FILE
+ARG SWAGGER_CODEGEN_USER_ORG=swagger-api
 
 # Install preprocessing script requirements
 RUN apt-get update && apt-get -y install python-pip && pip install urllib3
@@ -22,7 +23,7 @@ RUN apt-get update && apt-get -y install python-pip && pip install urllib3
 # Check out specific commit of swagger-codegen
 RUN mkdir /source && \
     cd /source && \
-    git clone -n https://github.com/swagger-api/swagger-codegen.git && \
+    git clone -n https://github.com/${SWAGGER_CODEGEN_USER_ORG}/swagger-codegen.git && \
     cd swagger-codegen && \
     git checkout $SWAGGER_CODEGEN_COMMIT
 
