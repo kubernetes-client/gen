@@ -23,7 +23,7 @@ set -o pipefail
 
 # Generates client.
 # Required env vars:
-#   CLEANUP_DIRS: List of directories to cleanup before generation for this language
+#   CLEANUP_DIRS: List of directories (string separated by space) to cleanup before generation for this language
 #   KUBERNETES_BRANCH: Kubernetes branch name to get the swagger spec from
 #   CLIENT_VERSION: Client version. Will be used in the comment sections of the generated code
 #   PACKAGE_NAME: Name of the client package.
@@ -76,14 +76,15 @@ echo "--- Downloading and pre-processing OpenAPI spec"
 python "${SCRIPT_ROOT}/preprocess_spec.py" "${KUBERNETES_BRANCH}" "${output_dir}/swagger.json"
 
 echo "--- Cleaning up previously generated folders"
-for i in ${CLEANUP_DIRS[@]}; do
+for i in ${CLEANUP_DIRS}; do
+    echo "--- Cleaning up ${output_dir}/${i}"
     rm -rf "${output_dir}/${i}"
 done
 
 echo "--- Generating client ..."
 mvn -f "${SCRIPT_ROOT}/generation_params.xml" clean generate-sources -Dgenerator.spec.path="${output_dir}/swagger.json" -Dgenerator.output.path="${output_dir}" -D=generator.client.version="${CLIENT_VERSION}" -D=generator.package.name="${PACKAGE_NAME}" -D=swagger-codegen-version="${PLUGIN_VERSION}"
 
-echo "" >> "${output_dir}/.swagger-codegen/VERSION"
-echo "commit: ${SWAGGER_CODEGEN_COMMIT}" >> "${output_dir}/.swagger-codegen/VERSION"
+mkdir -p "${output_dir}/.swagger-codegen"
+echo "${SWAGGER_CODEGEN_COMMIT}" > "${output_dir}/.swagger-codegen/COMMIT"
 
 echo "---Done."

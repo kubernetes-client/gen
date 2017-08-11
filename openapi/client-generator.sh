@@ -57,9 +57,13 @@ kubeclient::generator::generate_client() {
         --build-arg SWAGGER_CODEGEN_COMMIT="${SWAGGER_CODEGEN_COMMIT}" \
         --build-arg GENERATION_XML_FILE="${CLIENT_LANGUAGE}.xml"
 
+    # Docker does not support passing arrays, pass the string representation
+    # of the array instead (space separated)
+    CLEANUP_DIRS_STRING="${CLEANUP_DIRS[@]}"
+
     echo "--- Running generator inside container..."
     docker run \
-        -e CLEANUP_DIRS \
+        -e CLEANUP_DIRS="${CLEANUP_DIRS_STRING}" \
         -e KUBERNETES_BRANCH \
         -e CLIENT_VERSION \
         -e PACKAGE_NAME \
