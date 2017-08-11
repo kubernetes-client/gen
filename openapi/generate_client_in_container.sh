@@ -70,6 +70,11 @@ if [[ -z "${PLUGIN_VERSION:-}" ]]; then
 fi
 shopt -u nullglob
 
+# To make sure we can reproduce generation, we would also log code-gen exact commit
+pushd /source/swagger-codegen
+  SWAGGER_CODEGEN_COMMIT_ACTUAL=$(git rev-parse HEAD)
+popd
+
 mkdir -p "${output_dir}"
 
 echo "--- Downloading and pre-processing OpenAPI spec"
@@ -85,6 +90,7 @@ echo "--- Generating client ..."
 mvn -f "${SCRIPT_ROOT}/generation_params.xml" clean generate-sources -Dgenerator.spec.path="${output_dir}/swagger.json" -Dgenerator.output.path="${output_dir}" -D=generator.client.version="${CLIENT_VERSION}" -D=generator.package.name="${PACKAGE_NAME}" -D=swagger-codegen-version="${PLUGIN_VERSION}"
 
 mkdir -p "${output_dir}/.swagger-codegen"
-echo "${SWAGGER_CODEGEN_COMMIT}" > "${output_dir}/.swagger-codegen/COMMIT"
+echo "Requested Commit: ${SWAGGER_CODEGEN_COMMIT}" > "${output_dir}/.swagger-codegen/COMMIT"
+echo "Actual Commit: ${SWAGGER_CODEGEN_COMMIT_ACTUAL}" >> "${output_dir}/.swagger-codegen/COMMIT"
 
 echo "---Done."
