@@ -47,4 +47,7 @@ popd > /dev/null
 source "${SCRIPT_ROOT}/client-generator.sh"
 source "${SETTING_FILE}"
 
-CLIENT_LANGUAGE=java; CLEANUP_DIRS=(docs src/test src/main/java/io/kubernetes/client/apis src/main/java/io/kubernetes/client/models src/main/java/io/kubernetes/client/auth gradle); kubeclient::generator::generate_client "${OUTPUT_DIR}"
+SWAGGER_CODEGEN_COMMIT=5d263e1c9cdd395d93adf061c63d5ef58a8e9ec5 \
+CLIENT_LANGUAGE=java \
+CLEANUP_DIRS=(docs src/test src/main/java/io/kubernetes/client/apis src/main/java/io/kubernetes/client/models src/main/java/io/kubernetes/client/auth gradle) \
+kubeclient::generator::generate_client "${OUTPUT_DIR}"

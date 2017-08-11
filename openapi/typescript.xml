@@ -12,7 +12,7 @@
             <plugin>
                 <groupId>io.swagger</groupId>
                 <artifactId>swagger-codegen-maven-plugin</artifactId>
-                <version>2.2.2</version>
+                <version>${swagger-codegen-version}</version>
                 <executions>
                     <execution>
                         <goals>
