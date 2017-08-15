@@ -44,7 +44,10 @@ popd > /dev/null
 source "${SCRIPT_ROOT}/client-generator.sh"
 source "${SETTING_FILE}"
 
-CLIENT_LANGUAGE=python; CLEANUP_DIRS=(client/apis client/models docs test); kubeclient::generator::generate_client "${OUTPUT_DIR}"
+SWAGGER_CODEGEN_COMMIT=v2.2.2; \
+CLIENT_LANGUAGE=python; \
+CLEANUP_DIRS=(client/apis client/models docs test); \
+kubeclient::generator::generate_client "${OUTPUT_DIR}"
 
 echo "--- Patching generated code..."
 find "${OUTPUT_DIR}/test" -type f -name \*.py -exec sed -i 's/\bclient/kubernetes.client/g' {} +
