@@ -39,7 +39,7 @@ kubeclient::generator::generate_client() {
     : "${PACKAGE_NAME?Must set PACKAGE_NAME env var}"
     : "${CLIENT_LANGUAGE?Must set CLIENT_LANGUAGE env var}"
 
-    SWAGGER_CODEGEN_COMMIT="${SWAGGER_CODEGEN_COMMIT:-v2.3.0}"
+    SWAGGER_CODEGEN_COMMIT="${SWAGGER_CODEGEN_COMMIT:-v2.2.3}"
 
     local output_dir=$1
     pushd "${output_dir}" > /dev/null
@@ -64,10 +64,10 @@ kubeclient::generator::generate_client() {
     echo "--- Running generator inside container..."
     docker run \
         -e CLEANUP_DIRS="${CLEANUP_DIRS_STRING}" \
-        -e KUBERNETES_BRANCH \
-        -e CLIENT_VERSION \
-        -e PACKAGE_NAME \
-        -e SWAGGER_CODEGEN_COMMIT \
+        -e KUBERNETES_BRANCH="${KUBERNETES_BRANCH}" \
+        -e CLIENT_VERSION="${CLIENT_VERSION}" \
+        -e PACKAGE_NAME="${PACKAGE_NAME}" \
+        -e SWAGGER_CODEGEN_COMMIT="${SWAGGER_CODEGEN_COMMIT}" \
         -v "${output_dir}:/output_dir" \
         "kubernetes-${CLIENT_LANGUAGE}-client-gen:v1" "/output_dir"
 

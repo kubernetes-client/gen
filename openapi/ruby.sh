@@ -43,4 +43,6 @@ popd > /dev/null
 source "${SCRIPT_ROOT}/client-generator.sh"
 source "${SETTING_FILE}"
 
-CLIENT_LANGUAGE=ruby; CLEANUP_DIRS=(docs lib spec); kubeclient::generator::generate_client "${OUTPUT_DIR}"
+CLIENT_LANGUAGE=ruby; \
+CLEANUP_DIRS=(docs lib spec); \
+kubeclient::generator::generate_client "${OUTPUT_DIR}"
