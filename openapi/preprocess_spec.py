@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from __future__ import print_function
+
 import json
 import operator
 import os.path
@@ -59,7 +61,7 @@ def apply_func_to_spec_operations(spec, func, *params):
                  If the return value of the func is True, then the operation
                  will be deleted from the spec.
     """
-    for k, v in spec['paths'].iteritems():
+    for k, v in spec['paths'].items():
         for op in _ops:
             if op not in v:
                 continue
@@ -150,7 +152,7 @@ def find_rename_ref_recursive(root, old, new):
         if "$ref" in root:
             if root["$ref"] == old:
                 root["$ref"] = new
-        for k, v in root.iteritems():
+        for k, v in root.items():
             find_rename_ref_recursive(v, old, new)
 
 
@@ -164,33 +166,33 @@ def remove_model_prefixes(spec):
     but will change some of them.
     """
     models = {}
-    for k, v in spec['definitions'].iteritems():
+    for k, v in spec['definitions'].items():
         if k.startswith("io.k8s"):
             models[k] = {"split_n": 2}
 
     conflict = True
     while conflict:
-        for k, v in models.iteritems():
+        for k, v in models.items():
             splits = k.rsplit(".", v["split_n"])
             v["removed_prefix"] = splits.pop(0)
             v["new_name"] = ".".join(splits)
 
         conflict = False
-        for k, v in models.iteritems():
-            for k2, v2 in models.iteritems():
+        for k, v in models.items():
+            for k2, v2 in models.items():
                 if k != k2 and v["new_name"] == v2["new_name"]:
                     v["conflict"] = True
                     v2["conflict"] = True
                     conflict = True
 
         if conflict:
-            for k, v in models.iteritems():
+            for k, v in models.items():
                 if "conflict" in v:
                     print("Resolving conflict for %s" % k)
                     v["split_n"] += 1
                     del v["conflict"]
 
-    for k, v in models.iteritems():
+    for k, v in models.items():
         if "new_name" not in v:
             raise PreprocessingException("Cannot rename model %s" % k)
         print("Removing prefix %s from %s...\n" % (v["removed_prefix"], k))
@@ -205,7 +207,7 @@ def find_replace_ref_recursive(root, ref_name, replace_map):
         if "$ref" in root:
             if root["$ref"] == ref_name:
                 del root["$ref"]
-                for k, v in replace_map.iteritems():
+                for k, v in replace_map.items():
                     if k in root:
                         if k != "description":
                             raise PreprocessingException(
@@ -213,13 +215,13 @@ def find_replace_ref_recursive(root, ref_name, replace_map):
                                 "conflicting key %s." % (ref_name, k))
                         continue
                     root[k] = v
-        for k, v in root.iteritems():
+        for k, v in root.items():
             find_replace_ref_recursive(v, ref_name, replace_map)
 
 
 def inline_primitive_models(spec):
     to_remove_models = []
-    for k, v in spec['definitions'].iteritems():
+    for k, v in spec['definitions'].items():
         if "properties" not in v:
             print("Making primitive mode `%s` inline ..." % k)
             if "type" not in v:
@@ -243,7 +245,7 @@ def main():
     pool = urllib3.PoolManager()
     with pool.request('GET', spec_url, preload_content=False) as response:
         if response.status != 200:
-            print "Error downloading spec file. Reason: %s" % response.reason
+            print("Error downloading spec file. Reason: %s" % response.reason)
             return 1
         in_spec = json.load(response, object_pairs_hook=OrderedDict)
         out_spec = process_swagger(in_spec)
@@ -253,4 +255,5 @@ def main():
     return 0
 
 
-sys.exit(main())
+if __name__ == '__main__':
+    sys.exit(main())
