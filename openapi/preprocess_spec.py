@@ -256,9 +256,11 @@ def inline_primitive_models(spec):
     to_remove_models = []
     for k, v in spec['definitions'].items():
         if "properties" not in v:
-            print("Making primitive mode `%s` inline ..." % k)
+            if k == "intstr.IntOrString":
+                v["type"] = "object"
             if "type" not in v:
                 v["type"] = "object"
+            print("Making model `%s` inline as %s..." % (k, v["type"]))
             find_replace_ref_recursive(spec, "#/definitions/" + k, v)
             to_remove_models.append(k)
 
