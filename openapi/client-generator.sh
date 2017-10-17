@@ -52,10 +52,10 @@ kubeclient::generator::generate_client() {
 
     mkdir -p "${output_dir}"
 
-    local docker_file="Dockerfile"
+    local docker_file="${SCRIPT_ROOT}/Dockerfile"
 
-    if [ -e "Dockerfile.${CLIENT_LANGUAGE}" ];then
-        docker_file="Dockerfile.${CLIENT_LANGUAGE}"
+    if [ -e "${SCRIPT_ROOT}/Dockerfile.${CLIENT_LANGUAGE}" ];then
+        docker_file="${SCRIPT_ROOT}/Dockerfile.${CLIENT_LANGUAGE}"
     fi
 
     echo "--- Building docker image..."
