@@ -52,8 +52,14 @@ kubeclient::generator::generate_client() {
 
     mkdir -p "${output_dir}"
 
+    local docker_file="${SCRIPT_ROOT}/Dockerfile"
+
+    if [ -e "${SCRIPT_ROOT}/Dockerfile.${CLIENT_LANGUAGE}" ];then
+        docker_file="${SCRIPT_ROOT}/Dockerfile.${CLIENT_LANGUAGE}"
+    fi
+
     echo "--- Building docker image..."
-    docker build "${SCRIPT_ROOT}" -t "kubernetes-${CLIENT_LANGUAGE}-client-gen:v1" \
+    docker build -f $docker_file "${SCRIPT_ROOT}" -t "kubernetes-${CLIENT_LANGUAGE}-client-gen:v1" \
         --build-arg SWAGGER_CODEGEN_COMMIT="${SWAGGER_CODEGEN_COMMIT}" \
         --build-arg GENERATION_XML_FILE="${CLIENT_LANGUAGE}.xml"
 
