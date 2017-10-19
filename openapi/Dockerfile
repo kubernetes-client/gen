@@ -32,6 +32,15 @@ RUN cd /source/swagger-codegen && \
     mvn install -DskipTests -Dmaven.test.skip=true -pl modules/swagger-codegen-maven-plugin -am && \
     cp -r /root/.m2/* /usr/share/maven/ref
 
+# Install Autorest
+RUN curl -sL https://deb.nodesource.com/setup_7.x | bash - 
+RUN apt-get update && apt-get -y install \
+    nodejs \
+    libunwind8-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN npm install -g autorest@preview
+
 # Copy required files
 COPY ${GENERATION_XML_FILE} /generation_params.xml
 COPY generate_client_in_container.sh /generate_client.sh
