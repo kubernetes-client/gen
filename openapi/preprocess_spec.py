@@ -110,7 +110,7 @@ def add_custom_objects_spec(spec):
     return spec
 
 
-def process_swagger(spec):
+def process_swagger(spec, client_language):
     spec = add_custom_objects_spec(spec)
 
     apply_func_to_spec_operations(spec, strip_tags_from_operation_id)
@@ -127,10 +127,15 @@ def process_swagger(spec):
 
     remove_model_prefixes(spec)
 
-    inline_primitive_models(spec)
+    inline_primitive_models(spec, preserved_primitives_for_language(client_language))
 
     return spec
 
+def preserved_primitives_for_language(client_language):
+    if client_language == "java":
+        return ["intstr.IntOrString"]
+    else:
+        return []
 
 def rename_model(spec, old_name, new_name):
     if new_name in spec['definitions']:
@@ -180,7 +185,7 @@ def remove_deprecated_models(spec):
     models = {}
     for k, v in spec['definitions'].items():
         if is_model_deprecated(v):
-            print("Removing deprecated model %s" %k)
+            print("Removing deprecated model %s" % k)
         else:
             models[k] = v
     spec['definitions'] = models
@@ -252,30 +257,38 @@ def find_replace_ref_recursive(root, ref_name, replace_map):
             find_replace_ref_recursive(v, ref_name, replace_map)
 
 
-def inline_primitive_models(spec):
+def inline_primitive_models(spec, excluded_primitives):
     to_remove_models = []
     for k, v in spec['definitions'].items():
-        if "properties" not in v:
-            if k == "intstr.IntOrString":
-                v["type"] = "object"
-            if "type" not in v:
-                v["type"] = "object"
-            print("Making model `%s` inline as %s..." % (k, v["type"]))
-            find_replace_ref_recursive(spec, "#/definitions/" + k, v)
-            to_remove_models.append(k)
+        if k not in excluded_primitives:
+            if "properties" not in v:
+                if k == "intstr.IntOrString":
+                    v["type"] = "object"
+                if "type" not in v:
+                    v["type"] = "object"
+                print("Making model `%s` inline as %s..." % (k, v["type"]))
+                find_replace_ref_recursive(spec, "#/definitions/" + k, v)
+                to_remove_models.append(k)
 
     for k in to_remove_models:
         del spec['definitions'][k]
 
+def write_json(filename, object):
+    with open(filename, 'w') as out:
+        json.dump(object, out, sort_keys=False, indent=2,
+                  separators=(',', ': '), ensure_ascii=True)
+
+
 
 def main():
-    if len(sys.argv) != 3:
-        print("Usage:\n\n\tpython preprocess_spec.py kuberneres_branch " \
+    if len(sys.argv) != 4:
+        print("Usage:\n\n\tpython preprocess_spec.py client_language kuberneres_branch " \
               "output_spec_path")
         return 1
+    client_language = sys.argv[1]
     spec_url = 'https://raw.githubusercontent.com/kubernetes/kubernetes/' \
-               '%s/api/openapi-spec/swagger.json' % sys.argv[1]
-    output_path = sys.argv[2]
+               '%s/api/openapi-spec/swagger.json' % sys.argv[2]
+    output_path = sys.argv[3]
 
     pool = urllib3.PoolManager()
     with pool.request('GET', spec_url, preload_content=False) as response:
@@ -283,10 +296,9 @@ def main():
             print("Error downloading spec file. Reason: %s" % response.reason)
             return 1
         in_spec = json.load(response, object_pairs_hook=OrderedDict)
-        out_spec = process_swagger(in_spec)
-        with open(output_path, 'w') as out:
-            json.dump(out_spec, out, sort_keys=False, indent=2,
-                      separators=(',', ': '), ensure_ascii=True)
+        write_json(output_path + ".unprocessed", in_spec)
+        out_spec = process_swagger(in_spec, client_language)
+        write_json(output_path, out_spec)
     return 0
 
 
