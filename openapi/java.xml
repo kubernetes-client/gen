@@ -45,6 +45,8 @@
                 <dateLibrary>joda</dateLibrary>
                 <useRxJava>false</useRxJava>
                 <library>okhttp-gson</library>
+                <type-mappings>intstr.IntOrString=IntOrString</type-mappings>
+                <import-mappings>IntOrString=io.kubernetes.client.custom.IntOrString</import-mappings>
               </configOptions>
               <output>${generator.output.path}</output>
             </configuration>
