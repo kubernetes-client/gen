@@ -276,8 +276,7 @@ def inline_primitive_models(spec, excluded_primitives):
 
 def write_json(filename, object):
     with open(filename, 'w') as out:
-        json.dump(object, out, sort_keys=False, indent=2,
-                  separators=(',', ': '), ensure_ascii=True)
+        json.dump(object, out, sort_keys=False, indent=2, separators=(',', ': '), ensure_ascii=True)
 
 
 
