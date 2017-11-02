@@ -282,7 +282,7 @@ def write_json(filename, object):
 
 def main():
     if len(sys.argv) != 4:
-        print("Usage:\n\n\tpython preprocess_spec.py client_language kuberneres_branch " \
+        print("Usage:\n\n\tpython preprocess_spec.py client_language kubernetes_branch " \
               "output_spec_path")
         return 1
     client_language = sys.argv[1]
