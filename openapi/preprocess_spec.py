@@ -260,15 +260,16 @@ def find_replace_ref_recursive(root, ref_name, replace_map):
 def inline_primitive_models(spec, excluded_primitives):
     to_remove_models = []
     for k, v in spec['definitions'].items():
-        if k not in excluded_primitives:
-            if "properties" not in v:
-                if k == "intstr.IntOrString":
-                    v["type"] = "object"
-                if "type" not in v:
-                    v["type"] = "object"
-                print("Making model `%s` inline as %s..." % (k, v["type"]))
-                find_replace_ref_recursive(spec, "#/definitions/" + k, v)
-                to_remove_models.append(k)
+        if k in excluded_primitives:
+            continue
+        if "properties" not in v:
+            if k == "intstr.IntOrString":
+                v["type"] = "object"
+            if "type" not in v:
+                v["type"] = "object"
+            print("Making model `%s` inline as %s..." % (k, v["type"]))
+            find_replace_ref_recursive(spec, "#/definitions/" + k, v)
+            to_remove_models.append(k)
 
     for k in to_remove_models:
         del spec['definitions'][k]
