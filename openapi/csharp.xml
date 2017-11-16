@@ -29,8 +29,10 @@
           TODO: Containerize this.
       -->
       <configuration>
-        <executable>autorest</executable>
+        <executable>node</executable>
         <arguments>
+          <argument>--max-old-space-size=8192</argument> <!-- fix oom -->
+          <argument>/usr/bin/autorest</argument>
           <argument>--input-file=${generator.spec.path}</argument>
           <argument>--csharp</argument>
           <argument>--namespace=${generator.package.name}</argument>
