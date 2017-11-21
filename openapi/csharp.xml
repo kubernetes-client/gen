@@ -29,18 +29,22 @@
           TODO: Containerize this.
       -->
       <configuration>
-        <executable>autorest</executable>
+        <executable>node</executable>
         <arguments>
+          <argument>--max-old-space-size=8192</argument> <!-- fix oom -->
+          <argument>/usr/bin/autorest</argument>
           <argument>--input-file=${generator.spec.path}</argument>
           <argument>--csharp</argument>
           <argument>--namespace=${generator.package.name}</argument>
           <argument>--package-version=${generator.client.version}</argument>
           <argument>--output-folder=${generator.output.path}</argument>
-	  <argument>--version=preview</argument>
-	  <argument>--add-credentials</argument>
-	  <argument>--debug</argument>
-	  <argument>--verbose</argument>
+          <argument>--version=preview</argument>
+          <argument>--add-credentials</argument>
+          <argument>--debug</argument>
+          <argument>--verbose</argument>
           <argument>--directive={from: "swagger-document", where: "$..*[?(@.consumes[0] === \"*/*\")]", transform: "$.consumes[0] = \"application/json\""}</argument>
+          <argument>--directive={from: "swagger-document", where: "$.definitions", transform: "$[\"IntOrString\"] = {\"properties\": { \"value\": { \"type\": \"string\" }}}"}</argument>
+          <argument>--directive={from: "swagger-document", where: "$..*[?(@.format === \"int-or-string\")]", transform: "delete $.type; delete $.format; $[\"$ref\"] = \"#/definitions/IntOrString\""}</argument>
           <argument>--use=@microsoft.azure/autorest.csharp@preview</argument>
         </arguments>
       </configuration>

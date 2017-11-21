@@ -49,3 +49,7 @@ source "${SETTING_FILE}"
 
 # TODO(brendandburns): Update CLEANUP_DIRS
 CLIENT_LANGUAGE=csharp; CLEANUP_DIRS=(docs src target gradle); kubeclient::generator::generate_client "${OUTPUT_DIR}"
+
+
+# hack for generating empty host url
+sed -i '/BaseUri = new System.Uri(\"\");/ d' ${OUTPUT_DIR}/Kubernetes.cs
