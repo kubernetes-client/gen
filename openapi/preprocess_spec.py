@@ -133,7 +133,7 @@ def process_swagger(spec, client_language):
 
 def preserved_primitives_for_language(client_language):
     if client_language == "java":
-        return ["intstr.IntOrString"]
+        return ["intstr.IntOrString", "resource.Quantity"]
     else:
         return []
 
