@@ -42,9 +42,9 @@ RUN apt-get update && apt-get -y install \
 RUN npm install -g autorest@preview #TODO-krabhishek8260: Remove preview as soon as the required bits are in release version 
 
 # Copy required files
-COPY ${GENERATION_XML_FILE} /generation_params.xml
 COPY generate_client_in_container.sh /generate_client.sh
 COPY preprocess_spec.py /
 COPY custom_objects_spec.json /
+COPY ${GENERATION_XML_FILE} /generation_params.xml
 
 ENTRYPOINT ["mvn-entrypoint.sh", "/generate_client.sh"]
