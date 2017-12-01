@@ -47,11 +47,11 @@ popd > /dev/null
 source "${SCRIPT_ROOT}/client-generator.sh"
 source "${SETTING_FILE}"
 
+# this is to ensure sed after docker build has perm to modify files generated
 mkdir -p ${OUTPUT_DIR}/Models/
 
 # TODO(brendandburns): Update CLEANUP_DIRS
 CLIENT_LANGUAGE=csharp; CLEANUP_DIRS=(docs src target gradle); kubeclient::generator::generate_client "${OUTPUT_DIR}"
-
 
 # hack for generating empty host url
 sed -i '/BaseUri = new System.Uri(\"\");/ d' ${OUTPUT_DIR}/Kubernetes.cs
