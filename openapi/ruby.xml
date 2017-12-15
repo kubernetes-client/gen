@@ -28,7 +28,7 @@
                                 <gemLicense>Apache V2</gemLicense>
                                 <gemHomepage>https://kubernetes.io</gemHomepage>
                                 <gemSummary>Kubernetes ruby client.</gemSummary>
-                                <gemDescription>Kubernetes offtial ruby client to talk to kubernetes clusters.</gemDescription>
+                                <gemDescription>Kubernetes official ruby client to talk to kubernetes clusters.</gemDescription>
                                 <gemAuthor>Kubernetes authors</gemAuthor>
                                 <gemAuthorEmail>kubernetes-sig-api-machinery@googlegroups.com</gemAuthorEmail>
                                 <sortParamsByRequiredFlag>true</sortParamsByRequiredFlag>

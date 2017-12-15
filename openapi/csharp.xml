@@ -29,20 +29,23 @@
           TODO: Containerize this.
       -->
       <configuration>
-        <executable>autorest</executable>
+        <executable>node</executable>
         <arguments>
-          <argument>-Input</argument>
-          <argument>${generator.spec.path}</argument>
-          <argument>-CodeGenerator</argument>
-          <argument>CSharp</argument>
-          <argument>-Namespace</argument>
-          <argument>${generator.package.name}</argument>
-          <argument>-PackageVersion</argument>
-          <argument>${generator.client.version}</argument>
-          <argument>-OutputDirectory</argument>
-          <argument>${generator.output.path}</argument>
-          <argument>-AddCredentials</argument>
-          <argument>true</argument>
+          <argument>--max-old-space-size=8192</argument> <!-- fix oom -->
+          <argument>/usr/bin/autorest</argument>
+          <argument>--input-file=${generator.spec.path}</argument>
+          <argument>--csharp</argument>
+          <argument>--namespace=${generator.package.name}</argument>
+          <argument>--package-version=${generator.client.version}</argument>
+          <argument>--output-folder=${generator.output.path}</argument>
+          <argument>--version=preview</argument>
+          <argument>--add-credentials</argument>
+          <argument>--debug</argument>
+          <argument>--verbose</argument>
+          <argument>--directive={from: "swagger-document", where: "$..*[?(@.consumes[0] === \"*/*\")]", transform: "$.consumes[0] = \"application/json\""}</argument>
+          <argument>--directive={from: "swagger-document", where: "$.definitions", transform: "$[\"intstr.IntOrString\"] = {\"properties\": { \"value\": { \"type\": \"string\" }}}"}</argument>
+          <argument>--directive={from: "swagger-document", where: "$.definitions", transform: "$[\"resource.Quantity\"] = {\"properties\": { \"value\": { \"type\": \"string\" }}}"}</argument>
+          <argument>--use=@microsoft.azure/autorest.csharp@preview</argument>
         </arguments>
       </configuration>
     </plugin>
