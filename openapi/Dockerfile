@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM maven:3.5-jdk-7-slim
+FROM maven:3.5-jdk-8-slim
 ARG SWAGGER_CODEGEN_COMMIT
 ARG GENERATION_XML_FILE
 ARG SWAGGER_CODEGEN_USER_ORG=swagger-api
@@ -33,7 +33,7 @@ RUN cd /source/swagger-codegen && \
     cp -r /root/.m2/* /usr/share/maven/ref
 
 # Install Autorest
-RUN apt-get update && apt-get -qq -y install libunwind8 libicu52 libssl1.0 liblttng-ust0 libcurl3 libuuid1 libkrb5-3 zlib1g
+RUN apt-get update && apt-get -qq -y install libunwind8 libicu57 libssl1.0 liblttng-ust0 libcurl3 libuuid1 libkrb5-3 zlib1g
 RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - 
 RUN apt-get update && apt-get -y install \
     nodejs \
