@@ -23,6 +23,7 @@
                             <configOptions>
                                 <packageName>${generator.package.name}</packageName>
                                 <packageVersion>${generator.client.version}</packageVersion>
+                                <allowNonUniqueOperationIds>true</allowNonUniqueOperationIds>
                             </configOptions>
                         </configuration>
                     </execution>
