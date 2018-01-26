@@ -59,3 +59,4 @@ sed -i '/BaseUri = new System.Uri(\"\");/ d' ${OUTPUT_DIR}/Kubernetes.cs
 # remove public prop from Quantity, (autorest cannot generate empty class)
 sed -i '/JsonProperty/ d' ${OUTPUT_DIR}/Models/ResourceQuantity.cs
 sed -i 's/public string Value/private string Value/' ${OUTPUT_DIR}/Models/ResourceQuantity.cs
+sed -i 's/; set/; private set/' ${OUTPUT_DIR}/Models/V1Patch.cs
