@@ -20,8 +20,8 @@ ${CLIENT_LANGUAGE}.sh OUTPUT_DIR SETTING_FILE
 `SETTING_FILE` is a bash script exporting required setting to generate a client. These
 are normally:
 
-- `KUBERNETES_BRANCH`: The kubernetes branch to get OpenAPI spec from.
-- `CLIENT_VERSION`: Client version string. e.g. 1.0.0b1
+- `KUBERNETES_BRANCH`: The kubernetes branch to get OpenAPI spec from. e.g. "master"
+- `CLIENT_VERSION`: Client version string. e.g. "1.0.0b1"
 - `PACKAGE_NAME`: Package name for the generated client. e.g. "kubernetes"
 
 Recommended structure is to generate client in a folder called `kubernetes` at the root of
