@@ -19,8 +19,8 @@
                         <configuration>
                             <inputSpec>${generator.spec.path}</inputSpec>
                             <language>python</language>
-                            <gitUserId>kubernetes-incubator</gitUserId>
-                            <gitRepoId>client-python</gitRepoId>
+                            <gitUserId>kubernetes-client</gitUserId>
+                            <gitRepoId>python</gitRepoId>
                             <configOptions>
                                 <packageName>${generator.package.name}</packageName>
                                 <packageVersion>${generator.client.version}</packageVersion>
