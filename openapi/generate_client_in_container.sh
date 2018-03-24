@@ -88,7 +88,13 @@ for i in ${CLEANUP_DIRS}; do
 done
 
 echo "--- Generating client ..."
-mvn -f "${SCRIPT_ROOT}/generation_params.xml" clean generate-sources -Dgenerator.spec.path="${output_dir}/swagger.json" -Dgenerator.output.path="${output_dir}" -D=generator.client.version="${CLIENT_VERSION}" -D=generator.package.name="${PACKAGE_NAME}" -D=swagger-codegen-version="${PLUGIN_VERSION}"
+mvn -f "${SCRIPT_ROOT}/generation_params.xml" clean generate-sources \
+    -Dgenerator.spec.path="${output_dir}/swagger.json" \
+    -Dgenerator.output.path="${output_dir}" \
+    -D=generator.client.version="${CLIENT_VERSION}" \
+    -D=generator.package.name="${PACKAGE_NAME}" \
+    -D=swagger-codegen-version="${PLUGIN_VERSION}" \
+    -Duser.home=/root
 
 mkdir -p "${output_dir}/.swagger-codegen"
 echo "Requested Commit: ${SWAGGER_CODEGEN_COMMIT}" > "${output_dir}/.swagger-codegen/COMMIT"
