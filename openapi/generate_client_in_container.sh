@@ -79,7 +79,7 @@ popd
 mkdir -p "${output_dir}"
 
 echo "--- Downloading and pre-processing OpenAPI spec"
-python "${SCRIPT_ROOT}/preprocess_spec.py" "${CLIENT_LANGUAGE}" "${KUBERNETES_BRANCH}" "${output_dir}/swagger.json"
+python "${SCRIPT_ROOT}/preprocess_spec.py" "${CLIENT_LANGUAGE}" "${KUBERNETES_BRANCH}" "${output_dir}/swagger.json" "${USERNAME}"
 
 echo "--- Cleaning up previously generated folders"
 for i in ${CLEANUP_DIRS}; do

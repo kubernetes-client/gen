@@ -40,6 +40,7 @@ kubeclient::generator::generate_client() {
     : "${CLIENT_LANGUAGE?Must set CLIENT_LANGUAGE env var}"
 
     SWAGGER_CODEGEN_COMMIT="${SWAGGER_CODEGEN_COMMIT:-v2.2.3}"
+    USERNAME="${USERNAME:-kubernetes}"
 
     local output_dir=$1
     pushd "${output_dir}" > /dev/null
@@ -53,7 +54,12 @@ kubeclient::generator::generate_client() {
     mkdir -p "${output_dir}"
 
     echo "--- Building docker image..."
-    docker build "${SCRIPT_ROOT}" -t "kubernetes-${CLIENT_LANGUAGE}-client-gen:v1" \
+    if [ "${USERNAME}" != "kubernetes" ]; then
+        image_name="kubernetes-${USERNAME}-${CLIENT_LANGUAGE}-client-gen:v1"
+    else
+        image_name="kubernetes-${CLIENT_LANGUAGE}-client-gen:v1"
+    fi
+    docker build "${SCRIPT_ROOT}" -t "${image_name}" \
         --build-arg SWAGGER_CODEGEN_COMMIT="${SWAGGER_CODEGEN_COMMIT}" \
         --build-arg GENERATION_XML_FILE="${CLIENT_LANGUAGE}.xml"
 
@@ -69,8 +75,9 @@ kubeclient::generator::generate_client() {
         -e CLIENT_LANGUAGE="${CLIENT_LANGUAGE}" \
         -e PACKAGE_NAME="${PACKAGE_NAME}" \
         -e SWAGGER_CODEGEN_COMMIT="${SWAGGER_CODEGEN_COMMIT}" \
+        -e USERNAME="${USERNAME}" \
         -v "${output_dir}:/output_dir" \
-        "kubernetes-${CLIENT_LANGUAGE}-client-gen:v1" "/output_dir"
+        "${image_name}" "/output_dir"
 
     echo "---Done."
 }

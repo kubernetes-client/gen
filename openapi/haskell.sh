@@ -22,8 +22,9 @@ ARGC=$#
 
 if [ $# -ne 2 ]; then
     echo "Usage:"
-    echo "    haskell.sh OUTPUT_DIR SETTING_FILE_PATH"
+    echo "  $(basename ${0}) OUTPUT_DIR SETTING_FILE_PATH"
     echo "    Setting file should define KUBERNETES_BRANCH, CLIENT_VERSION, and PACKAGE_NAME"
+    echo "    Setting file can define an optional USERNAME if you're working on a fork"
     exit 1
 fi
 
