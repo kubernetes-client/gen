@@ -297,10 +297,16 @@ def main():
         'output_spec_path',
         help='Path to otput spec file to'
     )
+    argparser.add_argument(
+        'username',
+        help='Optional username if working on forks',
+        default='kubernetes'
+    )
     args = argparser.parse_args()
 
-    spec_url = 'https://raw.githubusercontent.com/kubernetes/kubernetes/' \
-               '%s/api/openapi-spec/swagger.json' % args.kubernetes_branch
+    spec_url = 'https://raw.githubusercontent.com/%s/kubernetes/' \
+               '%s/api/openapi-spec/swagger.json' % (args.username,
+                                                     args.kubernetes_branch)
 
     pool = urllib3.PoolManager()
     with pool.request('GET', spec_url, preload_content=False) as response:
