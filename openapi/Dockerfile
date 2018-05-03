@@ -38,7 +38,7 @@ RUN mkdir /source && \
     git checkout $SWAGGER_CODEGEN_COMMIT
 
 # Build it and persist local repository
-RUN cd /source/swagger-codegen && \
+RUN chmod go+rwx /root && umask 0 && cd /source/swagger-codegen && \
     mvn install -DskipTests -Dmaven.test.skip=true -pl modules/swagger-codegen-maven-plugin -am && \
     cp -r /root/.m2/* /usr/share/maven/ref
 
