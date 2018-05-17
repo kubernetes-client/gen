@@ -58,14 +58,37 @@ find "${OUTPUT_DIR}" -path "${OUTPUT_DIR}/base" -prune -o -type f -a -name \*.md
 # workaround https://github.com/swagger-api/swagger-codegen/pull/7905
 find "${OUTPUT_DIR}/client" -type f -name \*.py ! -name '__init__.py' -exec sed -i '/^from .*models.*/d' {} \;
 
-#
+# workaround https://github.com/swagger-api/swagger-codegen/pull/8204
+# + closing session
+echo '21a22,23
+> import asyncio
+> 
+81a84,86
+>     def __del__(self):
+>         asyncio.ensure_future(self.pool_manager.close())
+> 
+164c169,171
+<         async with self.pool_manager.request(**args) as r:
+---
+>         r = await self.pool_manager.request(**args)
+>         if _preload_content:
+> 
+168,169c175,176
+<         # log response body
+<         logger.debug("response body: %s", r.data)
+---
+>             # log response body
+>             logger.debug("response body: %s", r.data)
+171,172c178,179
+<         if not 200 <= r.status <= 299:
+<             raise ApiException(http_resp=r)
+---
+>             if not 200 <= r.status <= 299:
+>                 raise ApiException(http_resp=r)' | patch "${OUTPUT_DIR}/client/rest.py"
+
+# fix imports
 find "${OUTPUT_DIR}/client/" -type f -name \*.py -exec sed -i 's/import client\./import kubernetes_asyncio.client./g' {} +
 find "${OUTPUT_DIR}/client/" -type f -name \*.py -exec sed -i 's/from client/from kubernetes_asyncio.client/g' {} +
 find "${OUTPUT_DIR}/client/" -type f -name \*.py -exec sed -i 's/getattr(client\.models/getattr(kubernetes_asyncio.client.models/g' {} +
-
-#find "${OUTPUT_DIR}/client/" -type f -name \*.py -exec sed -i 's/from client\./from kubernetes.client./g' {} +
-#find "${OUTPUT_DIR}/client/" -type f -name \*.py -exec sed -i 's/from client import /from kubernetes.client import /g' {} +
-
-
 
 echo "---Done."
