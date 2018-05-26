@@ -60,6 +60,7 @@ find "${OUTPUT_DIR}/client" -type f -name \*.py ! -name '__init__.py' -exec sed 
 
 # workaround https://github.com/swagger-api/swagger-codegen/pull/8204
 # + closing session
+# + support application/strategic-merge-patch+json
 echo '21a22,23
 > import asyncio
 > 
@@ -67,19 +68,23 @@ echo '21a22,23
 >     def __del__(self):
 >         asyncio.ensure_future(self.pool_manager.close())
 > 
-164c169,171
+130a136,138
+>                 if headers['Content-Type'] == 'application/json-patch+json':
+>                     if not isinstance(body, list):
+>                         headers['Content-Type'] = 'application/strategic-merge-patch+json'
+164c172,174
 <         async with self.pool_manager.request(**args) as r:
 ---
 >         r = await self.pool_manager.request(**args)
 >         if _preload_content:
 > 
-168,169c175,176
+168,169c178,179
 <         # log response body
 <         logger.debug("response body: %s", r.data)
 ---
 >             # log response body
 >             logger.debug("response body: %s", r.data)
-171,172c178,179
+171,172c181,182
 <         if not 200 <= r.status <= 299:
 <             raise ApiException(http_resp=r)
 ---
