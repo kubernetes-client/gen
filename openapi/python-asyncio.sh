@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2017 The Kubernetes Authors.
+# Copyright 2018 The Kubernetes Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ ARGC=$#
 
 if [ $# -ne 2 ]; then
     echo "Usage:"
-    echo "    python.sh OUTPUT_DIR SETTING_FILE_PATH"
+    echo "    python-asyncio.sh OUTPUT_DIR SETTING_FILE_PATH"
     echo "    Setting file should define KUBERNETES_BRANCH, CLIENT_VERSION, and PACKAGE_NAME"
     exit 1
 fi
@@ -44,7 +44,6 @@ popd > /dev/null
 source "${SCRIPT_ROOT}/client-generator.sh"
 source "${SETTING_FILE}"
 
-# SWAGGER_CODEGEN_COMMIT=d2b91073e1fc499fea67141ff4c17740d25f8e83; \
 SWAGGER_CODEGEN_COMMIT=f9b2839a3076f26db1b8fc61655a26662f2552ee; \
 CLIENT_LANGUAGE=python-asyncio; \
 CLEANUP_DIRS=(client/apis client/models docs test); \
@@ -61,35 +60,7 @@ find "${OUTPUT_DIR}/client" -type f -name \*.py ! -name '__init__.py' -exec sed 
 # workaround https://github.com/swagger-api/swagger-codegen/pull/8204
 # + closing session
 # + support application/strategic-merge-patch+json
-echo '21a22,23
-> import asyncio
-> 
-81a84,86
->     def __del__(self):
->         asyncio.ensure_future(self.pool_manager.close())
-> 
-130a136,138
->                 if headers['Content-Type'] == 'application/json-patch+json':
->                     if not isinstance(body, list):
->                         headers['Content-Type'] = 'application/strategic-merge-patch+json'
-164c172,174
-<         async with self.pool_manager.request(**args) as r:
----
->         r = await self.pool_manager.request(**args)
->         if _preload_content:
-> 
-168,169c178,179
-<         # log response body
-<         logger.debug("response body: %s", r.data)
----
->             # log response body
->             logger.debug("response body: %s", r.data)
-171,172c181,182
-<         if not 200 <= r.status <= 299:
-<             raise ApiException(http_resp=r)
----
->             if not 200 <= r.status <= 299:
->                 raise ApiException(http_resp=r)' | patch "${OUTPUT_DIR}/client/rest.py"
+patch "${OUTPUT_DIR}/client/rest.py" "${SCRIPT_ROOT}/python-asyncio-rest.py.patch"
 
 # fix imports
 find "${OUTPUT_DIR}/client/" -type f -name \*.py -exec sed -i 's/import client\./import kubernetes_asyncio.client./g' {} +

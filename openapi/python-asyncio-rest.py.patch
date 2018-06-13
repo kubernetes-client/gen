@@ -1,0 +1,29 @@
+21a22,23
+> import asyncio
+> 
+81a84,86
+>     def __del__(self):
+>         asyncio.ensure_future(self.pool_manager.close())
+> 
+130a136,138
+>                 if headers['Content-Type'] == 'application/json-patch+json':
+>                     if not isinstance(body, list):
+>                         headers['Content-Type'] = 'application/strategic-merge-patch+json'
+164c172,174
+<         async with self.pool_manager.request(**args) as r:
+---
+>         r = await self.pool_manager.request(**args)
+>         if _preload_content:
+> 
+168,169c178,179
+<         # log response body
+<         logger.debug("response body: %s", r.data)
+---
+>             # log response body
+>             logger.debug("response body: %s", r.data)
+171,172c181,182
+<         if not 200 <= r.status <= 299:
+<             raise ApiException(http_resp=r)
+---
+>             if not 200 <= r.status <= 299:
+>                 raise ApiException(http_resp=r)
