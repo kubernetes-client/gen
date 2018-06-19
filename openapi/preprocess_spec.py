@@ -302,10 +302,16 @@ def main():
         help='Optional username if working on forks',
         default='kubernetes'
     )
+    argparser.add_argument(
+        'repository',
+        help='Optional repository name if working with kubernetes ecosystem projects',
+        default='kubernetes'
+    )
     args = argparser.parse_args()
 
-    spec_url = 'https://raw.githubusercontent.com/%s/kubernetes/' \
+    spec_url = 'https://raw.githubusercontent.com/%s/%s/' \
                '%s/api/openapi-spec/swagger.json' % (args.username,
+                                                     args.repository,
                                                      args.kubernetes_branch)
 
     pool = urllib3.PoolManager()
