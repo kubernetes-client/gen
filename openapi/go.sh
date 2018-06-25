@@ -25,6 +25,7 @@ if [ $# -ne 2 ]; then
     echo "  $(basename ${0}) OUTPUT_DIR SETTING_FILE_PATH"
     echo "    Setting file should define KUBERNETES_BRANCH, CLIENT_VERSION, and PACKAGE_NAME"
     echo "    Setting file can define an optional USERNAME if you're working on a fork"
+    echo "    Setting file can define an optional REPOSITORY if you're working on a ecosystem project"
     exit 1
 fi
 

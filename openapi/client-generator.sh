@@ -41,6 +41,7 @@ kubeclient::generator::generate_client() {
 
     SWAGGER_CODEGEN_COMMIT="${SWAGGER_CODEGEN_COMMIT:-v2.2.3}"
     USERNAME="${USERNAME:-kubernetes}"
+    REPOSITORY="${REPOSITORY:-kubernetes}"
 
     local output_dir=$1
     pushd "${output_dir}" > /dev/null
@@ -55,9 +56,9 @@ kubeclient::generator::generate_client() {
 
     echo "--- Building docker image..."
     if [ "${USERNAME}" != "kubernetes" ]; then
-        image_name="kubernetes-${USERNAME}-${CLIENT_LANGUAGE}-client-gen:v1"
+        image_name="${USERNAME}-${REPOSITORY}-${CLIENT_LANGUAGE}-client-gen:v1"
     else
-        image_name="kubernetes-${CLIENT_LANGUAGE}-client-gen:v1"
+        image_name="${REPOSITORY}-${CLIENT_LANGUAGE}-client-gen:v1"
     fi
     docker build "${SCRIPT_ROOT}" -t "${image_name}" \
         --build-arg SWAGGER_CODEGEN_COMMIT="${SWAGGER_CODEGEN_COMMIT}" \
@@ -76,6 +77,7 @@ kubeclient::generator::generate_client() {
         -e PACKAGE_NAME="${PACKAGE_NAME}" \
         -e SWAGGER_CODEGEN_COMMIT="${SWAGGER_CODEGEN_COMMIT}" \
         -e USERNAME="${USERNAME}" \
+        -e REPOSITORY="${REPOSITORY}" \
         -v "${output_dir}:/output_dir" \
         "${image_name}" "/output_dir"
 
