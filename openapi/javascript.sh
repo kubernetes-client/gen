@@ -46,7 +46,7 @@ popd > /dev/null
 source "${SCRIPT_ROOT}/client-generator.sh"
 source "${SETTING_FILE}"
 
-SWAGGER_CODEGEN_COMMIT=5d263e1c9cdd395d93adf061c63d5ef58a8e9ec5; \
+SWAGGER_CODEGEN_COMMIT="${SWAGGER_CODEGEN_COMMIT:-5d263e1c9cdd395d93adf061c63d5ef58a8e9ec5}"; \
 CLIENT_LANGUAGE=javascript; \
 CLEANUP_DIRS=(docs src test); \
 kubeclient::generator::generate_client "${OUTPUT_DIR}"

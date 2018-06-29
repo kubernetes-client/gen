@@ -46,7 +46,7 @@ popd > /dev/null
 source "${SCRIPT_ROOT}/client-generator.sh"
 source "${SETTING_FILE}"
 
-SWAGGER_CODEGEN_COMMIT=d2b91073e1fc499fea67141ff4c17740d25f8e83; \
+SWAGGER_CODEGEN_COMMIT="${SWAGGER_CODEGEN_COMMIT:-d2b91073e1fc499fea67141ff4c17740d25f8e83}"; \
 CLIENT_LANGUAGE=python; \
 CLEANUP_DIRS=(client/apis client/models docs test); \
 kubeclient::generator::generate_client "${OUTPUT_DIR}"

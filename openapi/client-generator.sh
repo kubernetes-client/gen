@@ -29,6 +29,7 @@ set -o pipefail
 #   PACKAGE_NAME: Name of the client package.
 #   CLIENT_LANGUAGE: Language of the client. ${CLIENT_LANGUAGE}.xml should exists.
 # Optional env vars:
+#   SWAGGER_CODEGEN_USER_ORG: swagger-codegen-user-org
 #   SWAGGER_CODEGEN_COMMIT: swagger-codegen-version
 # Input vars:
 #   $1: output directory
@@ -39,6 +40,7 @@ kubeclient::generator::generate_client() {
     : "${PACKAGE_NAME?Must set PACKAGE_NAME env var}"
     : "${CLIENT_LANGUAGE?Must set CLIENT_LANGUAGE env var}"
 
+    SWAGGER_CODEGEN_USER_ORG="${SWAGGER_CODEGEN_USER_ORG:-swagger-api}"
     SWAGGER_CODEGEN_COMMIT="${SWAGGER_CODEGEN_COMMIT:-v2.2.3}"
     USERNAME="${USERNAME:-kubernetes}"
     REPOSITORY="${REPOSITORY:-kubernetes}"
@@ -61,6 +63,7 @@ kubeclient::generator::generate_client() {
         image_name="${REPOSITORY}-${CLIENT_LANGUAGE}-client-gen:v1"
     fi
     docker build "${SCRIPT_ROOT}" -t "${image_name}" \
+        --build-arg SWAGGER_CODEGEN_USER_ORG="${SWAGGER_CODEGEN_USER_ORG}" \
         --build-arg SWAGGER_CODEGEN_COMMIT="${SWAGGER_CODEGEN_COMMIT}" \
         --build-arg GENERATION_XML_FILE="${CLIENT_LANGUAGE}.xml"
 
@@ -75,6 +78,7 @@ kubeclient::generator::generate_client() {
         -e CLIENT_VERSION="${CLIENT_VERSION}" \
         -e CLIENT_LANGUAGE="${CLIENT_LANGUAGE}" \
         -e PACKAGE_NAME="${PACKAGE_NAME}" \
+        -e SWAGGER_CODEGEN_USER_ORG="${SWAGGER_CODEGEN_USER_ORG}" \
         -e SWAGGER_CODEGEN_COMMIT="${SWAGGER_CODEGEN_COMMIT}" \
         -e USERNAME="${USERNAME}" \
         -e REPOSITORY="${REPOSITORY}" \

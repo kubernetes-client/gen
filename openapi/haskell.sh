@@ -47,7 +47,7 @@ source "${SCRIPT_ROOT}/client-generator.sh"
 source "${SETTING_FILE}"
 
 # HEAD of the 2.4.0 branch as of Jan 10, 2018.
-SWAGGER_CODEGEN_COMMIT=3930b5b0a109327b94baad0b8d1eaf25f11ee035; \
+SWAGGER_CODEGEN_COMMIT="${SWAGGER_CODEGEN_COMMIT:-3930b5b0a109327b94baad0b8d1eaf25f11ee035}"; \
 CLIENT_LANGUAGE=haskell-http-client; \
 CLEANUP_DIRS=(lib tests); \
 kubeclient::generator::generate_client "${OUTPUT_DIR}"

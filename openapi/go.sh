@@ -46,7 +46,7 @@ popd > /dev/null
 source "${SCRIPT_ROOT}/client-generator.sh"
 source "${SETTING_FILE}"
 
-SWAGGER_CODEGEN_COMMIT=v2.3.0; \
+SWAGGER_CODEGEN_COMMIT="${SWAGGER_CODEGEN_COMMIT:-v2.3.0}"; \
 CLIENT_LANGUAGE=go; \
 CLEANUP_DIRS=(pkg); \
 kubeclient::generator::generate_client "${OUTPUT_DIR}"
