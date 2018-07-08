@@ -62,6 +62,13 @@ find "${OUTPUT_DIR}/client" -type f -name \*.py ! -name '__init__.py' -exec sed 
 # + support application/strategic-merge-patch+json
 patch "${OUTPUT_DIR}/client/rest.py" "${SCRIPT_ROOT}/python-asyncio-rest.py.patch"
 
+# workaround https://github.com/swagger-api/swagger-codegen/pull/8401
+find "${OUTPUT_DIR}/client/" -type f -name \*.py -exec sed -i 's/async=/async_req=/g' {} +
+find "${OUTPUT_DIR}/client/" -type f -name \*.py -exec sed -i 's/async bool/async_req bool/g' {} +
+find "${OUTPUT_DIR}/client/" -type f -name \*.py -exec sed -i "s/'async'/'async_req'/g" {} +
+find "${OUTPUT_DIR}/client/" -type f -name \*.py -exec sed -i "s/async parameter/async_req parameter/g" {} +
+find "${OUTPUT_DIR}/client/" -type f -name \*.py -exec sed -i "s/if not async/if not async_req/g" {} +
+
 # fix imports
 find "${OUTPUT_DIR}/client/" -type f -name \*.py -exec sed -i 's/import client\./import kubernetes_asyncio.client./g' {} +
 find "${OUTPUT_DIR}/client/" -type f -name \*.py -exec sed -i 's/from client/from kubernetes_asyncio.client/g' {} +
