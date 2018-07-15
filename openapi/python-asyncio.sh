@@ -44,27 +44,58 @@ popd > /dev/null
 source "${SCRIPT_ROOT}/client-generator.sh"
 source "${SETTING_FILE}"
 
-SWAGGER_CODEGEN_COMMIT=f9b2839a3076f26db1b8fc61655a26662f2552ee; \
-CLIENT_LANGUAGE=python-asyncio; \
-CLEANUP_DIRS=(client/apis client/models docs test); \
-kubeclient::generator::generate_client "${OUTPUT_DIR}"
+if [ ${PACKAGE_NAME} == "kubernetes_asyncio" ]; then
 
-echo "--- Patching generated code..."
-find "${OUTPUT_DIR}/test" -type f -name \*.py -exec sed -i 's/\bclient/kubernetes_asyncio.client/g' {} +
-find "${OUTPUT_DIR}" -path "${OUTPUT_DIR}/base" -prune -o -type f -a -name \*.md -exec sed -i 's/\bclient/kubernetes_asyncio.client/g' {} +
-find "${OUTPUT_DIR}" -path "${OUTPUT_DIR}/base" -prune -o -type f -a -name \*.md -exec sed -i 's/kubernetes_asyncio.client-python/client-python/g' {} +
+  # --------------------------------------------------
+  # For "kubernetes_asyncio" client library.
+  # --------------------------------------------------
 
-# workaround https://github.com/swagger-api/swagger-codegen/pull/7905
-find "${OUTPUT_DIR}/client" -type f -name \*.py ! -name '__init__.py' -exec sed -i '/^from .*models.*/d' {} \;
+  SWAGGER_CODEGEN_COMMIT=f9b2839a3076f26db1b8fc61655a26662f2552ee; \
+  CLIENT_LANGUAGE=python-asyncio; \
+  CLEANUP_DIRS=(client/apis client/models docs test); \
+  kubeclient::generator::generate_client "${OUTPUT_DIR}"
 
-# workaround https://github.com/swagger-api/swagger-codegen/pull/8204
-# + closing session
-# + support application/strategic-merge-patch+json
-patch "${OUTPUT_DIR}/client/rest.py" "${SCRIPT_ROOT}/python-asyncio-rest.py.patch"
+  echo "--- Patching generated code..."
+  find "${OUTPUT_DIR}/test" -type f -name \*.py -exec sed -i 's/\bclient/kubernetes_asyncio.client/g' {} +
+  find "${OUTPUT_DIR}" -path "${OUTPUT_DIR}/base" -prune -o -type f -a -name \*.md -exec sed -i 's/\bclient/kubernetes_asyncio.client/g' {} +
+  find "${OUTPUT_DIR}" -path "${OUTPUT_DIR}/base" -prune -o -type f -a -name \*.md -exec sed -i 's/kubernetes_asyncio.client-python/client-python/g' {} +
 
-# fix imports
-find "${OUTPUT_DIR}/client/" -type f -name \*.py -exec sed -i 's/import client\./import kubernetes_asyncio.client./g' {} +
-find "${OUTPUT_DIR}/client/" -type f -name \*.py -exec sed -i 's/from client/from kubernetes_asyncio.client/g' {} +
-find "${OUTPUT_DIR}/client/" -type f -name \*.py -exec sed -i 's/getattr(client\.models/getattr(kubernetes_asyncio.client.models/g' {} +
+  # workaround https://github.com/swagger-api/swagger-codegen/pull/7905
+  find "${OUTPUT_DIR}/client" -type f -name \*.py ! -name '__init__.py' -exec sed -i '/^from .*models.*/d' {} \;
+
+  # workaround https://github.com/swagger-api/swagger-codegen/pull/8204
+  # + closing session
+  # + support application/strategic-merge-patch+json
+  patch "${OUTPUT_DIR}/client/rest.py" "${SCRIPT_ROOT}/python-asyncio-rest.py.patch"
+
+  # workaround https://github.com/swagger-api/swagger-codegen/pull/8401
+  find "${OUTPUT_DIR}/client/" -type f -name \*.py -exec sed -i 's/async=/async_req=/g' {} +
+  find "${OUTPUT_DIR}/client/" -type f -name \*.py -exec sed -i 's/async bool/async_req bool/g' {} +
+  find "${OUTPUT_DIR}/client/" -type f -name \*.py -exec sed -i "s/'async'/'async_req'/g" {} +
+  find "${OUTPUT_DIR}/client/" -type f -name \*.py -exec sed -i "s/async parameter/async_req parameter/g" {} +
+  find "${OUTPUT_DIR}/client/" -type f -name \*.py -exec sed -i "s/if not async/if not async_req/g" {} +
+
+  # fix imports
+  find "${OUTPUT_DIR}/client/" -type f -name \*.py -exec sed -i 's/import client\./import kubernetes_asyncio.client./g' {} +
+  find "${OUTPUT_DIR}/client/" -type f -name \*.py -exec sed -i 's/from client/from kubernetes_asyncio.client/g' {} +
+  find "${OUTPUT_DIR}/client/" -type f -name \*.py -exec sed -i 's/getattr(client\.models/getattr(kubernetes_asyncio.client.models/g' {} +
+
+else
+  # --------------------------------------------------
+  # Generic client library build.
+  # --------------------------------------------------
+  SWAGGER_CODEGEN_COMMIT=v2.3.1; \
+  CLIENT_LANGUAGE=python-asyncio; \
+  CLEANUP_DIRS=(client/apis client/models docs test); \
+  kubeclient::generator::generate_client "${OUTPUT_DIR}"
+
+  echo "--- Patching generated code..."
+  find "${OUTPUT_DIR}/test" -type f -name \*.py -exec sed -i "s/\\bclient/${PACKAGE_NAME}.client/g" {} +
+  find "${OUTPUT_DIR}" -path "${OUTPUT_DIR}/base" -prune -o -type f -a -name \*.md -exec sed -i "s/\\bclient/${PACKAGE_NAME}.client/g" {} +
+  find "${OUTPUT_DIR}" -path "${OUTPUT_DIR}/base" -prune -o -type f -a -name \*.md -exec sed -i "s/${PACKAGE_NAME}.client-python/client-python/g" {} +
+
+  # The imports in `v1beta1_json_schema_props.py` are circular - remove them.
+  sed -i "/^from ${PACKAGE_NAME}\.models.*/d" "${PACKAGE_NAME}/${PACKAGE_NAME}/models/v1beta1_json_schema_props.py"
+fi
 
 echo "---Done."
