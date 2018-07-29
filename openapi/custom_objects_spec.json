@@ -435,6 +435,298 @@
       }
     }
   },
+  "/apis/{group}/{version}/{plural}/{name}/status": {
+    "parameters": [
+      {
+        "name": "group",
+        "in": "path",
+        "required": true,
+        "description": "the custom resource's group",
+        "type": "string"
+      },
+      {
+        "name": "version",
+        "in": "path",
+        "required": true,
+        "description": "the custom resource's version",
+        "type": "string"
+      },
+      {
+        "name": "plural",
+        "in": "path",
+        "required": true,
+        "description": "the custom resource's plural name. For TPRs this would be lowercase plural kind.",
+        "type": "string"
+      },
+      {
+        "name": "name",
+        "in": "path",
+        "required": true,
+        "description": "the custom object's name",
+        "type": "string"
+      }
+    ],
+    "get": {
+      "description": "read status of the specified cluster scoped custom object",
+      "consumes": [
+        "*/*"
+      ],
+      "produces": [
+        "application/json",
+        "application/yaml",
+        "application/vnd.kubernetes.protobuf"
+      ],
+      "schemes": [
+        "https"
+      ],
+      "tags": [
+        "custom_objects"
+      ],
+      "operationId": "getClusterCustomObjectStatus",
+      "responses": {
+        "200": {
+          "description": "OK",
+          "schema": {
+            "type": "object"
+          }
+        },
+        "401": {
+          "description": "Unauthorized"
+        }
+      }
+    },
+    "put": {
+      "description": "replace status of the cluster scoped specified custom object",
+      "consumes": [
+        "*/*"
+      ],
+      "produces": [
+        "application/json",
+        "application/yaml",
+        "application/vnd.kubernetes.protobuf"
+      ],
+      "schemes": [
+        "https"
+      ],
+      "tags": [
+        "custom_objects"
+      ],
+      "operationId": "replaceClusterCustomObjectStatus",
+      "parameters": [
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "type": "object"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "OK",
+          "schema": {
+            "type": "object"
+          }
+        },
+        "201": {
+          "description": "Created",
+          "schema": {
+            "type": "object"
+          }
+        },
+        "401": {
+          "description": "Unauthorized"
+        }
+      }
+    },
+    "patch": {
+      "description": "partially update status of the specified cluster scoped custom object",
+      "consumes": [
+        "application/merge-patch+json"
+      ],
+      "produces": [
+        "application/json",
+        "application/yaml",
+        "application/vnd.kubernetes.protobuf"
+      ],
+      "schemes": [
+        "https"
+      ],
+      "tags": [
+        "custom_objects"
+      ],
+      "operationId": "patchClusterCustomObjectStatus",
+      "parameters": [
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "description": "The JSON schema of the Resource to patch.",
+            "type": "object"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "OK",
+          "schema": {
+            "type": "object"
+          }
+        },
+        "401": {
+          "description": "Unauthorized"
+        }
+      }
+    }
+  },
+  "/apis/{group}/{version}/{plural}/{name}/scale": {
+    "parameters": [
+      {
+        "name": "group",
+        "in": "path",
+        "required": true,
+        "description": "the custom resource's group",
+        "type": "string"
+      },
+      {
+        "name": "version",
+        "in": "path",
+        "required": true,
+        "description": "the custom resource's version",
+        "type": "string"
+      },
+      {
+        "name": "plural",
+        "in": "path",
+        "required": true,
+        "description": "the custom resource's plural name. For TPRs this would be lowercase plural kind.",
+        "type": "string"
+      },
+      {
+        "name": "name",
+        "in": "path",
+        "required": true,
+        "description": "the custom object's name",
+        "type": "string"
+      }
+    ],
+    "get": {
+      "description": "read scale of the specified custom object",
+      "consumes": [
+        "*/*"
+      ],
+      "produces": [
+        "application/json",
+        "application/yaml",
+        "application/vnd.kubernetes.protobuf"
+      ],
+      "schemes": [
+        "https"
+      ],
+      "tags": [
+        "custom_objects"
+      ],
+      "operationId": "getClusterCustomObjectScale",
+      "responses": {
+        "200": {
+          "description": "OK",
+          "schema": {
+            "type": "object"
+          }
+        },
+        "401": {
+          "description": "Unauthorized"
+        }
+      }
+    },
+    "put": {
+      "description": "replace scale of the specified cluster scoped custom object",
+      "consumes": [
+        "*/*"
+      ],
+      "produces": [
+        "application/json",
+        "application/yaml",
+        "application/vnd.kubernetes.protobuf"
+      ],
+      "schemes": [
+        "https"
+      ],
+      "tags": [
+        "custom_objects"
+      ],
+      "operationId": "replaceClusterCustomObjectScale",
+      "parameters": [
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "type": "object"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "OK",
+          "schema": {
+            "type": "object"
+          }
+        },
+        "201": {
+          "description": "Created",
+          "schema": {
+            "type": "object"
+          }
+          }
+        },
+        "401": {
+          "description": "Unauthorized"
+        }
+    },
+    "patch": {
+      "description": "partially update scale of the specified cluster scoped custom object",
+      "consumes": [
+        "application/merge-patch+json"
+      ],
+      "produces": [
+        "application/json",
+        "application/yaml",
+        "application/vnd.kubernetes.protobuf"
+      ],
+      "schemes": [
+        "https"
+      ],
+      "tags": [
+        "custom_objects"
+      ],
+      "operationId": "patchClusterCustomObjectScale",
+      "parameters": [
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "description": "The JSON schema of the Resource to patch.",
+            "type": "object"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "OK",
+          "schema": {
+            "type": "object"
+          }
+        },
+        "401": {
+          "description": "Unauthorized"
+        }
+      }
+    }
+  },
   "/apis/{group}/{version}/namespaces/{namespace}/{plural}/{name}": {
     "parameters": [
       {
@@ -618,6 +910,312 @@
           "required": true,
           "description": "The JSON schema of the Resource to replace.",
           "schema": {
+            "type": "object"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "OK",
+          "schema": {
+            "type": "object"
+          }
+        },
+        "401": {
+          "description": "Unauthorized"
+        }
+      }
+    }
+  },
+  "/apis/{group}/{version}/namespaces/{namespace}/{plural}/{name}/status": {
+    "parameters": [
+      {
+        "name": "group",
+        "in": "path",
+        "required": true,
+        "description": "the custom resource's group",
+        "type": "string"
+      },
+      {
+        "name": "version",
+        "in": "path",
+        "required": true,
+        "description": "the custom resource's version",
+        "type": "string"
+      },
+      {
+        "name": "namespace",
+        "in": "path",
+        "required": true,
+        "description": "The custom resource's namespace",
+        "type": "string"
+      },
+      {
+        "name": "plural",
+        "in": "path",
+        "required": true,
+        "description": "the custom resource's plural name. For TPRs this would be lowercase plural kind.",
+        "type": "string"
+      },
+      {
+        "name": "name",
+        "in": "path",
+        "required": true,
+        "description": "the custom object's name",
+        "type": "string"
+      }
+    ],
+    "get": {
+      "description": "read status of the specified namespace scoped custom object",
+      "consumes": [
+        "*/*"
+      ],
+      "produces": [
+        "application/json",
+        "application/yaml",
+        "application/vnd.kubernetes.protobuf"
+      ],
+      "schemes": [
+        "https"
+      ],
+      "tags": [
+        "custom_objects"
+      ],
+      "operationId": "getNamespacedCustomObjectStatus",
+      "responses": {
+        "200": {
+          "description": "OK",
+          "schema": {
+            "type": "object"
+          }
+        },
+        "401": {
+          "description": "Unauthorized"
+        }
+      }
+    },
+    "put": {
+      "description": "replace status of the specified namespace scoped custom object",
+      "consumes": [
+        "*/*"
+      ],
+      "produces": [
+        "application/json",
+        "application/yaml",
+        "application/vnd.kubernetes.protobuf"
+      ],
+      "schemes": [
+        "https"
+      ],
+      "tags": [
+        "custom_objects"
+      ],
+      "operationId": "replaceNamespacedCustomObjectStatus",
+      "parameters": [
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "type": "object"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "OK",
+          "schema": {
+            "type": "object"
+          }
+        },
+        "201": {
+          "description": "Created",
+          "schema": {
+            "type": "object"
+          }
+        },
+        "401": {
+          "description": "Unauthorized"
+        }
+      }
+    },
+    "patch": {
+      "description": "partially update status of the specified namespace scoped custom object",
+      "consumes": [
+        "application/merge-patch+json"
+      ],
+      "produces": [
+        "application/json",
+        "application/yaml",
+        "application/vnd.kubernetes.protobuf"
+      ],
+      "schemes": [
+        "https"
+      ],
+      "tags": [
+        "custom_objects"
+      ],
+      "operationId": "patchNamespacedCustomObjectStatus",
+      "parameters": [
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "description": "The JSON schema of the Resource to patch.",
+            "type": "object"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "OK",
+          "schema": {
+            "type": "object"
+          }
+        },
+        "401": {
+          "description": "Unauthorized"
+        }
+      }
+    }
+  },
+  "/apis/{group}/{version}/namespaces/{namespace}/{plural}/{name}/scale": {
+    "parameters": [
+      {
+        "name": "group",
+        "in": "path",
+        "required": true,
+        "description": "the custom resource's group",
+        "type": "string"
+      },
+      {
+        "name": "version",
+        "in": "path",
+        "required": true,
+        "description": "the custom resource's version",
+        "type": "string"
+      },
+      {
+        "name": "namespace",
+        "in": "path",
+        "required": true,
+        "description": "The custom resource's namespace",
+        "type": "string"
+      },
+      {
+        "name": "plural",
+        "in": "path",
+        "required": true,
+        "description": "the custom resource's plural name. For TPRs this would be lowercase plural kind.",
+        "type": "string"
+      },
+      {
+        "name": "name",
+        "in": "path",
+        "required": true,
+        "description": "the custom object's name",
+        "type": "string"
+      }
+    ],
+    "get": {
+      "description": "read scale of the specified namespace scoped custom object",
+      "consumes": [
+        "*/*"
+      ],
+      "produces": [
+        "application/json",
+        "application/yaml",
+        "application/vnd.kubernetes.protobuf"
+      ],
+      "schemes": [
+        "https"
+      ],
+      "tags": [
+        "custom_objects"
+      ],
+      "operationId": "getNamespacedCustomObjectScale",
+      "responses": {
+        "200": {
+          "description": "OK",
+          "schema": {
+            "type": "object"
+          }
+        },
+        "401": {
+          "description": "Unauthorized"
+        }
+      }
+    },
+    "put": {
+      "description": "replace scale of the specified namespace scoped custom object",
+      "consumes": [
+        "*/*"
+      ],
+      "produces": [
+        "application/json",
+        "application/yaml",
+        "application/vnd.kubernetes.protobuf"
+      ],
+      "schemes": [
+        "https"
+      ],
+      "tags": [
+        "custom_objects"
+      ],
+      "operationId": "replaceNamespacedCustomObjectScale",
+      "parameters": [
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "type": "object"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "OK",
+          "schema": {
+            "type": "object"
+          }
+        },
+        "201": {
+          "description": "Created",
+          "schema": {
+            "type": "object"
+          }
+          }
+        },
+        "401": {
+          "description": "Unauthorized"
+        }
+    },
+    "patch": {
+      "description": "partially update scale of the specified namespace scoped custom object",
+      "consumes": [
+        "application/merge-patch+json"
+      ],
+      "produces": [
+        "application/json",
+        "application/yaml",
+        "application/vnd.kubernetes.protobuf"
+      ],
+      "schemes": [
+        "https"
+      ],
+      "tags": [
+        "custom_objects"
+      ],
+      "operationId": "patchNamespacedCustomObjectScale",
+      "parameters": [
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "description": "The JSON schema of the Resource to patch.",
             "type": "object"
           }
         }
