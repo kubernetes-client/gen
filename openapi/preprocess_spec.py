@@ -317,7 +317,7 @@ def main():
     pool = urllib3.PoolManager()
     with pool.request('GET', spec_url, preload_content=False) as response:
         if response.status != 200:
-            print("Error downloading spec file. Reason: %s" % response.reason)
+            print("Error downloading spec file %s. Reason: %s" % (spec_url, response.reason))
             return 1
         in_spec = json.load(response, object_pairs_hook=OrderedDict)
         write_json(args.output_spec_path + ".unprocessed", in_spec)
