@@ -680,11 +680,11 @@
           "schema": {
             "type": "object"
           }
-          }
-        },
+          },
         "401": {
           "description": "Unauthorized"
         }
+      }
     },
     "patch": {
       "description": "partially update scale of the specified cluster scoped custom object",
@@ -1186,11 +1186,11 @@
           "schema": {
             "type": "object"
           }
-          }
         },
         "401": {
           "description": "Unauthorized"
         }
+      }
     },
     "patch": {
       "description": "partially update scale of the specified namespace scoped custom object",
