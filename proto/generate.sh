@@ -52,7 +52,7 @@ files="k8s.io/apimachinery/pkg/api/resource/generated.proto;Resource \
        k8s.io/api/apps/v1beta1/generated.proto;V1beta1Apps \
        k8s.io/api/authentication/v1/generated.proto;V1Authentication \
        k8s.io/api/authentication/v1beta1/generated.proto;V1beta1Authentication \
-       k8s.io/api/admission/v1alpha1/generated.proto;V1alpha1Admission \
+       k8s.io/api/admission/v1beta1/generated.proto;V1beta1Admission \
        k8s.io/api/policy/v1beta1/generated.proto;V1beta1Policy \
        k8s.io/api/core/v1/generated.proto;V1 \
        k8s.io/api/autoscaling/v1/generated.proto;V1Autoscaling \

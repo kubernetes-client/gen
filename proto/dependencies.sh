@@ -41,7 +41,7 @@ mkdir -p k8s.io/api/apps/v1
 mkdir -p k8s.io/api/apps/v1beta1
 mkdir -p k8s.io/api/authentication/v1
 mkdir -p k8s.io/api/authentication/v1beta1
-mkdir -p k8s.io/api/admission/v1alpha1
+mkdir -p k8s.io/api/admission/v1beta1
 mkdir -p k8s.io/api/policy/v1beta1
 mkdir -p k8s.io/api/core/v1
 mkdir -p k8s.io/api/autoscaling/v1
@@ -88,7 +88,7 @@ curl -s ${base}/api/master/apps/v1/generated.proto > k8s.io/api/apps/v1/generate
 curl -s ${base}/api/master/apps/v1beta1/generated.proto > k8s.io/api/apps/v1beta1/generated.proto
 curl -s ${base}/api/master/authentication/v1/generated.proto > k8s.io/api/authentication/v1/generated.proto
 curl -s ${base}/api/master/authentication/v1beta1/generated.proto > k8s.io/api/authentication/v1beta1/generated.proto
-curl -s ${base}/api/master/admission/v1alpha1/generated.proto > k8s.io/api/admission/v1alpha1/generated.proto
+curl -s ${base}/api/master/admission/v1beta1/generated.proto > k8s.io/api/admission/v1beta1/generated.proto
 curl -s ${base}/api/master/policy/v1beta1/generated.proto > k8s.io/api/policy/v1beta1/generated.proto
 curl -s ${base}/api/master/core/v1/generated.proto > k8s.io/api/core/v1/generated.proto
 curl -s ${base}/api/master/autoscaling/v1/generated.proto > k8s.io/api/autoscaling/v1/generated.proto
