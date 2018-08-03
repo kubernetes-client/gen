@@ -16,7 +16,7 @@
 
 echo 'Installing proto compiler'
 
-version=3.4.0
+version=3.6.1
 file=protoc-${version}-linux-x86_64.zip
 
 wget https://github.com/google/protobuf/releases/download/v${version}/${file}
