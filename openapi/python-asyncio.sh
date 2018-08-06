@@ -45,7 +45,7 @@ source "${SCRIPT_ROOT}/client-generator.sh"
 source "${SETTING_FILE}"
 
 # Client specific Swagger branch to use.
-if [ ${PACKAGE_NAME} == "kubernetes_asyncio" ]; then
+if [ ${PACKAGE_NAME} == "client" ]; then
     SWAGGER_CODEGEN_COMMIT=f9b2839a3076f26db1b8fc61655a26662f2552ee
 else
     SWAGGER_CODEGEN_COMMIT=v2.3.1
@@ -63,7 +63,7 @@ find "${OUTPUT_DIR}" -path "${OUTPUT_DIR}/base" -prune -o -type f -a -name \*.md
 find "${OUTPUT_DIR}" -path "${OUTPUT_DIR}/base" -prune -o -type f -a -name \*.md -exec sed -i "s/${PACKAGE_NAME}.client-python/client-python/g" {} +
 
 # Client specific post-processing of the generated Python wrappers.
-if [ ${PACKAGE_NAME} == "kubernetes_asyncio" ]; then
+if [ ${PACKAGE_NAME} == "client" ]; then
   # workaround https://github.com/swagger-api/swagger-codegen/pull/7905
   find "${OUTPUT_DIR}/client" -type f -name \*.py ! -name '__init__.py' -exec sed -i '/^from .*models.*/d' {} \;
 
