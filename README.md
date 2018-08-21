@@ -34,3 +34,6 @@ cd ${CLIENT_ROOT}/...
 ${GEN_REPO_ROOT}/openapi/autoupdate.sh
 ```
 
+## Contributing
+
+Please see [CONTRIBUTING.md](CONTRIBUTING.md) for instructions on how to contribute.
