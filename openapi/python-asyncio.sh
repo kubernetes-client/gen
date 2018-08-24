@@ -71,6 +71,8 @@ if [ ${PACKAGE_NAME} == "client" ]; then
   # workaround https://github.com/swagger-api/swagger-codegen/pull/8204
   # + closing session
   # + support application/strategic-merge-patch+json
+  # workaround https://github.com/swagger-api/swagger-codegen/pull/8507
+  # + aiohttp without verify_ssl
   patch "${OUTPUT_DIR}/client/rest.py" "${SCRIPT_ROOT}/python-asyncio-rest.py.patch"
 
   # workaround https://github.com/swagger-api/swagger-codegen/pull/8401
