@@ -58,12 +58,13 @@ kubeclient::generator::generate_client "${OUTPUT_DIR}"
 
 # Generic patches to the generated Python code, most notably renaming the library.
 echo "--- Patching generated code..."
-find "${OUTPUT_DIR}/test" -type f -name \*.py -exec sed -i "s/\\bclient/${PACKAGE_NAME}.client/g" {} +
-find "${OUTPUT_DIR}" -path "${OUTPUT_DIR}/base" -prune -o -type f -a -name \*.md -exec sed -i "s/\\bclient/${PACKAGE_NAME}.client/g" {} +
-find "${OUTPUT_DIR}" -path "${OUTPUT_DIR}/base" -prune -o -type f -a -name \*.md -exec sed -i "s/${PACKAGE_NAME}.client-python/client-python/g" {} +
 
-# Client specific post-processing of the generated Python wrappers.
+# Post-processing of the generated Python wrapper.
 if [ ${PACKAGE_NAME} == "client" ]; then
+  find "${OUTPUT_DIR}/test" -type f -name \*.py -exec sed -i 's/\bclient/kubernetes_asyncio.client/g' {} +
+  find "${OUTPUT_DIR}" -path "${OUTPUT_DIR}/base" -prune -o -type f -a -name \*.md -exec sed -i 's/\bclient/kubernetes_asyncio.client/g' {} +
+  find "${OUTPUT_DIR}" -path "${OUTPUT_DIR}/base" -prune -o -type f -a -name \*.md -exec sed -i 's/kubernetes_asyncio.client-python/client-python/g' {} +
+
   # workaround https://github.com/swagger-api/swagger-codegen/pull/7905
   find "${OUTPUT_DIR}/client" -type f -name \*.py ! -name '__init__.py' -exec sed -i '/^from .*models.*/d' {} \;
 
@@ -83,8 +84,11 @@ if [ ${PACKAGE_NAME} == "client" ]; then
   find "${OUTPUT_DIR}/client/" -type f -name \*.py -exec sed -i 's/import client\./import kubernetes_asyncio.client./g' {} +
   find "${OUTPUT_DIR}/client/" -type f -name \*.py -exec sed -i 's/from client/from kubernetes_asyncio.client/g' {} +
   find "${OUTPUT_DIR}/client/" -type f -name \*.py -exec sed -i 's/getattr(client\.models/getattr(kubernetes_asyncio.client.models/g' {} +
-
 else
+  find "${OUTPUT_DIR}/test" -type f -name \*.py -exec sed -i "s/\\bclient/${PACKAGE_NAME}.client/g" {} +
+  find "${OUTPUT_DIR}" -path "${OUTPUT_DIR}/base" -prune -o -type f -a -name \*.md -exec sed -i "s/\\bclient/${PACKAGE_NAME}.client/g" {} +
+  find "${OUTPUT_DIR}" -path "${OUTPUT_DIR}/base" -prune -o -type f -a -name \*.md -exec sed -i "s/${PACKAGE_NAME}.client-python/client-python/g" {} +
+
   # Remove circular imports in `v1beta1_json_schema_props.py`.
   sed -i "/^from ${PACKAGE_NAME}\.models.*/d" "${PACKAGE_NAME}/${PACKAGE_NAME}/models/v1beta1_json_schema_props.py"
 fi
