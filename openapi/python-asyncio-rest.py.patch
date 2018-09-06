@@ -1,6 +1,10 @@
 21a22,23
 > import asyncio
 > 
+67c69
+<             ssl_context=ssl_context,
+---
+>             ssl_context=ssl_context if configuration.verify_ssl else None,
 81a84,86
 >     def __del__(self):
 >         asyncio.ensure_future(self.pool_manager.close())
