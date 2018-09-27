@@ -28,7 +28,7 @@ RUN apt-get update && apt-get -y install \
     libunwind8-dev \
     && rm -rf /var/lib/apt/lists/*
 
-RUN npm install -g autorest@preview #TODO-krabhishek8260: Remove preview as soon as the required bits are in release version
+RUN npm install -g autorest
 
 # Check out specific commit of swagger-codegen
 RUN mkdir /source && \
