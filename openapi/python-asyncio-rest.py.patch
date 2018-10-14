@@ -1,31 +1,37 @@
 21a22,23
 > import asyncio
 > 
-67c69
+64a67,70
+>         if not configuration.verify_ssl:
+>             ssl_context.check_hostname = False
+>             ssl_context.verify_mode = ssl.CERT_NONE
+>
+67,68c73
 <             ssl_context=ssl_context,
+<             verify_ssl=configuration.verify_ssl
 ---
->             ssl_context=ssl_context if configuration.verify_ssl else None,
-81a84,86
+>             ssl_context=ssl_context
+81a87,89
 >     def __del__(self):
 >         asyncio.ensure_future(self.pool_manager.close())
 > 
-130a136,138
+130a139,141
 >                 if headers['Content-Type'] == 'application/json-patch+json':
 >                     if not isinstance(body, list):
 >                         headers['Content-Type'] = 'application/strategic-merge-patch+json'
-164c172,174
+164c175,177
 <         async with self.pool_manager.request(**args) as r:
 ---
 >         r = await self.pool_manager.request(**args)
 >         if _preload_content:
 > 
-168,169c178,179
+168,169c181,182
 <         # log response body
 <         logger.debug("response body: %s", r.data)
 ---
 >             # log response body
 >             logger.debug("response body: %s", r.data)
-171,172c181,182
+171,172c184,185
 <         if not 200 <= r.status <= 299:
 <             raise ApiException(http_resp=r)
 ---
