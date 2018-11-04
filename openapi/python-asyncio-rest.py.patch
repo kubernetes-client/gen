@@ -5,7 +5,7 @@
 >         if not configuration.verify_ssl:
 >             ssl_context.check_hostname = False
 >             ssl_context.verify_mode = ssl.CERT_NONE
->
+> 
 67,68c73
 <             ssl_context=ssl_context,
 <             verify_ssl=configuration.verify_ssl
