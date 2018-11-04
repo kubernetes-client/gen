@@ -22,7 +22,7 @@ are normally:
 
 - `KUBERNETES_BRANCH`: The kubernetes branch to get OpenAPI spec from. e.g. "master"
 - `CLIENT_VERSION`: Client version string. e.g. "1.0.0b1"
-- `PACKAGE_NAME`: Package name for the generated client. e.g. "kubernetes" 
+- `PACKAGE_NAME`: Package name for the generated client. e.g. "kubernetes"
 
 Example settings file for python-client:
 
