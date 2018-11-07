@@ -26,7 +26,7 @@ are normally:
 
 Example settings file for python-client:
 
-export KUBERNETES_BRANCH="master" 
+export KUBERNETES_BRANCH="master"
 export CLIENT_VERSION="8.0.0b1"
 export PACKAGE_NAME="client"
 
