@@ -24,6 +24,17 @@ are normally:
 - `CLIENT_VERSION`: Client version string. e.g. "1.0.0b1"
 - `PACKAGE_NAME`: Package name for the generated client. e.g. "kubernetes"
 
+Example settings file for python-client:
+
+export KUBERNETES_BRANCH="master"
+export CLIENT_VERSION="8.0.0b1"
+export PACKAGE_NAME="client"
+
+Note: For generating the client for any language, the PACKAGE_NAME should be "client".
+      You can use the latest version for the CLIENT_VERSION. It's displayed here for
+      the python-client ( https://github.com/kubernetes-client/python ), and similarly
+      for other language clients. 
+
 Recommended structure is to generate client in a folder called `kubernetes` at the root of
 the client repo and put all settings in a file named `settings` at the root of the repo.
 If you followed these recommendations, you can simply run autoupdate script anywhere inside
