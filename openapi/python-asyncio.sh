@@ -82,6 +82,9 @@ if [ ${PACKAGE_NAME} == "client" ]; then
   find "${OUTPUT_DIR}/client/" -type f -name \*.py -exec sed -i "s/async parameter/async_req parameter/g" {} +
   find "${OUTPUT_DIR}/client/" -type f -name \*.py -exec sed -i "s/if not async/if not async_req/g" {} +
 
+  # workaround https://github.com/swagger-api/swagger-codegen/pull/8061 (thread pool only on demand)
+  patch "${OUTPUT_DIR}/client/api_client.py" "${SCRIPT_ROOT}/python-asyncio-api_client.py.patch"
+
   # fix imports
   find "${OUTPUT_DIR}/client/" -type f -name \*.py -exec sed -i 's/import client\./import kubernetes_asyncio.client./g' {} +
   find "${OUTPUT_DIR}/client/" -type f -name \*.py -exec sed -i 's/from client/from kubernetes_asyncio.client/g' {} +
