@@ -21,6 +21,7 @@
             <configuration>
               <inputSpec>${generator.spec.path}</inputSpec>
               <language>java</language>
+              <templateDirectory>${generator.output.path}/hack/okhttp-gson</templateDirectory>
               <gitUserId>kubernetes-client</gitUserId>
               <gitRepoId>client-java</gitRepoId>
               <configOptions>
