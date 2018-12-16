@@ -66,6 +66,7 @@ if [ ${PACKAGE_NAME} == "client" ]; then
   find "${OUTPUT_DIR}" -path "${OUTPUT_DIR}/base" -prune -o -type f -a -name \*.md -exec sed -i 's/kubernetes_asyncio.client-python/client-python/g' {} +
 
   # workaround https://github.com/swagger-api/swagger-codegen/pull/7905
+  # TODO: Remove this when above merges
   find "${OUTPUT_DIR}/client" -type f -name \*.py ! -name '__init__.py' -exec sed -i '/^from .*models.*/d' {} \;
 
   # workaround https://github.com/swagger-api/swagger-codegen/pull/8204
@@ -73,9 +74,12 @@ if [ ${PACKAGE_NAME} == "client" ]; then
   # + support application/strategic-merge-patch+json
   # workaround https://github.com/swagger-api/swagger-codegen/pull/8797
   # + aiohttp without verify_ssl
+  # TODO: Remove this when above merges
   patch "${OUTPUT_DIR}/client/rest.py" "${SCRIPT_ROOT}/python-asyncio-rest.py.patch"
 
   # workaround https://github.com/swagger-api/swagger-codegen/pull/8401
+  # TODO: Remove this when above merges
+
   find "${OUTPUT_DIR}/client/" -type f -name \*.py -exec sed -i 's/async=/async_req=/g' {} +
   find "${OUTPUT_DIR}/client/" -type f -name \*.py -exec sed -i 's/async bool/async_req bool/g' {} +
   find "${OUTPUT_DIR}/client/" -type f -name \*.py -exec sed -i "s/'async'/'async_req'/g" {} +
@@ -83,6 +87,7 @@ if [ ${PACKAGE_NAME} == "client" ]; then
   find "${OUTPUT_DIR}/client/" -type f -name \*.py -exec sed -i "s/if not async/if not async_req/g" {} +
 
   # workaround https://github.com/swagger-api/swagger-codegen/pull/8061 (thread pool only on demand)
+  # TODO: Remove this when above merges
   patch "${OUTPUT_DIR}/client/api_client.py" "${SCRIPT_ROOT}/python-asyncio-api_client.py.patch"
 
   # fix imports
