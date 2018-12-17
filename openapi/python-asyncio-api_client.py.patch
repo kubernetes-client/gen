@@ -1,0 +1,27 @@
+61a62
+>     _pool = None
+64c65
+<                  cookie=None):
+---
+>                  cookie=None, pool_threads=None):
+67a69
+>         self.pool_threads = pool_threads
+69d70
+<         self.pool = ThreadPool()
+79,80c80,92
+<         self.pool.close()
+<         self.pool.join()
+---
+>         if self._pool:
+>             self._pool.close()
+>             self._pool.join()
+>             self._pool = None
+> 
+>     @property
+>     def pool(self):
+>         """Create thread pool on first request
+>          avoids instantiating unused threadpool for blocking clients.
+>         """
+>         if self._pool is None:
+>             self._pool = ThreadPool(self.pool_threads)
+>         return self._pool
