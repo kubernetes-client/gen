@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Copyright 2017 The Kubernetes Authors.
 #
@@ -46,8 +46,8 @@ popd > /dev/null
 source "${SCRIPT_ROOT}/client-generator.sh"
 source "${SETTING_FILE}"
 
-# HEAD of the 2.4.0 branch as of Jan 10, 2018.
-SWAGGER_CODEGEN_COMMIT="${SWAGGER_CODEGEN_COMMIT:-3930b5b0a109327b94baad0b8d1eaf25f11ee035}"; \
+# Latest version of HaskellHttpClientCodegen.java as of Nov 19, 2018
+SWAGGER_CODEGEN_COMMIT="${SWAGGER_CODEGEN_COMMIT:-d0e2d7684dd3258233c3e4d838dcd7bf44055869}"; \
 CLIENT_LANGUAGE=haskell-http-client; \
 CLEANUP_DIRS=(lib tests); \
 kubeclient::generator::generate_client "${OUTPUT_DIR}"

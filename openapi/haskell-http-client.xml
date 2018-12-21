@@ -24,6 +24,8 @@
                                 <packageName>${generator.package.name}</packageName>
                                 <packageVersion>${generator.client.version}</packageVersion>
                                 <allowNonUniqueOperationIds>true</allowNonUniqueOperationIds>
+                                <cabalPackage>kubernetes-openapi</cabalPackage>
+                                <baseModule>Kubernetes.OpenAPI</baseModule>
                             </configOptions>
                         </configuration>
                     </execution>
