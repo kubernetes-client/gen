@@ -62,6 +62,13 @@
           "in": "query"
         },
         {
+          "uniqueItems": true,
+          "type": "integer",
+          "description": "Timeout for the list/watch call. This limits the duration of the call, regardless of any activity or inactivity.",
+          "name": "timeoutSeconds",
+          "in": "query"
+        },
+        {
           "name": "watch",
           "uniqueItems": true,
           "type": "boolean",
@@ -186,6 +193,13 @@
           "name": "resourceVersion",
           "in": "query"
         },
+        {
+          "uniqueItems": true,
+          "type": "integer",
+          "description": "Timeout for the list/watch call. This limits the duration of the call, regardless of any activity or inactivity.",
+          "name": "timeoutSeconds",
+          "in": "query"
+        }
         {
           "name": "watch",
           "uniqueItems": true,
