@@ -49,20 +49,21 @@ kubeclient::generator::generate_client() {
     pushd "${output_dir}" > /dev/null
     local output_dir=`pwd`
     popd > /dev/null
-    SCRIPT_ROOT=$(dirname "${BASH_SOURCE}")
+    local SCRIPT_ROOT=$(dirname "${BASH_SOURCE}")
     pushd "${SCRIPT_ROOT}" > /dev/null
     local SCRIPT_ROOT=`pwd`
     popd > /dev/null
 
     mkdir -p "${output_dir}"
 
-    echo "--- Building docker image..."
     if [ "${USERNAME}" != "kubernetes" ]; then
         image_name="${USERNAME}-${REPOSITORY}-${CLIENT_LANGUAGE}-client-gen:v1"
     else
         image_name="${REPOSITORY}-${CLIENT_LANGUAGE}-client-gen:v1"
     fi
-    docker build "${SCRIPT_ROOT}" -t "${image_name}" \
+
+    echo "--- Building docker image ${image_name}..."
+    docker build "${SCRIPT_ROOT}"/../ -f "${SCRIPT_ROOT}/Dockerfile" -t "${image_name}" \
         --build-arg SWAGGER_CODEGEN_USER_ORG="${SWAGGER_CODEGEN_USER_ORG}" \
         --build-arg SWAGGER_CODEGEN_COMMIT="${SWAGGER_CODEGEN_COMMIT}" \
         --build-arg GENERATION_XML_FILE="${CLIENT_LANGUAGE}.xml"

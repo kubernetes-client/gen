@@ -43,7 +43,7 @@ pushd "${OUTPUT_DIR}" > /dev/null
 OUTPUT_DIR=`pwd`
 popd > /dev/null
 
-source "${SCRIPT_ROOT}/client-generator.sh"
+source "${SCRIPT_ROOT}/swagger-codegen/client-generator.sh"
 source "${SETTING_FILE}"
 
 # Latest version of HaskellHttpClientCodegen.java as of Nov 19, 2018
