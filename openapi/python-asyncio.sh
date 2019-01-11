@@ -41,66 +41,52 @@ pushd "${OUTPUT_DIR}" > /dev/null
 OUTPUT_DIR=`pwd`
 popd > /dev/null
 
-source "${SCRIPT_ROOT}/swagger-codegen/client-generator.sh"
 source "${SETTING_FILE}"
 
-# Client specific Swagger branch to use.
 if [ ${PACKAGE_NAME} == "client" ]; then
-    SWAGGER_CODEGEN_COMMIT=f9b2839a3076f26db1b8fc61655a26662f2552ee
-else
-    SWAGGER_CODEGEN_COMMIT=v2.3.1
-fi
 
-# Build the client library in a Docker container.
-CLIENT_LANGUAGE=python-asyncio
-CLEANUP_DIRS=(client/apis client/models docs test)
-kubeclient::generator::generate_client "${OUTPUT_DIR}"
+  # use openapi-generator to generate library
+  source "${SCRIPT_ROOT}/openapi-generator/client-generator.sh"
 
-# Generic patches to the generated Python code, most notably renaming the library.
-echo "--- Patching generated code..."
+  CLIENT_LANGUAGE=python-asyncio
+  CLEANUP_DIRS=(client/apis client/models docs test)
+  kubeclient::generator::generate_client "${OUTPUT_DIR}"
 
-# Post-processing of the generated Python wrapper.
-if [ ${PACKAGE_NAME} == "client" ]; then
+  # Generic patches to the generated Python code, most notably renaming the library.
+  echo "--- Patching generated code..."
+
+  # Post-processing of the generated Python wrapper.
   find "${OUTPUT_DIR}/test" -type f -name \*.py -exec sed -i 's/\bclient/kubernetes_asyncio.client/g' {} +
   find "${OUTPUT_DIR}" -path "${OUTPUT_DIR}/base" -prune -o -type f -a -name \*.md -exec sed -i 's/\bclient/kubernetes_asyncio.client/g' {} +
   find "${OUTPUT_DIR}" -path "${OUTPUT_DIR}/base" -prune -o -type f -a -name \*.md -exec sed -i 's/kubernetes_asyncio.client-python/client-python/g' {} +
-
-  # workaround https://github.com/swagger-api/swagger-codegen/pull/7905
-  # TODO: Remove this when above merges
-  find "${OUTPUT_DIR}/client" -type f -name \*.py ! -name '__init__.py' -exec sed -i '/^from .*models.*/d' {} \;
-
-  # workaround https://github.com/swagger-api/swagger-codegen/pull/8204
-  # + closing session
-  # + support application/strategic-merge-patch+json
-  # workaround https://github.com/swagger-api/swagger-codegen/pull/8797
-  # + aiohttp without verify_ssl
-  # TODO: Remove this when above merges
-  patch "${OUTPUT_DIR}/client/rest.py" "${SCRIPT_ROOT}/python-asyncio-rest.py.patch"
-
-  # workaround https://github.com/swagger-api/swagger-codegen/pull/8401
-  # TODO: Remove this when above merges
-
-  find "${OUTPUT_DIR}/client/" -type f -name \*.py -exec sed -i 's/async=/async_req=/g' {} +
-  find "${OUTPUT_DIR}/client/" -type f -name \*.py -exec sed -i 's/async bool/async_req bool/g' {} +
-  find "${OUTPUT_DIR}/client/" -type f -name \*.py -exec sed -i "s/'async'/'async_req'/g" {} +
-  find "${OUTPUT_DIR}/client/" -type f -name \*.py -exec sed -i "s/async parameter/async_req parameter/g" {} +
-  find "${OUTPUT_DIR}/client/" -type f -name \*.py -exec sed -i "s/if not async/if not async_req/g" {} +
-
-  # workaround https://github.com/swagger-api/swagger-codegen/pull/8061 (thread pool only on demand)
-  # TODO: Remove this when above merges
-  patch "${OUTPUT_DIR}/client/api_client.py" "${SCRIPT_ROOT}/python-asyncio-api_client.py.patch"
 
   # fix imports
   find "${OUTPUT_DIR}/client/" -type f -name \*.py -exec sed -i 's/import client\./import kubernetes_asyncio.client./g' {} +
   find "${OUTPUT_DIR}/client/" -type f -name \*.py -exec sed -i 's/from client/from kubernetes_asyncio.client/g' {} +
   find "${OUTPUT_DIR}/client/" -type f -name \*.py -exec sed -i 's/getattr(client\.models/getattr(kubernetes_asyncio.client.models/g' {} +
+
 else
+
+  # use swagger-codegen to generate library
+  source "${SCRIPT_ROOT}/swagger-codegen/client-generator.sh"
+
+  SWAGGER_CODEGEN_COMMIT=v2.3.1
+  # Build the client library in a Docker container.
+  CLIENT_LANGUAGE=python-asyncio
+  CLEANUP_DIRS=(client/apis client/models docs test)
+  kubeclient::generator::generate_client "${OUTPUT_DIR}"
+
+  # Generic patches to the generated Python code, most notably renaming the library.
+  echo "--- Patching generated code..."
+
+  # Post-processing of the generated Python wrapper.
   find "${OUTPUT_DIR}/test" -type f -name \*.py -exec sed -i "s/\\bclient/${PACKAGE_NAME}.client/g" {} +
   find "${OUTPUT_DIR}" -path "${OUTPUT_DIR}/base" -prune -o -type f -a -name \*.md -exec sed -i "s/\\bclient/${PACKAGE_NAME}.client/g" {} +
   find "${OUTPUT_DIR}" -path "${OUTPUT_DIR}/base" -prune -o -type f -a -name \*.md -exec sed -i "s/${PACKAGE_NAME}.client-python/client-python/g" {} +
 
   # Remove circular imports in `v1beta1_json_schema_props.py`.
   sed -i "/^from ${PACKAGE_NAME}\.models.*/d" "${PACKAGE_NAME}/${PACKAGE_NAME}/models/v1beta1_json_schema_props.py"
+
 fi
 
 echo "---Done."
