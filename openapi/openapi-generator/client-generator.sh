@@ -29,8 +29,8 @@ set -o pipefail
 #   PACKAGE_NAME: Name of the client package.
 #   CLIENT_LANGUAGE: Language of the client. ${CLIENT_LANGUAGE}.xml should exists.
 # Optional env vars:
-#   SWAGGER_CODEGEN_USER_ORG: swagger-codegen-user-org
-#   SWAGGER_CODEGEN_COMMIT: swagger-codegen-version
+#   OPENAPI_GENERATOR_USER_ORG: openapi-generator-user-org
+#   OPENAPI_GENERATOR_COMMIT: openapi-generator-version
 # Input vars:
 #   $1: output directory
 kubeclient::generator::generate_client() {
@@ -40,8 +40,8 @@ kubeclient::generator::generate_client() {
     : "${PACKAGE_NAME?Must set PACKAGE_NAME env var}"
     : "${CLIENT_LANGUAGE?Must set CLIENT_LANGUAGE env var}"
 
-    SWAGGER_CODEGEN_USER_ORG="${SWAGGER_CODEGEN_USER_ORG:-swagger-api}"
-    SWAGGER_CODEGEN_COMMIT="${SWAGGER_CODEGEN_COMMIT:-v2.2.3}"
+    OPENAPI_GENERATOR_USER_ORG="${OPENAPI_GENERATOR_USER_ORG:-OpenAPITools}"
+    OPENAPI_GENERATOR_COMMIT="${OPENAPI_GENERATOR_COMMIT:-v3.3.4}"
     USERNAME="${USERNAME:-kubernetes}"
     REPOSITORY="${REPOSITORY:-kubernetes}"
 
@@ -49,22 +49,23 @@ kubeclient::generator::generate_client() {
     pushd "${output_dir}" > /dev/null
     local output_dir=`pwd`
     popd > /dev/null
-    SCRIPT_ROOT=$(dirname "${BASH_SOURCE}")
+    local SCRIPT_ROOT=$(dirname "${BASH_SOURCE}")
     pushd "${SCRIPT_ROOT}" > /dev/null
     local SCRIPT_ROOT=`pwd`
     popd > /dev/null
 
     mkdir -p "${output_dir}"
 
-    echo "--- Building docker image..."
     if [ "${USERNAME}" != "kubernetes" ]; then
-        image_name="${USERNAME}-${REPOSITORY}-${CLIENT_LANGUAGE}-client-gen:v1"
+        image_name="${USERNAME}-${REPOSITORY}-${CLIENT_LANGUAGE}-client-gen-with-openapi-generator:v1"
     else
-        image_name="${REPOSITORY}-${CLIENT_LANGUAGE}-client-gen:v1"
+        image_name="${REPOSITORY}-${CLIENT_LANGUAGE}-client-gen-with-openapi-generator:v1"
     fi
-    docker build "${SCRIPT_ROOT}" -t "${image_name}" \
-        --build-arg SWAGGER_CODEGEN_USER_ORG="${SWAGGER_CODEGEN_USER_ORG}" \
-        --build-arg SWAGGER_CODEGEN_COMMIT="${SWAGGER_CODEGEN_COMMIT}" \
+
+    echo "--- Building docker image ${image_name}..."
+    docker build "${SCRIPT_ROOT}"/../ -f "${SCRIPT_ROOT}/Dockerfile" -t "${image_name}" \
+        --build-arg OPENAPI_GENERATOR_USER_ORG="${OPENAPI_GENERATOR_USER_ORG}" \
+        --build-arg OPENAPI_GENERATOR_COMMIT="${OPENAPI_GENERATOR_COMMIT}" \
         --build-arg GENERATION_XML_FILE="${CLIENT_LANGUAGE}.xml"
 
     # Docker does not support passing arrays, pass the string representation
@@ -78,8 +79,8 @@ kubeclient::generator::generate_client() {
         -e CLIENT_VERSION="${CLIENT_VERSION}" \
         -e CLIENT_LANGUAGE="${CLIENT_LANGUAGE}" \
         -e PACKAGE_NAME="${PACKAGE_NAME}" \
-        -e SWAGGER_CODEGEN_USER_ORG="${SWAGGER_CODEGEN_USER_ORG}" \
-        -e SWAGGER_CODEGEN_COMMIT="${SWAGGER_CODEGEN_COMMIT}" \
+        -e OPENAPI_GENERATOR_USER_ORG="${OPENAPI_GENERATOR_USER_ORG}" \
+        -e OPENAPI_GENERATOR_COMMIT="${OPENAPI_GENERATOR_COMMIT}" \
         -e USERNAME="${USERNAME}" \
         -e REPOSITORY="${REPOSITORY}" \
         -v "${output_dir}:/output_dir" \

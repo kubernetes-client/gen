@@ -43,7 +43,7 @@ pushd "${OUTPUT_DIR}" > /dev/null
 OUTPUT_DIR=`pwd`
 popd > /dev/null
 
-source "${SCRIPT_ROOT}/client-generator.sh"
+source "${SCRIPT_ROOT}/swagger-codegen/client-generator.sh"
 source "${SETTING_FILE}"
 
 SWAGGER_CODEGEN_COMMIT="${SWAGGER_CODEGEN_COMMIT:-5d263e1c9cdd395d93adf061c63d5ef58a8e9ec5}"; \

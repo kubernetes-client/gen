@@ -8,9 +8,9 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>io.swagger</groupId>
-                <artifactId>swagger-codegen-maven-plugin</artifactId>
-                <version>${swagger-codegen-version}</version>
+                <groupId>org.openapitools</groupId>
+                <artifactId>openapi-generator-maven-plugin</artifactId>
+                <version>${openapi-generator-version}</version>
                 <executions>
                     <execution>
                         <goals>
@@ -37,7 +37,7 @@
     <dependencies>
         <!-- dependencies are needed for the client being generated -->
         <dependency>
-            <groupId>io.swagger</groupId>
+            <groupId>org.openapitools</groupId>
             <artifactId>swagger-annotations</artifactId>
             <version>${swagger-annotations-version}</version>
         </dependency>

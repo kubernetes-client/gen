@@ -58,7 +58,7 @@ RUN apt-get install -yy -q dotnet-hosting-2.0.8
 
 
 # Copy required files
-COPY generate_client_in_container.sh /generate_client.sh
+COPY swagger-codegen/generate_client_in_container.sh /generate_client.sh
 COPY preprocess_spec.py /
 COPY custom_objects_spec.json /
 COPY ${GENERATION_XML_FILE} /generation_params.xml
