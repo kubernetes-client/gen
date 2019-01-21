@@ -110,11 +110,17 @@ def add_custom_objects_spec(spec):
             spec['paths'][path] = custom_objects_spec[path]
     return spec
 
+def add_codegen_request_body(operation, _):
+    if 'parameters' in operation and len(operation['parameters']) > 0:
+        if operation['parameters'][0].get('in') == 'body':
+            operation['x-codegen-request-body-name'] = 'body'
 
 def process_swagger(spec, client_language):
     spec = add_custom_objects_spec(spec)
 
     apply_func_to_spec_operations(spec, strip_tags_from_operation_id)
+
+    apply_func_to_spec_operations(spec, add_codegen_request_body)
 
     operation_ids = {}
     apply_func_to_spec_operations(spec, lambda op, _: operator.setitem(
@@ -295,7 +301,7 @@ def main():
     )
     argparser.add_argument(
         'output_spec_path',
-        help='Path to otput spec file to'
+        help='Path to output spec file to'
     )
     argparser.add_argument(
         'username',
