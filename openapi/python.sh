@@ -43,29 +43,23 @@ pushd "${OUTPUT_DIR}" > /dev/null
 OUTPUT_DIR=`pwd`
 popd > /dev/null
 
-source "${SCRIPT_ROOT}/swagger-codegen/client-generator.sh"
+source "${SCRIPT_ROOT}/openapi-generator/client-generator.sh"
 source "${SETTING_FILE}"
 
-SWAGGER_CODEGEN_COMMIT="${SWAGGER_CODEGEN_COMMIT:-d2b91073e1fc499fea67141ff4c17740d25f8e83}"; \
 CLIENT_LANGUAGE=python; \
-CLEANUP_DIRS=(client/apis client/models docs test); \
+CLEANUP_DIRS=(client/api client/apis client/models docs test); \
 kubeclient::generator::generate_client "${OUTPUT_DIR}"
 
 echo "--- Patching generated code..."
 
-# workaround https://github.com/swagger-api/swagger-codegen/pull/8401
-# TODO: Remove this when above merges
-find "${OUTPUT_DIR}/${PACKAGE_NAME}/" -type f -name \*.py -exec sed -i 's/async=/async_req=/g' {} +
-find "${OUTPUT_DIR}/${PACKAGE_NAME}/" -type f -name \*.py -exec sed -i 's/async bool/async_req bool/g' {} +
-find "${OUTPUT_DIR}/${PACKAGE_NAME}/" -type f -name \*.py -exec sed -i "s/'async'/'async_req'/g" {} +
-sed -i "s/if not async/if not async_req/g" "${OUTPUT_DIR}/${PACKAGE_NAME}/api_client.py"
-#
-
-# workaround https://github.com/swagger-api/swagger-codegen/pull/8061 (thread pool only on demand)
-# TODO: Remove this when above merges
-patch "${OUTPUT_DIR}/${PACKAGE_NAME}/api_client.py" "${SCRIPT_ROOT}/python-api_client.py.patch"
-
+# Post-processing of the generated Python wrapper.
 find "${OUTPUT_DIR}/test" -type f -name \*.py -exec sed -i 's/\bclient/kubernetes.client/g' {} +
 find "${OUTPUT_DIR}" -path "${OUTPUT_DIR}/base" -prune -o -type f -a -name \*.md -exec sed -i 's/\bclient/kubernetes.client/g' {} +
 find "${OUTPUT_DIR}" -path "${OUTPUT_DIR}/base" -prune -o -type f -a -name \*.md -exec sed -i 's/kubernetes.client-python/client-python/g' {} +
+
+# fix imports
+find "${OUTPUT_DIR}/client/" -type f -name \*.py -exec sed -i 's/import client\./import kubernetes.client./g' {} +
+find "${OUTPUT_DIR}/client/" -type f -name \*.py -exec sed -i 's/from client/from kubernetes.client/g' {} +
+find "${OUTPUT_DIR}/client/" -type f -name \*.py -exec sed -i 's/getattr(client\.models/getattr(kubernetes.client.models/g' {} +
+
 echo "---Done."
