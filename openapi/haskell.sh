@@ -59,11 +59,11 @@ CABAL_OVERRIDES=(homepage https://github.com/kubernetes-client/haskell
 
 patch_cabal_file() {
     while [[ $# -gt 1 ]]; do
-        sed -i 's|^\('$1':[[:space:]]*\).*|\1'"$2"'|' ${OUTPUT_DIR}/kubernetes.cabal
+        sed -i 's|^\('$1':[[:space:]]*\).*|\1'"$2"'|' ${OUTPUT_DIR}/*.cabal
         shift 2
     done
 }
 patch_cabal_file "${CABAL_OVERRIDES[@]}"
 
-sed -i '/^copyright:/d' ${OUTPUT_DIR}/kubernetes.cabal
+sed -i '/^copyright:/d' ${OUTPUT_DIR}/*.cabal
 echo "---Done."
