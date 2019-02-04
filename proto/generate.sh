@@ -40,7 +40,7 @@ files="k8s.io/apimachinery/pkg/api/resource/generated.proto;Resource \
        k8s.io/api/rbac/v1beta1/generated.proto;V1beta1Rbac \
        k8s.io/api/networking/v1/generated.proto;V1Networking \
        k8s.io/api/settings/v1alpha1/generated.proto;V1alpha1Settings \
-       k8s.io/api/admissionregistration/v1alpha1/generated.proto;V1alpha1Admissionregistration \
+       k8s.io/api/admissionregistration/v1beta1/generated.proto;V1beta1Admissionregistration \
        k8s.io/api/scheduling/v1alpha1/generated.proto;V1alpha1Scheduling \
        k8s.io/api/storage/v1/generated.proto;V1Storage \
        k8s.io/api/storage/v1beta1/generated.proto;V1beta1Storage \
@@ -57,6 +57,7 @@ files="k8s.io/apimachinery/pkg/api/resource/generated.proto;Resource \
        k8s.io/api/core/v1/generated.proto;V1 \
        k8s.io/api/autoscaling/v1/generated.proto;V1Autoscaling \
        k8s.io/api/autoscaling/v2beta1/generated.proto;V2beta1Autoscaling \
+       k8s.io/api/autoscaling/v2beta2/generated.proto;V2beta2Autoscaling \
        k8s.io/api/extensions/v1beta1/generated.proto;V1beta1Extensions \
        k8s.io/api/certificates/v1beta1/generated.proto;V1beta1Certificates \
        k8s.io/api/imagepolicy/v1alpha1/generated.proto;V1alpha1Imagepolicy \
