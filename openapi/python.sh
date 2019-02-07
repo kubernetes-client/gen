@@ -63,7 +63,7 @@ sed -i "s/if not async/if not async_req/g" "${OUTPUT_DIR}/${PACKAGE_NAME}/api_cl
 
 # workaround https://github.com/swagger-api/swagger-codegen/pull/8061 (thread pool only on demand)
 # TODO: Remove this when above merges
-patch "${OUTPUT_DIR}/${PACKAGE_NAME}/api_client.py" "${SCRIPT_ROOT}/python-api_client.py.patch"
+patch "${OUTPUT_DIR}/${PACKAGE_NAME}/api_client.py" "${SCRIPT_ROOT}/python-api_client.py.patch" --no-backup-if-mismatch
 
 find "${OUTPUT_DIR}/test" -type f -name \*.py -exec sed -i 's/\bclient/kubernetes.client/g' {} +
 find "${OUTPUT_DIR}" -path "${OUTPUT_DIR}/base" -prune -o -type f -a -name \*.md -exec sed -i 's/\bclient/kubernetes.client/g' {} +
