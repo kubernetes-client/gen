@@ -26,6 +26,8 @@
                                 <allowNonUniqueOperationIds>true</allowNonUniqueOperationIds>
                                 <cabalPackage>kubernetes-openapi</cabalPackage>
                                 <baseModule>Kubernetes.OpenAPI</baseModule>
+                                <requestType>KubernetesRequest</requestType>
+                                <configType>KubernetesClientConfig</configType>
                             </configOptions>
                         </configuration>
                     </execution>
