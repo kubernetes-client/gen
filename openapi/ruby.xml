@@ -21,6 +21,8 @@
                             <language>ruby</language>
                             <gitUserId>kubernetes-client</gitUserId>
                             <gitRepoId>ruby</gitRepoId>
+                            <apiTests>false</apiTests>
+                            <modelTests>false</modelTests>
                             <configOptions>
                                 <gemName>kubernetes</gemName>
                                 <moduleName>Kubernetes</moduleName>

@@ -47,5 +47,5 @@ source "${SCRIPT_ROOT}/swagger-codegen/client-generator.sh"
 source "${SETTING_FILE}"
 
 CLIENT_LANGUAGE=ruby; \
-CLEANUP_DIRS=(docs lib spec); \
+CLEANUP_DIRS=(docs lib); \
 kubeclient::generator::generate_client "${OUTPUT_DIR}"
