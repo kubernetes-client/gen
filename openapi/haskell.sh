@@ -43,11 +43,11 @@ pushd "${OUTPUT_DIR}" > /dev/null
 OUTPUT_DIR=`pwd`
 popd > /dev/null
 
-source "${SCRIPT_ROOT}/swagger-codegen/client-generator.sh"
+source "${SCRIPT_ROOT}/openapi-generator/client-generator.sh"
 source "${SETTING_FILE}"
 
 # Latest version of HaskellHttpClientCodegen.java as of Nov 19, 2018
-SWAGGER_CODEGEN_COMMIT="${SWAGGER_CODEGEN_COMMIT:-d0e2d7684dd3258233c3e4d838dcd7bf44055869}"; \
+OPENAPI_GENERATOR_COMMIT="${OPENAPI_GENERATOR_COMMIT:-c30a21ac3cd8b1d8a3db600e4079977af0681e11}"; \
 CLIENT_LANGUAGE=haskell-http-client; \
 CLEANUP_DIRS=(lib tests); \
 kubeclient::generator::generate_client "${OUTPUT_DIR}"
