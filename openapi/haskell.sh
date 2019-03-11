@@ -46,8 +46,8 @@ popd > /dev/null
 source "${SCRIPT_ROOT}/openapi-generator/client-generator.sh"
 source "${SETTING_FILE}"
 
-# Latest version of HaskellHttpClientCodegen.java as of Nov 19, 2018
-OPENAPI_GENERATOR_COMMIT="${OPENAPI_GENERATOR_COMMIT:-c30a21ac3cd8b1d8a3db600e4079977af0681e11}"; \
+# Latest version as of Mar 11, 2019
+OPENAPI_GENERATOR_COMMIT="${OPENAPI_GENERATOR_COMMIT:-aa7ea8bdcae35d7800dc0218bb31e84952f43c62}"; \
 CLIENT_LANGUAGE=haskell-http-client; \
 CLEANUP_DIRS=(lib tests); \
 kubeclient::generator::generate_client "${OUTPUT_DIR}"
@@ -64,6 +64,11 @@ patch_cabal_file() {
     done
 }
 patch_cabal_file "${CABAL_OVERRIDES[@]}"
+
+# Add license-file after license
+sed -i '/^license:/a license-file:   LICENSE' ${OUTPUT_DIR}/*.cabal
+
+ln -sf ../LICENSE ${OUTPUT_DIR}/LICENSE
 
 sed -i '/^copyright:/d' ${OUTPUT_DIR}/*.cabal
 echo "---Done."

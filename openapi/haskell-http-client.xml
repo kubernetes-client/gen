@@ -25,7 +25,7 @@
                                 <packageName>${generator.package.name}</packageName>
                                 <packageVersion>${generator.client.version}</packageVersion>
                                 <allowNonUniqueOperationIds>true</allowNonUniqueOperationIds>
-                                <cabalPackage>kubernetes-openapi-client-gen</cabalPackage>
+                                <cabalPackage>kubernetes-client-core</cabalPackage>
                                 <baseModule>Kubernetes.OpenAPI</baseModule>
                                 <requestType>KubernetesRequest</requestType>
                                 <configType>KubernetesClientConfig</configType>
