@@ -29,6 +29,9 @@
                                 <baseModule>Kubernetes.OpenAPI</baseModule>
                                 <requestType>KubernetesRequest</requestType>
                                 <configType>KubernetesClientConfig</configType>
+                                <type-mappings>intstr.IntOrString=IntOrString</type-mappings>
+                                <import-mappings>IntOrString=Kubernetes.OpenAPI.CustomTypes</import-mappings>
+                                <customTestInstanceModule>CustomInstances</customTestInstanceModule>
                             </configOptions>
                         </configuration>
                     </execution>
