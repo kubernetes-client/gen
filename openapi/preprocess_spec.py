@@ -136,6 +136,8 @@ def process_swagger(spec, client_language):
 
     inline_primitive_models(spec, preserved_primitives_for_language(client_language))
 
+    remove_models(spec, removed_models_for_language(client_language))
+
     return spec
 
 def preserved_primitives_for_language(client_language):
@@ -143,6 +145,14 @@ def preserved_primitives_for_language(client_language):
         return ["intstr.IntOrString", "resource.Quantity"]
     elif client_language == "csharp":
         return ["intstr.IntOrString", "resource.Quantity", "v1.Patch"]
+    elif client_language == "haskell-http-client":
+        return ["intstr.IntOrString", "resource.Quantity"]
+    else:
+        return []
+
+def removed_models_for_language(client_language):
+    if client_language == "haskell-http-client":
+        return ["intstr.IntOrString", "resource.Quantity"]
     else:
         return []
 
@@ -265,6 +275,11 @@ def find_replace_ref_recursive(root, ref_name, replace_map):
         for k, v in root.items():
             find_replace_ref_recursive(v, ref_name, replace_map)
 
+
+def remove_models(spec, to_remove_models):
+    for k in to_remove_models:
+        print("Removing model `%s " % k)
+        del spec['definitions'][k]
 
 def inline_primitive_models(spec, excluded_primitives):
     to_remove_models = []
