@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2017 The Kubernetes Authors.
+# Copyright 2015 The Kubernetes Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -46,9 +46,6 @@ popd > /dev/null
 source "${SCRIPT_ROOT}/openapi-generator/client-generator.sh"
 source "${SETTING_FILE}"
 
-OPENAPI_GENERATOR_COMMIT="${OPENAPI_GENERATOR_COMMIT:-v3.3.4}" \
-CLIENT_LANGUAGE=go; \
-CLEANUP_DIRS=(pkg); \
+CLIENT_LANGUAGE=perl; \
+CLEANUP_DIRS=(docs lib); \
 kubeclient::generator::generate_client "${OUTPUT_DIR}"
-
-echo "---Done."

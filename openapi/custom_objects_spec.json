@@ -50,6 +50,13 @@
         {
           "uniqueItems": true,
           "type": "string",
+          "description": "A selector to restrict the list of returned objects by their fields. Defaults to everything.",
+          "name": "fieldSelector",
+          "in": "query"
+        },
+        {
+          "uniqueItems": true,
+          "type": "string",
           "description": "A selector to restrict the list of returned objects by their labels. Defaults to everything.",
           "name": "labelSelector",
           "in": "query"
@@ -179,6 +186,13 @@
         "https"
       ],
       "parameters": [
+        {
+          "uniqueItems": true,
+          "type": "string",
+          "description": "A selector to restrict the list of returned objects by their fields. Defaults to everything.",
+          "name": "fieldSelector",
+          "in": "query"
+        },
         {
           "uniqueItems": true,
           "type": "string",

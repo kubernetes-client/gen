@@ -8,9 +8,9 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>io.swagger</groupId>
-                <artifactId>swagger-codegen-maven-plugin</artifactId>
-                <version>${swagger-codegen-version}</version>
+                <groupId>org.openapitools</groupId>
+                <artifactId>openapi-generator-maven-plugin</artifactId>
+                <version>${openapi-generator-version}</version>
                 <executions>
                     <execution>
                         <goals>
@@ -18,14 +18,20 @@
                         </goals>
                         <configuration>
                             <inputSpec>${generator.spec.path}</inputSpec>
-                            <language>haskell-http-client</language>
+                            <generatorName>haskell-http-client</generatorName>
                             <output>${generator.output.path}</output>
+                            <validateSpec>false</validateSpec>
                             <configOptions>
                                 <packageName>${generator.package.name}</packageName>
                                 <packageVersion>${generator.client.version}</packageVersion>
                                 <allowNonUniqueOperationIds>true</allowNonUniqueOperationIds>
-                                <cabalPackage>kubernetes-openapi</cabalPackage>
+                                <cabalPackage>kubernetes-client-core</cabalPackage>
                                 <baseModule>Kubernetes.OpenAPI</baseModule>
+                                <requestType>KubernetesRequest</requestType>
+                                <configType>KubernetesClientConfig</configType>
+                                <type-mappings>intstr.IntOrString=IntOrString,resource.Quantity=Quantity</type-mappings>
+                                <import-mappings>IntOrString=Kubernetes.OpenAPI.CustomTypes,Quantity=Kubernetes.OpenAPI.CustomTypes</import-mappings>
+                                <customTestInstanceModule>CustomInstances</customTestInstanceModule>
                             </configOptions>
                         </configuration>
                     </execution>

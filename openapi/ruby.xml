@@ -8,9 +8,9 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>io.swagger</groupId>
-                <artifactId>swagger-codegen-maven-plugin</artifactId>
-                <version>${swagger-codegen-version}</version>
+                <groupId>org.openapitools</groupId>
+                <artifactId>openapi-generator-maven-plugin</artifactId>
+                <version>${openapi-generator-version}</version>
                 <executions>
                     <execution>
                         <goals>
@@ -21,6 +21,8 @@
                             <language>ruby</language>
                             <gitUserId>kubernetes-client</gitUserId>
                             <gitRepoId>ruby</gitRepoId>
+                            <generateApiTests>false</generateApiTests>
+                            <generateModelTests>false</generateModelTests>
                             <configOptions>
                                 <gemName>kubernetes</gemName>
                                 <moduleName>Kubernetes</moduleName>

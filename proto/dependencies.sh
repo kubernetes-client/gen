@@ -29,7 +29,7 @@ mkdir -p k8s.io/api/rbac/v1
 mkdir -p k8s.io/api/rbac/v1beta1
 mkdir -p k8s.io/api/networking/v1
 mkdir -p k8s.io/api/settings/v1alpha1
-mkdir -p k8s.io/api/admissionregistration/v1alpha1
+mkdir -p k8s.io/api/admissionregistration/v1beta1
 mkdir -p k8s.io/api/scheduling/v1alpha1
 mkdir -p k8s.io/api/storage/v1
 mkdir -p k8s.io/api/storage/v1beta1
@@ -46,6 +46,7 @@ mkdir -p k8s.io/api/policy/v1beta1
 mkdir -p k8s.io/api/core/v1
 mkdir -p k8s.io/api/autoscaling/v1
 mkdir -p k8s.io/api/autoscaling/v2beta1
+mkdir -p k8s.io/api/autoscaling/v2beta2
 mkdir -p k8s.io/api/extensions/v1beta1
 mkdir -p k8s.io/api/certificates/v1beta1
 mkdir -p k8s.io/api/imagepolicy/v1alpha1
@@ -76,7 +77,7 @@ curl -s ${base}/api/master/rbac/v1/generated.proto > k8s.io/api/rbac/v1/generate
 curl -s ${base}/api/master/rbac/v1beta1/generated.proto > k8s.io/api/rbac/v1beta1/generated.proto
 curl -s ${base}/api/master/networking/v1/generated.proto > k8s.io/api/networking/v1/generated.proto
 curl -s ${base}/api/master/settings/v1alpha1/generated.proto > k8s.io/api/settings/v1alpha1/generated.proto
-curl -s ${base}/api/master/admissionregistration/v1alpha1/generated.proto > k8s.io/api/admissionregistration/v1alpha1/generated.proto
+curl -s ${base}/api/master/admissionregistration/v1beta1/generated.proto > k8s.io/api/admissionregistration/v1beta1/generated.proto
 curl -s ${base}/api/master/scheduling/v1alpha1/generated.proto > k8s.io/api/scheduling/v1alpha1/generated.proto
 curl -s ${base}/api/master/storage/v1/generated.proto > k8s.io/api/storage/v1/generated.proto
 curl -s ${base}/api/master/storage/v1beta1/generated.proto > k8s.io/api/storage/v1beta1/generated.proto
@@ -93,6 +94,7 @@ curl -s ${base}/api/master/policy/v1beta1/generated.proto > k8s.io/api/policy/v1
 curl -s ${base}/api/master/core/v1/generated.proto > k8s.io/api/core/v1/generated.proto
 curl -s ${base}/api/master/autoscaling/v1/generated.proto > k8s.io/api/autoscaling/v1/generated.proto
 curl -s ${base}/api/master/autoscaling/v2beta1/generated.proto > k8s.io/api/autoscaling/v2beta1/generated.proto
+curl -s ${base}/api/master/autoscaling/v2beta2/generated.proto > k8s.io/api/autoscaling/v2beta2/generated.proto
 curl -s ${base}/api/master/extensions/v1beta1/generated.proto > k8s.io/api/extensions/v1beta1/generated.proto
 curl -s ${base}/api/master/certificates/v1beta1/generated.proto > k8s.io/api/certificates/v1beta1/generated.proto
 curl -s ${base}/api/master/imagepolicy/v1alpha1/generated.proto > k8s.io/api/imagepolicy/v1alpha1/generated.proto
