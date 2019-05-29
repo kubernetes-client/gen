@@ -1,5 +1,5 @@
-<project 
-  xmlns="http://maven.apache.org/POM/4.0.0" 
+<project
+  xmlns="http://maven.apache.org/POM/4.0.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.kubernetes</groupId>
@@ -10,9 +10,9 @@
   <build>
     <plugins>
       <plugin>
-        <groupId>io.swagger</groupId>
-        <artifactId>swagger-codegen-maven-plugin</artifactId>
-        <version>${swagger-codegen-version}</version>
+        <groupId>org.openapitools</groupId>
+        <artifactId>openapi-generator-maven-plugin</artifactId>
+        <version>${openapi-generator-version}</version>
         <executions>
           <execution>
             <goals>
@@ -23,6 +23,7 @@
               <language>java</language>
               <gitUserId>kubernetes-client</gitUserId>
               <gitRepoId>client-java</gitRepoId>
+              <skipValidateSpec>true</skipValidateSpec>
               <configOptions>
                 <projectName>kubernetes-java-client</projectName>
                 <projectDescription>Java client for Kubernetes.</projectDescription>
@@ -37,7 +38,6 @@
                 <artifactId>client-java</artifactId>
                 <artifactVersion>1.0-SNAPSHOT</artifactVersion>
                 <sourceFolder>src/main/java</sourceFolder>
-                <localVariablePrefix></localVariablePrefix>
                 <serializableModel>false</serializableModel>
                 <bigDecimalAsString>false</bigDecimalAsString>
                 <fullJavaUtil>false</fullJavaUtil>
@@ -45,11 +45,10 @@
                 <dateLibrary>joda</dateLibrary>
                 <useRxJava>false</useRxJava>
                 <library>okhttp-gson</library>
-                <type-mappings>intstr.IntOrString=IntOrString,resource.Quantity=Quantity</type-mappings>
-                <import-mappings>
-                  IntOrString=io.kubernetes.client.custom.IntOrString,Quantity=io.kubernetes.client.custom.Quantity,V1Patch=io.kubernetes.client.custom.V1Patch
-                </import-mappings>
+                <useReflectionEqualsHashCode>true</useReflectionEqualsHashCode>
               </configOptions>
+              <typeMappings>int-or-string=IntOrString,quantity=Quantity</typeMappings>
+              <importMappings>IntOrString=io.kubernetes.client.custom.IntOrString,Quantity=io.kubernetes.client.custom.Quantity</importMappings>
               <output>${generator.output.path}</output>
             </configuration>
           </execution>
@@ -65,9 +64,9 @@
       <version>${swagger-annotations-version}</version>
     </dependency>
     <dependency>
-      <groupId>io.swagger</groupId>
-      <artifactId>swagger-codegen-maven-plugin</artifactId>
-      <version>2.2.2</version>
+      <groupId>org.openapitools</groupId>
+      <artifactId>openapi-generator-maven-plugin</artifactId>
+      <version>${openapi-generator-version}</version>
     </dependency>
   </dependencies>
   <properties>

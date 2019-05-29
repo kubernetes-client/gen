@@ -46,10 +46,10 @@ pushd "${OUTPUT_DIR}" > /dev/null
 OUTPUT_DIR=`pwd`
 popd > /dev/null
 
-source "${SCRIPT_ROOT}/swagger-codegen/client-generator.sh"
+source "${SCRIPT_ROOT}/openapi-generator/client-generator.sh"
 source "${SETTING_FILE}"
 
-SWAGGER_CODEGEN_COMMIT="${SWAGGER_CODEGEN_COMMIT:-5d263e1c9cdd395d93adf061c63d5ef58a8e9ec5}"; \
+OPENAPI_GENERATOR_COMMIT="${OPENAPI_GENERATOR_COMMIT:-v4.2.0}" \
 CLIENT_LANGUAGE=java; \
-CLEANUP_DIRS=(docs src/test/java/io/kubernetes/client/apis src/main/java/io/kubernetes/client/apis src/main/java/io/kubernetes/client/models src/main/java/io/kubernetes/client/auth gradle); \
+CLEANUP_DIRS=(docs src/test/java/io/kubernetes/openapi/apis src/main/java/io/kubernetes/openapi/apis src/main/java/io/kubernetes/openapi/models src/main/java/io/kubernetes/openapi/auth gradle); \
 kubeclient::generator::generate_client "${OUTPUT_DIR}"
