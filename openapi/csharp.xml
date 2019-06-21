@@ -38,7 +38,6 @@
           <argument>--namespace=${generator.package.name}</argument>
           <argument>--package-version=${generator.client.version}</argument>
           <argument>--output-folder=${generator.output.path}</argument>
-          <argument>--version=preview</argument>
           <argument>--add-credentials</argument>
           <argument>--debug</argument>
           <argument>--verbose</argument>
@@ -48,7 +47,6 @@
           <argument>--directive={from: "swagger-document", where: "$.definitions", transform: "$[\"intstr.IntOrString\"] = {\"properties\": { \"value\": { \"type\": \"string\" }}}"}</argument>
           <argument>--directive={from: "swagger-document", where: "$.definitions", transform: "$[\"resource.Quantity\"] = {\"properties\": { \"value\": { \"type\": \"string\" }}}"}</argument>
           <argument>--directive={from: "swagger-document", where: "$.definitions", transform: "$[\"v1.Patch\"] = {\"properties\": { \"content\": { \"type\": \"object\" }}}"}</argument>
-          <argument>--use=@microsoft.azure/autorest.csharp@preview</argument>
         </arguments>
       </configuration>
     </plugin>
