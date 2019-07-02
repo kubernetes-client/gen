@@ -390,6 +390,7 @@
       "operationId": "patchClusterCustomObject",
       "description": "patch the specified cluster scoped custom object",
       "consumes": [
+        "application/json-patch+json",
         "application/merge-patch+json"
       ],
       "produces": [
@@ -571,6 +572,7 @@
     "patch": {
       "description": "partially update status of the specified cluster scoped custom object",
       "consumes": [
+        "application/json-patch+json",
         "application/merge-patch+json"
       ],
       "produces": [
@@ -717,6 +719,7 @@
     "patch": {
       "description": "partially update scale of the specified cluster scoped custom object",
       "consumes": [
+        "application/json-patch+json",
         "application/merge-patch+json"
       ],
       "produces": [
@@ -882,6 +885,7 @@
       "operationId": "patchNamespacedCustomObject",
       "description": "patch the specified namespace scoped custom object",
       "consumes": [
+        "application/json-patch+json",
         "application/merge-patch+json"
       ],
       "produces": [
@@ -1070,6 +1074,7 @@
     "patch": {
       "description": "partially update status of the specified namespace scoped custom object",
       "consumes": [
+        "application/json-patch+json",
         "application/merge-patch+json"
       ],
       "produces": [
@@ -1223,6 +1228,7 @@
     "patch": {
       "description": "partially update scale of the specified namespace scoped custom object",
       "consumes": [
+        "application/json-patch+json",
         "application/merge-patch+json"
       ],
       "produces": [
