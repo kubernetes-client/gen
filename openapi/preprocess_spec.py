@@ -330,20 +330,26 @@ def main():
     )
     args = argparser.parse_args()
 
-    spec_url = 'https://raw.githubusercontent.com/%s/%s/' \
+
+    unprocessed_spec = args.output_spec_path + ".unprocessed"
+    in_spec = ""
+    if os.environ.get("OPENAPI_SKIP_FETCH_SPEC") or False:
+        with open(unprocessed_spec, 'r') as content:
+            in_spec = json.load(content, object_pairs_hook=OrderedDict)
+    else:
+        pool = urllib3.PoolManager()
+        spec_url = 'https://raw.githubusercontent.com/%s/%s/' \
                '%s/api/openapi-spec/swagger.json' % (args.username,
                                                      args.repository,
                                                      args.kubernetes_branch)
-
-    pool = urllib3.PoolManager()
-    with pool.request('GET', spec_url, preload_content=False) as response:
-        if response.status != 200:
-            print("Error downloading spec file %s. Reason: %s" % (spec_url, response.reason))
-            return 1
-        in_spec = json.load(response, object_pairs_hook=OrderedDict)
-        write_json(args.output_spec_path + ".unprocessed", in_spec)
-        out_spec = process_swagger(in_spec, args.client_language)
-        write_json(args.output_spec_path, out_spec)
+        with pool.request('GET', spec_url, preload_content=False) as response:
+            if response.status != 200:
+                print("Error downloading spec file %s. Reason: %s" % (spec_url, response.reason))
+                return 1
+            in_spec = json.load(response, object_pairs_hook=OrderedDict)
+    write_json(unprocessed_spec, in_spec)
+    out_spec = process_swagger(in_spec, args.client_language)
+    write_json(args.output_spec_path, out_spec)
     return 0
 
 

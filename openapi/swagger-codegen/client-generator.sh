@@ -42,6 +42,7 @@ kubeclient::generator::generate_client() {
 
     SWAGGER_CODEGEN_USER_ORG="${SWAGGER_CODEGEN_USER_ORG:-swagger-api}"
     SWAGGER_CODEGEN_COMMIT="${SWAGGER_CODEGEN_COMMIT:-v2.2.3}"
+    OPENAPI_SKIP_FETCH_SPEC="${OPENAPI_SKIP_FETCH_SPEC:-}"
     USERNAME="${USERNAME:-kubernetes}"
     REPOSITORY="${REPOSITORY:-kubernetes}"
 
@@ -81,6 +82,7 @@ kubeclient::generator::generate_client() {
         -e PACKAGE_NAME="${PACKAGE_NAME}" \
         -e SWAGGER_CODEGEN_USER_ORG="${SWAGGER_CODEGEN_USER_ORG}" \
         -e SWAGGER_CODEGEN_COMMIT="${SWAGGER_CODEGEN_COMMIT}" \
+	-e OPENAPI_SKIP_FETCH_SPEC="${OPENAPI_SKIP_FETCH_SPEC}" \
         -e USERNAME="${USERNAME}" \
         -e REPOSITORY="${REPOSITORY}" \
         -v "${output_dir}:/output_dir" \

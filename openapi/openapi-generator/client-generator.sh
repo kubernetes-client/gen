@@ -42,6 +42,7 @@ kubeclient::generator::generate_client() {
 
     OPENAPI_GENERATOR_USER_ORG="${OPENAPI_GENERATOR_USER_ORG:-OpenAPITools}"
     OPENAPI_GENERATOR_COMMIT="${OPENAPI_GENERATOR_COMMIT:-v3.3.4}"
+    OPENAPI_SKIP_FETCH_SPEC="${OPENAPI_SKIP_FETCH_SPEC:-}"
     USERNAME="${USERNAME:-kubernetes}"
     REPOSITORY="${REPOSITORY:-kubernetes}"
 
@@ -81,6 +82,7 @@ kubeclient::generator::generate_client() {
         -e PACKAGE_NAME="${PACKAGE_NAME}" \
         -e OPENAPI_GENERATOR_USER_ORG="${OPENAPI_GENERATOR_USER_ORG}" \
         -e OPENAPI_GENERATOR_COMMIT="${OPENAPI_GENERATOR_COMMIT}" \
+        -e OPENAPI_SKIP_FETCH_SPEC="${OPENAPI_SKIP_FETCH_SPEC}" \
         -e USERNAME="${USERNAME}" \
         -e REPOSITORY="${REPOSITORY}" \
         -v "${output_dir}:/output_dir" \
