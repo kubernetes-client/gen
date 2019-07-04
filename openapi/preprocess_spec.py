@@ -142,7 +142,7 @@ def process_swagger(spec, client_language):
 
 def preserved_primitives_for_language(client_language):
     if client_language == "java":
-        return ["intstr.IntOrString", "resource.Quantity", "v1.Patch"]
+        return ["intstr.IntOrString", "resource.Quantity", "v1.Patch", "v1.Fields"]
     elif client_language == "csharp":
         return ["intstr.IntOrString", "resource.Quantity", "v1.Patch"]
     elif client_language == "haskell-http-client":
