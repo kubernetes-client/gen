@@ -43,9 +43,10 @@ pushd "${OUTPUT_DIR}" > /dev/null
 OUTPUT_DIR=`pwd`
 popd > /dev/null
 
-source "${SCRIPT_ROOT}/swagger-codegen/client-generator.sh"
+source "${SCRIPT_ROOT}/openapi-generator/client-generator.sh"
 source "${SETTING_FILE}"
 
+OPENAPI_GENERATOR_COMMIT="${OPENAPI_GENERATOR_COMMIT:-v4.0.3}"; \
 CLIENT_LANGUAGE=typescript; \
-CLEANUP_DIRS=(docs src target gradle); \
+CLEANUP_DIRS=(api model); \
 kubeclient::generator::generate_client "${OUTPUT_DIR}"
