@@ -32,6 +32,7 @@
                                 <supportsES6>false</supportsES6>
                                 <npmName>kubernetes-client-typescript</npmName>
                                 <npmVersion>${generator.client.version}</npmVersion>
+                                <modelPropertyNaming>original</modelPropertyNaming>
                             </configOptions>
                             <output>${generator.output.path}</output>
                         </configuration>
