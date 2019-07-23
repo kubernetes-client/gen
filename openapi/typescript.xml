@@ -10,9 +10,9 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>io.swagger</groupId>
-                <artifactId>swagger-codegen-maven-plugin</artifactId>
-                <version>${swagger-codegen-version}</version>
+                <groupId>org.openapitools</groupId>
+                <artifactId>openapi-generator-maven-plugin</artifactId>
+                <version>${openapi-generator-version}</version>
                 <executions>
                     <execution>
                         <goals>
@@ -20,42 +20,20 @@
                         </goals>
                         <configuration>
                             <inputSpec>${generator.spec.path}</inputSpec>
-                            <language>typescript-node</language>
-                            <gitUserId>kubernetes-client</gitUserId>
-                            <gitRepoId>typescript</gitRepoId>
+                            <skipValidateSpec>true</skipValidateSpec>
+                            <generatorName>typescript-node</generatorName>
+                            <output>${generator.output.path}</output>
                             <configOptions>
-                                <projectName>kubernetes-typescript-client</projectName>
-                                <projectDescription>Typescript client for Kubernetes.</projectDescription>
-                                <projectVersion>${generator.client.version}</projectVersion>
-                                <projectLicenseName>Apache V2</projectLicenseName>
                                 <sortParamsByRequiredFlag>true</sortParamsByRequiredFlag>
-                                <supportsES6>false</supportsES6>
+                                <supportsES6>true</supportsES6>
                                 <npmName>kubernetes-client-typescript</npmName>
                                 <npmVersion>${generator.client.version}</npmVersion>
                             </configOptions>
-                            <output>${generator.output.path}</output>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
         </plugins>
     </build>
-    <dependencies>
-        <!-- dependencies are needed for the client being generated -->
-        <dependency>
-            <groupId>io.swagger</groupId>
-            <artifactId>swagger-annotations</artifactId>
-            <version>${swagger-annotations-version}</version>
-        </dependency>
-    </dependencies>
-    <properties>
-        <swagger-annotations-version>1.5.0</swagger-annotations-version>
-        <maven-plugin-version>1.0.0</maven-plugin-version>
-        <!-- Default values for the generator parameters. -->
-        <generator.output.path>.</generator.output.path>
-        <generator.spec.path>swagger.json</generator.spec.path>
-        <generator.package.name>client</generator.package.name>
-        <generator.client.version>0.1-snapshot</generator.client.version>
-    </properties>
 </project>
 
