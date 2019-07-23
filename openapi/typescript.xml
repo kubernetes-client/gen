@@ -28,6 +28,7 @@
                                 <supportsES6>true</supportsES6>
                                 <npmName>kubernetes-client-typescript</npmName>
                                 <npmVersion>${generator.client.version}</npmVersion>
+                                <modelPropertyNaming>original</modelPropertyNaming>
                             </configOptions>
                         </configuration>
                     </execution>
