@@ -63,10 +63,6 @@ patch_cabal_file() {
         shift 2
     done
 }
-
-# Solve bug with date time format
-sed -i 's/formatISO8601Millis/formatISO8601Micros/g' ${OUTPUT_DIR}/lib/Kubernetes/OpenAPI/Core.hs
-
 patch_cabal_file "${CABAL_OVERRIDES[@]}"
 
 # Add license-file after license
