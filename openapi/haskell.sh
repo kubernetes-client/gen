@@ -47,14 +47,14 @@ source "${SCRIPT_ROOT}/openapi-generator/client-generator.sh"
 source "${SETTING_FILE}"
 
 # Latest version as of Mar 15, 2019
-OPENAPI_GENERATOR_COMMIT="${OPENAPI_GENERATOR_COMMIT:-c9737cf97d5e31936639842d389118e980ee85a9}"; \
+OPENAPI_GENERATOR_COMMIT="${OPENAPI_GENERATOR_COMMIT:-a979fd8e13c86431831b0c769ba7b484e744afa5}"; \
 CLIENT_LANGUAGE=haskell-http-client; \
 CLEANUP_DIRS=(lib/Kubernetes/OpenAPI/API); \
 kubeclient::generator::generate_client "${OUTPUT_DIR}"
 
 CABAL_OVERRIDES=(homepage https://github.com/kubernetes-client/haskell
            author "Auto Generated"
-           maintainer "Shimin Guo <smguo2001@gmail.com>"
+           maintainer "Shimin Guo <smguo2001@gmail.com>, Akshay Mankar <itsakshaymankar@gmail.com>"
            license Apache-2.0)
 
 patch_cabal_file() {
@@ -63,9 +63,6 @@ patch_cabal_file() {
         shift 2
     done
 }
-
-# Solve bug with date time format
-sed -i 's/formatISO8601Millis/formatISO8601Micros/g' ${OUTPUT_DIR}/lib/Kubernetes/OpenAPI/Core.hs
 
 patch_cabal_file "${CABAL_OVERRIDES[@]}"
 
