@@ -32,6 +32,7 @@
                                 <type-mappings>intstr.IntOrString=IntOrString,resource.Quantity=Quantity</type-mappings>
                                 <import-mappings>IntOrString=Kubernetes.OpenAPI.CustomTypes,Quantity=Kubernetes.OpenAPI.CustomTypes</import-mappings>
                                 <customTestInstanceModule>CustomInstances</customTestInstanceModule>
+                                <dateTimeFormat>%FT%T%6QZ</dateTimeFormat>
                             </configOptions>
                         </configuration>
                     </execution>
