@@ -136,6 +136,8 @@ def process_swagger(spec, client_language):
 
     inline_primitive_models(spec, preserved_primitives_for_language(client_language))
 
+    add_custom_formatting(spec, format_for_language(client_language))
+
     remove_models(spec, removed_models_for_language(client_language))
 
     return spec
@@ -149,6 +151,12 @@ def preserved_primitives_for_language(client_language):
         return ["intstr.IntOrString", "resource.Quantity"]
     else:
         return []
+
+def format_for_language(client_language):
+    if client_language == "java":
+        return {"resource.Quantity": "quantity"}
+    else:
+        return {}
 
 def removed_models_for_language(client_language):
     if client_language == "haskell-http-client":
@@ -297,6 +305,12 @@ def inline_primitive_models(spec, excluded_primitives):
 
     for k in to_remove_models:
         del spec['definitions'][k]
+
+def add_custom_formatting(spec, custom_formats):
+    for k, v in spec['definitions'].items():
+        if k not in custom_formats:
+            continue
+        v["format"] = custom_formats[k]
 
 def write_json(filename, object):
     with open(filename, 'w') as out:
