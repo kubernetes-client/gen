@@ -43,17 +43,17 @@ popd > /dev/null
 
 source "${SETTING_FILE}"
 
+# use openapi-generator to generate library
+source "${SCRIPT_ROOT}/openapi-generator/client-generator.sh"
+
+CLIENT_LANGUAGE=python-asyncio
+CLEANUP_DIRS=(client/apis client/models docs test)
+kubeclient::generator::generate_client "${OUTPUT_DIR}"
+
+# Generic patches to the generated Python code, most notably renaming the library.
+echo "--- Patching generated code..."
+
 if [ ${PACKAGE_NAME} == "client" ]; then
-
-  # use openapi-generator to generate library
-  source "${SCRIPT_ROOT}/openapi-generator/client-generator.sh"
-
-  CLIENT_LANGUAGE=python-asyncio
-  CLEANUP_DIRS=(client/apis client/models docs test)
-  kubeclient::generator::generate_client "${OUTPUT_DIR}"
-
-  # Generic patches to the generated Python code, most notably renaming the library.
-  echo "--- Patching generated code..."
 
   # Post-processing of the generated Python wrapper.
   find "${OUTPUT_DIR}/test" -type f -name \*.py -exec sed -i 's/\bclient/kubernetes_asyncio.client/g' {} +
@@ -67,25 +67,10 @@ if [ ${PACKAGE_NAME} == "client" ]; then
 
 else
 
-  # use swagger-codegen to generate library
-  source "${SCRIPT_ROOT}/swagger-codegen/client-generator.sh"
-
-  SWAGGER_CODEGEN_COMMIT=v2.3.1
-  # Build the client library in a Docker container.
-  CLIENT_LANGUAGE=python-asyncio
-  CLEANUP_DIRS=(client/apis client/models docs test)
-  kubeclient::generator::generate_client "${OUTPUT_DIR}"
-
-  # Generic patches to the generated Python code, most notably renaming the library.
-  echo "--- Patching generated code..."
-
   # Post-processing of the generated Python wrapper.
   find "${OUTPUT_DIR}/test" -type f -name \*.py -exec sed -i "s/\\bclient/${PACKAGE_NAME}.client/g" {} +
   find "${OUTPUT_DIR}" -path "${OUTPUT_DIR}/base" -prune -o -type f -a -name \*.md -exec sed -i "s/\\bclient/${PACKAGE_NAME}.client/g" {} +
   find "${OUTPUT_DIR}" -path "${OUTPUT_DIR}/base" -prune -o -type f -a -name \*.md -exec sed -i "s/${PACKAGE_NAME}.client-python/client-python/g" {} +
-
-  # Remove circular imports in `v1beta1_json_schema_props.py`.
-  sed -i "/^from ${PACKAGE_NAME}\.models.*/d" "${PACKAGE_NAME}/${PACKAGE_NAME}/models/v1beta1_json_schema_props.py"
 
 fi
 
