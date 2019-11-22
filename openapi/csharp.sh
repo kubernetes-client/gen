@@ -46,7 +46,7 @@ pushd "${OUTPUT_DIR}" > /dev/null
 OUTPUT_DIR=`pwd`
 popd > /dev/null
 
-source "${SCRIPT_ROOT}/swagger-codegen/client-generator.sh"
+source "${SCRIPT_ROOT}/openapi-generator/client-generator.sh"
 source "${SETTING_FILE}"
 
 # this is to ensure sed after docker build has perm to modify files generated
