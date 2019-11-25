@@ -45,7 +45,7 @@
                 <dateLibrary>joda</dateLibrary>
                 <useRxJava>false</useRxJava>
                 <library>okhttp-gson</library>
-                <useReflectionEqualsHashCode>true</useReflectionEqualsHashCode>
+                <useReflectionEqualsHashCode>false</useReflectionEqualsHashCode>
               </configOptions>
               <typeMappings>int-or-string=IntOrString,quantity=Quantity</typeMappings>
               <importMappings>IntOrString=io.kubernetes.client.custom.IntOrString,Quantity=io.kubernetes.client.custom.Quantity</importMappings>
