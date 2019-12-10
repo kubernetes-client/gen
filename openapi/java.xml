@@ -24,6 +24,8 @@
               <gitUserId>kubernetes-client</gitUserId>
               <gitRepoId>client-java</gitRepoId>
               <skipValidateSpec>true</skipValidateSpec>
+              <generateApiTests>false</generateApiTests>
+              <generateModelTests>false</generateModelTests>
               <configOptions>
                 <projectName>kubernetes-java-client</projectName>
                 <projectDescription>Java client for Kubernetes.</projectDescription>
@@ -47,8 +49,8 @@
                 <library>okhttp-gson</library>
                 <useReflectionEqualsHashCode>false</useReflectionEqualsHashCode>
               </configOptions>
-              <typeMappings>int-or-string=IntOrString,quantity=Quantity</typeMappings>
-              <importMappings>IntOrString=io.kubernetes.client.custom.IntOrString,Quantity=io.kubernetes.client.custom.Quantity</importMappings>
+              <typeMappings>int-or-string=IntOrString,quantity=Quantity,patch=V1Patch</typeMappings>
+              <importMappings>IntOrString=io.kubernetes.client.custom.IntOrString,Quantity=io.kubernetes.client.custom.Quantity,V1Patch=io.kubernetes.client.custom.V1Patch</importMappings>
               <output>${generator.output.path}</output>
             </configuration>
           </execution>

@@ -137,6 +137,7 @@ def process_swagger(spec, client_language):
     inline_primitive_models(spec, preserved_primitives_for_language(client_language))
 
     add_custom_formatting(spec, format_for_language(client_language))
+    add_custom_typing(spec, type_for_language(client_language))
 
     remove_models(spec, removed_models_for_language(client_language))
 
@@ -154,7 +155,13 @@ def preserved_primitives_for_language(client_language):
 
 def format_for_language(client_language):
     if client_language == "java":
-        return {"resource.Quantity": "quantity"}
+        return {"resource.Quantity": "quantity", "v1.Patch": "patch"}
+    else:
+        return {}
+
+def type_for_language(client_language):
+    if client_language == "java":
+        return {"v1.Patch": "string"}
     else:
         return {}
 
@@ -311,6 +318,12 @@ def add_custom_formatting(spec, custom_formats):
         if k not in custom_formats:
             continue
         v["format"] = custom_formats[k]
+
+def add_custom_typing(spec, custom_types):
+    for k, v in spec['definitions'].items():
+        if k not in custom_types:
+            continue
+        v["type"] = custom_types[k]
 
 def write_json(filename, object):
     with open(filename, 'w') as out:
