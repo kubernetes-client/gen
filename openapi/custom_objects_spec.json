@@ -375,7 +375,6 @@
         {
           "name": "body",
           "in": "body",
-          "required": true,
           "schema": {
             "$ref": "#/definitions/v1.DeleteOptions"
           }
@@ -870,7 +869,6 @@
         {
           "name": "body",
           "in": "body",
-          "required": true,
           "schema": {
             "$ref": "#/definitions/v1.DeleteOptions"
           }
