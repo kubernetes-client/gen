@@ -339,7 +339,7 @@ def main():
     )
     argparser.add_argument(
         'kubernetes_branch',
-        help='Branch of github.com/kubernetes/kubernetes to get spec from'
+        help='Branch/tag of github.com/kubernetes/kubernetes to get spec from'
     )
     argparser.add_argument(
         'output_spec_path',
@@ -375,6 +375,9 @@ def main():
                 return 1
             in_spec = json.load(response, object_pairs_hook=OrderedDict)
     write_json(unprocessed_spec, in_spec)
+    # use version from branch/tag name if spec doesn't provide it
+    if in_spec['info']['version'] == 'unversioned':
+        in_spec['info']['version'] = args.kubernetes_branch
     out_spec = process_swagger(in_spec, args.client_language)
     write_json(args.output_spec_path, out_spec)
     return 0
