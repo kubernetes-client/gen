@@ -45,6 +45,7 @@ source "${SETTING_FILE}"
 
 # use openapi-generator to generate library
 source "${SCRIPT_ROOT}/openapi-generator/client-generator.sh"
+OPENAPI_GENERATOR_COMMIT="${OPENAPI_GENERATOR_COMMIT:-v4.2.3}"
 
 CLIENT_LANGUAGE=python-asyncio
 CLEANUP_DIRS=(client/apis client/models docs test)
