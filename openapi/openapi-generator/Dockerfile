@@ -28,7 +28,7 @@ RUN apt-get update && apt-get -y install \
     libunwind8-dev \
     && rm -rf /var/lib/apt/lists/*
 
-RUN npm install -g autorest
+RUN npm install -g autorest@2
 
 # Check out specific commit of openapi-generator
 RUN mkdir /source && \
