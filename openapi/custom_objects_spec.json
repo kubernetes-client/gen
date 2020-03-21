@@ -143,6 +143,63 @@
           "description": "Unauthorized"
         }
       }
+    },
+    "delete": {
+      "operationId": "deleteClusterCustomObject",
+      "description": "Deletes the specified cluster scoped custom object",
+      "consumes": [
+        "*/*"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "schemes": [
+        "https"
+      ],
+      "tags": [
+        "custom_objects"
+      ],
+      "parameters": [
+        {
+          "name": "body",
+          "in": "body",
+          "schema": {
+            "$ref": "#/definitions/v1.DeleteOptions"
+          }
+        },
+        {
+          "name": "gracePeriodSeconds",
+          "uniqueItems": true,
+          "type": "integer",
+          "description": "The duration in seconds before the object should be deleted. Value must be non-negative integer. The value zero indicates delete immediately. If this value is nil, the default grace period for the specified type will be used. Defaults to a per object value if not specified. zero means delete immediately.",
+          "in": "query"
+        },
+        {
+          "name": "orphanDependents",
+          "uniqueItems": true,
+          "type": "boolean",
+          "description": "Deprecated: please use the PropagationPolicy, this field will be deprecated in 1.7. Should the dependent objects be orphaned. If true/false, the \"orphan\" finalizer will be added to/removed from the object's finalizers list. Either this field or PropagationPolicy may be set, but not both.",
+          "in": "query"
+        },
+        {
+          "name": "propagationPolicy",
+          "uniqueItems": true,
+          "type": "string",
+          "description": "Whether and how garbage collection will be performed. Either this field or OrphanDependents may be set, but not both. The default policy is decided by the existing finalizer set in the metadata.finalizers and the resource-specific default policy.",
+          "in": "query"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "OK",
+          "schema": {
+            "type": "object"
+          }
+        },
+        "401": {
+          "description": "Unauthorized"
+        }
+      }
     }
   },
   "/apis/{group}/{version}/namespaces/{namespace}/{plural}": {
@@ -288,6 +345,63 @@
       "responses": {
         "201": {
           "description": "Created",
+          "schema": {
+            "type": "object"
+          }
+        },
+        "401": {
+          "description": "Unauthorized"
+        }
+      }
+    },
+    "delete": {
+      "operationId": "deleteNamespacedCustomObject",
+      "description": "Deletes the specified namespace scoped custom object",
+      "consumes": [
+        "*/*"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "schemes": [
+        "https"
+      ],
+      "tags": [
+        "custom_objects"
+      ],
+      "parameters": [
+        {
+          "name": "body",
+          "in": "body",
+          "schema": {
+            "$ref": "#/definitions/v1.DeleteOptions"
+          }
+        },
+        {
+          "name": "gracePeriodSeconds",
+          "uniqueItems": true,
+          "type": "integer",
+          "description": "The duration in seconds before the object should be deleted. Value must be non-negative integer. The value zero indicates delete immediately. If this value is nil, the default grace period for the specified type will be used. Defaults to a per object value if not specified. zero means delete immediately.",
+          "in": "query"
+        },
+        {
+          "name": "orphanDependents",
+          "uniqueItems": true,
+          "type": "boolean",
+          "description": "Deprecated: please use the PropagationPolicy, this field will be deprecated in 1.7. Should the dependent objects be orphaned. If true/false, the \"orphan\" finalizer will be added to/removed from the object's finalizers list. Either this field or PropagationPolicy may be set, but not both.",
+          "in": "query"
+        },
+        {
+          "name": "propagationPolicy",
+          "uniqueItems": true,
+          "type": "string",
+          "description": "Whether and how garbage collection will be performed. Either this field or OrphanDependents may be set, but not both. The default policy is decided by the existing finalizer set in the metadata.finalizers and the resource-specific default policy.",
+          "in": "query"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "OK",
           "schema": {
             "type": "object"
           }
