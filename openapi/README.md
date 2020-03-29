@@ -1,1 +1,0 @@
-Share generator files for all OpenAPI based clients (non-go clients) such as python.

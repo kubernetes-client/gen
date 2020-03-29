@@ -53,5 +53,3 @@ fi
 echo "Running command \"${SCRIPT_ROOT}/${REPO_NAME}.sh\" \"${REPO_ROOT}/kubernetes\" \"${REPO_ROOT}/settings\""
 
 "${SCRIPT_ROOT}/${REPO_NAME}.sh" "${REPO_ROOT}/kubernetes" "${REPO_ROOT}/settings"
-
-
