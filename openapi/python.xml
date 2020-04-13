@@ -21,6 +21,7 @@
                             <language>python</language>
                             <gitUserId>kubernetes-client</gitUserId>
                             <gitRepoId>python</gitRepoId>
+                            <skipValidateSpec>true</skipValidateSpec>
                             <configOptions>
                                 <packageName>${generator.package.name}</packageName>
                                 <packageVersion>${generator.client.version}</packageVersion>
