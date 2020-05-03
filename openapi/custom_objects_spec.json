@@ -145,8 +145,8 @@
       }
     },
     "delete": {
-      "operationId": "deleteClusterCustomObject",
-      "description": "Deletes the specified cluster scoped custom object",
+      "operationId": "deleteCollectionClusterCustomObject",
+      "description": "Delete collection of cluster scoped custom objects",
       "consumes": [
         "*/*"
       ],
@@ -355,8 +355,8 @@
       }
     },
     "delete": {
-      "operationId": "deleteNamespacedCustomObject",
-      "description": "Deletes the specified namespace scoped custom object",
+      "operationId": "deleteCollectionNamespacedCustomObject",
+      "description": "Delete collection of namespace scoped custom objects",
       "consumes": [
         "*/*"
       ],
