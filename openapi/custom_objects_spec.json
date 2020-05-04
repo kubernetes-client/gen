@@ -130,6 +130,20 @@
           "schema": {
             "type": "object"
           }
+        },
+        {
+          "description": "When present, indicates that modifications should not be persisted. An invalid or unrecognized dryRun directive will result in an error response and no further processing of the request. Valid values are: - All: all dry run stages will be processed",
+          "in": "query",
+          "name": "dryRun",
+          "type": "string",
+          "uniqueItems": true
+        },
+        {
+          "description": "fieldManager is a name associated with the actor or entity that is making these changes. The value must be less than or 128 characters long, and only contain printable characters, as defined by https://golang.org/pkg/unicode/#IsPrint. This field is required for apply requests (application/apply-patch) but optional for non-apply patch types (JsonPatch, MergePatch, StrategicMergePatch).",
+          "in": "query",
+          "name": "fieldManager",
+          "type": "string",
+          "uniqueItems": true
         }
       ],
       "responses": {
@@ -187,6 +201,13 @@
           "type": "string",
           "description": "Whether and how garbage collection will be performed. Either this field or OrphanDependents may be set, but not both. The default policy is decided by the existing finalizer set in the metadata.finalizers and the resource-specific default policy.",
           "in": "query"
+        },
+        {
+          "description": "When present, indicates that modifications should not be persisted. An invalid or unrecognized dryRun directive will result in an error response and no further processing of the request. Valid values are: - All: all dry run stages will be processed",
+          "in": "query",
+          "name": "dryRun",
+          "type": "string",
+          "uniqueItems": true
         }
       ],
       "responses": {
@@ -340,6 +361,20 @@
           "schema": {
             "type": "object"
           }
+        },
+        {
+          "description": "When present, indicates that modifications should not be persisted. An invalid or unrecognized dryRun directive will result in an error response and no further processing of the request. Valid values are: - All: all dry run stages will be processed",
+          "in": "query",
+          "name": "dryRun",
+          "type": "string",
+          "uniqueItems": true
+        },
+        {
+          "description": "fieldManager is a name associated with the actor or entity that is making these changes. The value must be less than or 128 characters long, and only contain printable characters, as defined by https://golang.org/pkg/unicode/#IsPrint.",
+          "in": "query",
+          "name": "fieldManager",
+          "type": "string",
+          "uniqueItems": true
         }
       ],
       "responses": {
@@ -397,6 +432,13 @@
           "type": "string",
           "description": "Whether and how garbage collection will be performed. Either this field or OrphanDependents may be set, but not both. The default policy is decided by the existing finalizer set in the metadata.finalizers and the resource-specific default policy.",
           "in": "query"
+        },
+        {
+          "description": "When present, indicates that modifications should not be persisted. An invalid or unrecognized dryRun directive will result in an error response and no further processing of the request. Valid values are: - All: all dry run stages will be processed",
+          "in": "query",
+          "name": "dryRun",
+          "type": "string",
+          "uniqueItems": true
         }
       ],
       "responses": {
@@ -471,7 +513,7 @@
       }
     },
     "delete": {
-      "operationId": "deleteClusterCustomObject",
+      "operationId": "deleteCollectionClusterCustomObject",
       "description": "Deletes the specified cluster scoped custom object",
       "consumes": [
         "*/*"
@@ -513,6 +555,13 @@
           "type": "string",
           "description": "Whether and how garbage collection will be performed. Either this field or OrphanDependents may be set, but not both. The default policy is decided by the existing finalizer set in the metadata.finalizers and the resource-specific default policy.",
           "in": "query"
+        },
+        {
+          "description": "When present, indicates that modifications should not be persisted. An invalid or unrecognized dryRun directive will result in an error response and no further processing of the request. Valid values are: - All: all dry run stages will be processed",
+          "in": "query",
+          "name": "dryRun",
+          "type": "string",
+          "uniqueItems": true
         }
       ],
       "responses": {
@@ -552,6 +601,27 @@
           "schema": {
             "type": "object"
           }
+        },
+        {
+          "description": "When present, indicates that modifications should not be persisted. An invalid or unrecognized dryRun directive will result in an error response and no further processing of the request. Valid values are: - All: all dry run stages will be processed",
+          "in": "query",
+          "name": "dryRun",
+          "type": "string",
+          "uniqueItems": true
+        },
+        {
+          "description": "fieldManager is a name associated with the actor or entity that is making these changes. The value must be less than or 128 characters long, and only contain printable characters, as defined by https://golang.org/pkg/unicode/#IsPrint. This field is required for apply requests (application/apply-patch) but optional for non-apply patch types (JsonPatch, MergePatch, StrategicMergePatch).",
+          "in": "query",
+          "name": "fieldManager",
+          "type": "string",
+          "uniqueItems": true
+        },
+        {
+          "description": "Force is going to \"force\" Apply requests. It means user will re-acquire conflicting fields owned by other people. Force flag must be unset for non-apply patch requests.",
+          "in": "query",
+          "name": "force",
+          "type": "boolean",
+          "uniqueItems": true
         }
       ],
       "responses": {
@@ -590,6 +660,20 @@
           "schema": {
             "type": "object"
           }
+        },
+        {
+          "description": "When present, indicates that modifications should not be persisted. An invalid or unrecognized dryRun directive will result in an error response and no further processing of the request. Valid values are: - All: all dry run stages will be processed",
+          "in": "query",
+          "name": "dryRun",
+          "type": "string",
+          "uniqueItems": true
+        },
+        {
+          "description": "fieldManager is a name associated with the actor or entity that is making these changes. The value must be less than or 128 characters long, and only contain printable characters, as defined by https://golang.org/pkg/unicode/#IsPrint.",
+          "in": "query",
+          "name": "fieldManager",
+          "type": "string",
+          "uniqueItems": true
         }
       ],
       "responses": {
@@ -690,6 +774,20 @@
           "schema": {
             "type": "object"
           }
+        },
+        {
+          "description": "When present, indicates that modifications should not be persisted. An invalid or unrecognized dryRun directive will result in an error response and no further processing of the request. Valid values are: - All: all dry run stages will be processed",
+          "in": "query",
+          "name": "dryRun",
+          "type": "string",
+          "uniqueItems": true
+        },
+        {
+          "description": "fieldManager is a name associated with the actor or entity that is making these changes. The value must be less than or 128 characters long, and only contain printable characters, as defined by https://golang.org/pkg/unicode/#IsPrint.",
+          "in": "query",
+          "name": "fieldManager",
+          "type": "string",
+          "uniqueItems": true
         }
       ],
       "responses": {
@@ -737,6 +835,27 @@
             "description": "The JSON schema of the Resource to patch.",
             "type": "object"
           }
+        },
+        {
+          "description": "When present, indicates that modifications should not be persisted. An invalid or unrecognized dryRun directive will result in an error response and no further processing of the request. Valid values are: - All: all dry run stages will be processed",
+          "in": "query",
+          "name": "dryRun",
+          "type": "string",
+          "uniqueItems": true
+        },
+        {
+          "description": "fieldManager is a name associated with the actor or entity that is making these changes. The value must be less than or 128 characters long, and only contain printable characters, as defined by https://golang.org/pkg/unicode/#IsPrint. This field is required for apply requests (application/apply-patch) but optional for non-apply patch types (JsonPatch, MergePatch, StrategicMergePatch).",
+          "in": "query",
+          "name": "fieldManager",
+          "type": "string",
+          "uniqueItems": true
+        },
+        {
+          "description": "Force is going to \"force\" Apply requests. It means user will re-acquire conflicting fields owned by other people. Force flag must be unset for non-apply patch requests.",
+          "in": "query",
+          "name": "force",
+          "type": "boolean",
+          "uniqueItems": true
         }
       ],
       "responses": {
@@ -837,6 +956,20 @@
           "schema": {
             "type": "object"
           }
+        },
+        {
+          "description": "When present, indicates that modifications should not be persisted. An invalid or unrecognized dryRun directive will result in an error response and no further processing of the request. Valid values are: - All: all dry run stages will be processed",
+          "in": "query",
+          "name": "dryRun",
+          "type": "string",
+          "uniqueItems": true
+        },
+        {
+          "description": "fieldManager is a name associated with the actor or entity that is making these changes. The value must be less than or 128 characters long, and only contain printable characters, as defined by https://golang.org/pkg/unicode/#IsPrint.",
+          "in": "query",
+          "name": "fieldManager",
+          "type": "string",
+          "uniqueItems": true
         }
       ],
       "responses": {
@@ -884,6 +1017,27 @@
             "description": "The JSON schema of the Resource to patch.",
             "type": "object"
           }
+        },
+        {
+          "description": "When present, indicates that modifications should not be persisted. An invalid or unrecognized dryRun directive will result in an error response and no further processing of the request. Valid values are: - All: all dry run stages will be processed",
+          "in": "query",
+          "name": "dryRun",
+          "type": "string",
+          "uniqueItems": true
+        },
+        {
+          "description": "fieldManager is a name associated with the actor or entity that is making these changes. The value must be less than or 128 characters long, and only contain printable characters, as defined by https://golang.org/pkg/unicode/#IsPrint. This field is required for apply requests (application/apply-patch) but optional for non-apply patch types (JsonPatch, MergePatch, StrategicMergePatch).",
+          "in": "query",
+          "name": "fieldManager",
+          "type": "string",
+          "uniqueItems": true
+        },
+        {
+          "description": "Force is going to \"force\" Apply requests. It means user will re-acquire conflicting fields owned by other people. Force flag must be unset for non-apply patch requests.",
+          "in": "query",
+          "name": "force",
+          "type": "boolean",
+          "uniqueItems": true
         }
       ],
       "responses": {
@@ -965,8 +1119,7 @@
       }
     },
     "delete": {
-      "operationId": "deleteNamespacedCustomObject",
-      "description": "Deletes the specified namespace scoped custom object",
+      "operationId": "deleteCollectionNamespacedCustomObject",
       "consumes": [
         "*/*"
       ],
@@ -1007,6 +1160,13 @@
           "type": "string",
           "description": "Whether and how garbage collection will be performed. Either this field or OrphanDependents may be set, but not both. The default policy is decided by the existing finalizer set in the metadata.finalizers and the resource-specific default policy.",
           "in": "query"
+        },
+        {
+          "description": "When present, indicates that modifications should not be persisted. An invalid or unrecognized dryRun directive will result in an error response and no further processing of the request. Valid values are: - All: all dry run stages will be processed",
+          "in": "query",
+          "name": "dryRun",
+          "type": "string",
+          "uniqueItems": true
         }
       ],
       "responses": {
@@ -1046,6 +1206,27 @@
           "schema": {
             "type": "object"
           }
+        },
+        {
+          "description": "When present, indicates that modifications should not be persisted. An invalid or unrecognized dryRun directive will result in an error response and no further processing of the request. Valid values are: - All: all dry run stages will be processed",
+          "in": "query",
+          "name": "dryRun",
+          "type": "string",
+          "uniqueItems": true
+        },
+        {
+          "description": "fieldManager is a name associated with the actor or entity that is making these changes. The value must be less than or 128 characters long, and only contain printable characters, as defined by https://golang.org/pkg/unicode/#IsPrint. This field is required for apply requests (application/apply-patch) but optional for non-apply patch types (JsonPatch, MergePatch, StrategicMergePatch).",
+          "in": "query",
+          "name": "fieldManager",
+          "type": "string",
+          "uniqueItems": true
+        },
+        {
+          "description": "Force is going to \"force\" Apply requests. It means user will re-acquire conflicting fields owned by other people. Force flag must be unset for non-apply patch requests.",
+          "in": "query",
+          "name": "force",
+          "type": "boolean",
+          "uniqueItems": true
         }
       ],
       "responses": {
@@ -1084,6 +1265,20 @@
           "schema": {
             "type": "object"
           }
+        },
+        {
+          "description": "When present, indicates that modifications should not be persisted. An invalid or unrecognized dryRun directive will result in an error response and no further processing of the request. Valid values are: - All: all dry run stages will be processed",
+          "in": "query",
+          "name": "dryRun",
+          "type": "string",
+          "uniqueItems": true
+        },
+        {
+          "description": "fieldManager is a name associated with the actor or entity that is making these changes. The value must be less than or 128 characters long, and only contain printable characters, as defined by https://golang.org/pkg/unicode/#IsPrint.",
+          "in": "query",
+          "name": "fieldManager",
+          "type": "string",
+          "uniqueItems": true
         }
       ],
       "responses": {
@@ -1191,6 +1386,20 @@
           "schema": {
             "type": "object"
           }
+        },
+        {
+          "description": "When present, indicates that modifications should not be persisted. An invalid or unrecognized dryRun directive will result in an error response and no further processing of the request. Valid values are: - All: all dry run stages will be processed",
+          "in": "query",
+          "name": "dryRun",
+          "type": "string",
+          "uniqueItems": true
+        },
+        {
+          "description": "fieldManager is a name associated with the actor or entity that is making these changes. The value must be less than or 128 characters long, and only contain printable characters, as defined by https://golang.org/pkg/unicode/#IsPrint.",
+          "in": "query",
+          "name": "fieldManager",
+          "type": "string",
+          "uniqueItems": true
         }
       ],
       "responses": {
@@ -1215,7 +1424,8 @@
       "description": "partially update status of the specified namespace scoped custom object",
       "consumes": [
         "application/json-patch+json",
-        "application/merge-patch+json"
+        "application/merge-patch+json",
+        "application/apply-patch+yaml"
       ],
       "produces": [
         "application/json",
@@ -1238,6 +1448,27 @@
             "description": "The JSON schema of the Resource to patch.",
             "type": "object"
           }
+        },
+        {
+          "description": "When present, indicates that modifications should not be persisted. An invalid or unrecognized dryRun directive will result in an error response and no further processing of the request. Valid values are: - All: all dry run stages will be processed",
+          "in": "query",
+          "name": "dryRun",
+          "type": "string",
+          "uniqueItems": true
+        },
+        {
+          "description": "fieldManager is a name associated with the actor or entity that is making these changes. The value must be less than or 128 characters long, and only contain printable characters, as defined by https://golang.org/pkg/unicode/#IsPrint. This field is required for apply requests (application/apply-patch) but optional for non-apply patch types (JsonPatch, MergePatch, StrategicMergePatch).",
+          "in": "query",
+          "name": "fieldManager",
+          "type": "string",
+          "uniqueItems": true
+        },
+        {
+          "description": "Force is going to \"force\" Apply requests. It means user will re-acquire conflicting fields owned by other people. Force flag must be unset for non-apply patch requests.",
+          "in": "query",
+          "name": "force",
+          "type": "boolean",
+          "uniqueItems": true
         }
       ],
       "responses": {
@@ -1345,6 +1576,20 @@
           "schema": {
             "type": "object"
           }
+        },
+        {
+          "description": "When present, indicates that modifications should not be persisted. An invalid or unrecognized dryRun directive will result in an error response and no further processing of the request. Valid values are: - All: all dry run stages will be processed",
+          "in": "query",
+          "name": "dryRun",
+          "type": "string",
+          "uniqueItems": true
+        },
+        {
+          "description": "fieldManager is a name associated with the actor or entity that is making these changes. The value must be less than or 128 characters long, and only contain printable characters, as defined by https://golang.org/pkg/unicode/#IsPrint.",
+          "in": "query",
+          "name": "fieldManager",
+          "type": "string",
+          "uniqueItems": true
         }
       ],
       "responses": {
@@ -1369,7 +1614,8 @@
       "description": "partially update scale of the specified namespace scoped custom object",
       "consumes": [
         "application/json-patch+json",
-        "application/merge-patch+json"
+        "application/merge-patch+json",
+        "application/apply-patch+yaml"
       ],
       "produces": [
         "application/json",
@@ -1392,6 +1638,27 @@
             "description": "The JSON schema of the Resource to patch.",
             "type": "object"
           }
+        },
+        {
+          "description": "When present, indicates that modifications should not be persisted. An invalid or unrecognized dryRun directive will result in an error response and no further processing of the request. Valid values are: - All: all dry run stages will be processed",
+          "in": "query",
+          "name": "dryRun",
+          "type": "string",
+          "uniqueItems": true
+        },
+        {
+          "description": "fieldManager is a name associated with the actor or entity that is making these changes. The value must be less than or 128 characters long, and only contain printable characters, as defined by https://golang.org/pkg/unicode/#IsPrint. This field is required for apply requests (application/apply-patch) but optional for non-apply patch types (JsonPatch, MergePatch, StrategicMergePatch).",
+          "in": "query",
+          "name": "fieldManager",
+          "type": "string",
+          "uniqueItems": true
+        },
+        {
+          "description": "Force is going to \"force\" Apply requests. It means user will re-acquire conflicting fields owned by other people. Force flag must be unset for non-apply patch requests.",
+          "in": "query",
+          "name": "force",
+          "type": "boolean",
+          "uniqueItems": true
         }
       ],
       "responses": {
