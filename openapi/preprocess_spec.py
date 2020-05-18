@@ -28,7 +28,9 @@ import urllib3
 WATCH_OP_PREFIX = "watch"
 WATCH_OP_SUFFIX = "List"
 LIST_OP_PREFIX = "list"
+DELETECOLLECTION_OP_PREFIX = "deleteCollection"
 WATCH_QUERY_PARAM_NAME = "watch"
+ALLOW_WATCH_BOOKMARKS_QUERY_PARAM_NAME = "allowWatchBookmarks"
 
 CUSTOM_OBJECTS_SPEC_PATH = os.path.join(
     os.path.dirname(__file__),
@@ -95,6 +97,21 @@ def remove_watch_operations(op, parent, operation_ids):
     return True
 
 
+def strip_delete_collection_operation_watch_params(op, parent):
+    op_id = op['operationId']
+    if not op_id.startswith(DELETECOLLECTION_OP_PREFIX):
+        return
+    params = []
+    if 'parameters' in op:
+        for i in range(len(op['parameters'])):
+            paramName = op['parameters'][i]['name']
+            if paramName != WATCH_QUERY_PARAM_NAME and paramName != ALLOW_WATCH_BOOKMARKS_QUERY_PARAM_NAME:
+                params.append(op['parameters'][i])
+    op['parameters'] = params
+    return False
+
+
+
 def strip_tags_from_operation_id(operation, _):
     operation_id = operation['operationId']
     if 'tags' in operation:
@@ -119,6 +136,8 @@ def process_swagger(spec, client_language):
     spec = add_custom_objects_spec(spec)
 
     apply_func_to_spec_operations(spec, strip_tags_from_operation_id)
+
+    apply_func_to_spec_operations(spec, strip_delete_collection_operation_watch_params)
 
     apply_func_to_spec_operations(spec, add_codegen_request_body)
 
