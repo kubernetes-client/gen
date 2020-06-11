@@ -119,6 +119,16 @@ def strip_tags_from_operation_id(operation, _):
             operation_id = operation_id.replace(_to_camel_case(t), '')
         operation['operationId'] = operation_id
 
+def clean_crd_meta(spec):
+    for k, v in spec['definitions'].items():
+        if k.endswith('List'):
+            print("Using built-in v1.ListMeta")
+            v['properties']['metadata']['$ref'] = '#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta'
+            v['properties']['metadata'].pop('properties')
+        find_rename_ref_recursive(spec, '#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta', '#/definitions/v1.ListMeta')
+        find_rename_ref_recursive(spec, '#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta', '#/definitions/v1.ObjectMeta')
+
+
 def add_custom_objects_spec(spec):
     with open(CUSTOM_OBJECTS_SPEC_PATH, 'r') as custom_objects_spec_file:
         custom_objects_spec = json.loads(custom_objects_spec_file.read())
@@ -132,8 +142,15 @@ def add_codegen_request_body(operation, _):
         if operation['parameters'][0].get('in') == 'body':
             operation['x-codegen-request-body-name'] = 'body'
 
-def process_swagger(spec, client_language):
+def drop_paths(spec):
+    spec['paths'] = {}
+    
+
+def process_swagger(spec, client_language, crd_mode=False):
     spec = add_custom_objects_spec(spec)
+
+    if crd_mode:
+        drop_paths(spec)
 
     apply_func_to_spec_operations(spec, strip_tags_from_operation_id)
 
@@ -151,9 +168,14 @@ def process_swagger(spec, client_language):
     except PreprocessingException as e:
         print(e)
 
-    remove_model_prefixes(spec)
+    if crd_mode:
+        filter_api_group(spec)
+    remove_model_prefixes(spec, crd_mode)
 
     inline_primitive_models(spec, preserved_primitives_for_language(client_language))
+
+    if crd_mode:
+        clean_crd_meta(spec)
 
     add_custom_formatting(spec, format_for_language(client_language))
     add_custom_typing(spec, type_for_language(client_language))
@@ -227,6 +249,16 @@ def is_model_deprecated(m):
         return False
     return m["description"].startswith("Deprecated.")
 
+def filter_api_group(spec):
+    models = {}
+    for k, v in spec['definitions'].items():
+        if k.startswith("io.k8s"):
+            print("Removing builtin Kubernetes Resource %s" %k)
+        elif not k.startswith(os.environ.get('KUBERNETES_CRD_GROUP_PREFIX')):
+            print("Ignoring Custom Resource %s" %k)
+        else:
+            models[k] = v
+    spec['definitions'] = models
 
 def remove_deprecated_models(spec):
     """
@@ -244,7 +276,7 @@ def remove_deprecated_models(spec):
     spec['definitions'] = models
 
 
-def remove_model_prefixes(spec):
+def remove_model_prefixes(spec, crd_mode=False):
     """Remove full package name from OpenAPI model names.
 
     Starting kubernetes 1.6, all models has full package name. This is
@@ -260,6 +292,9 @@ def remove_model_prefixes(spec):
     for k, v in spec['definitions'].items():
         if k.startswith("io.k8s"):
             models[k] = {"split_n": 2}
+        elif crd_mode and k.startswith(os.environ.get('KUBERNETES_CRD_GROUP_PREFIX')):
+            if os.environ.get('OPENAPI_MODEL_LENGTH') or False:
+                models[k] = {"split_n": int(os.environ.get('OPENAPI_MODEL_LENGTH'))}
 
     conflict = True
     while conflict:
@@ -397,7 +432,8 @@ def main():
     # use version from branch/tag name if spec doesn't provide it
     if in_spec['info']['version'] == 'unversioned':
         in_spec['info']['version'] = args.kubernetes_branch
-    out_spec = process_swagger(in_spec, args.client_language)
+    crd_mode = os.environ.get('KUBERNETES_CRD_MODE') or False
+    out_spec = process_swagger(in_spec, args.client_language, crd_mode)
     write_json(args.output_spec_path, out_spec)
     return 0
 
