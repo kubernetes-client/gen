@@ -124,7 +124,7 @@ def clean_crd_meta(spec):
         if k.endswith('List'):
             print("Using built-in v1.ListMeta")
             v['properties']['metadata']['$ref'] = '#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta'
-            v['properties']['metadata'].pop('properties')
+            v['properties']['metadata'].pop('properties', None)
         find_rename_ref_recursive(spec, '#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta', '#/definitions/v1.ListMeta')
         find_rename_ref_recursive(spec, '#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta', '#/definitions/v1.ObjectMeta')
 
