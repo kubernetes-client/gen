@@ -168,6 +168,8 @@ def process_swagger(spec, client_language, crd_mode=False):
     except PreprocessingException as e:
         print(e)
 
+    add_openapi_codegen_x_implement_extension(spec, client_language)
+
     if crd_mode:
         filter_api_group(spec)
     remove_model_prefixes(spec, crd_mode)
@@ -378,6 +380,25 @@ def add_custom_typing(spec, custom_types):
         if k not in custom_types:
             continue
         v["type"] = custom_types[k]
+
+def add_openapi_codegen_x_implement_extension(spec, client_language):
+    if client_language != "java":
+        return
+    for k, v in spec['definitions'].items():        
+        if "x-kubernetes-group-version-kind" not in v:
+            continue
+        if k == "io.k8s.apimachinery.pkg.apis.meta.v1.Status":
+            # Status is explicitly exlucded because it's obviously not a list object
+            # but it has ListMeta.
+            continue
+        if "metadata" not in v['properties']:
+            continue # not a legitimate kubernetes api object
+        if v["properties"]["metadata"]["$ref"] == "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta":  
+            v["x-implements"] = ["io.kubernetes.client.common.KubernetesListObject"]
+        elif v["properties"]["metadata"]["$ref"] == "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta":
+            v["x-implements"] = ["io.kubernetes.client.common.KubernetesObject"]
+
+
 
 def write_json(filename, object):
     with open(filename, 'w') as out:
