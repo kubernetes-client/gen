@@ -168,7 +168,6 @@ def process_swagger(spec, client_language, crd_mode=False):
     except PreprocessingException as e:
         print(e)
 
-    add_openapi_codegen_x_implement_extension(spec, client_language)
 
     if crd_mode:
         filter_api_group(spec)
@@ -183,6 +182,8 @@ def process_swagger(spec, client_language, crd_mode=False):
     add_custom_typing(spec, type_for_language(client_language))
 
     remove_models(spec, removed_models_for_language(client_language))
+
+    add_openapi_codegen_x_implement_extension(spec, client_language)
 
     return spec
 
@@ -384,6 +385,8 @@ def add_custom_typing(spec, custom_types):
 def add_openapi_codegen_x_implement_extension(spec, client_language):
     if client_language != "java":
         return
+    if os.environ.get('OPENAPI_SKIP_BASE_INTERFACE') or True:
+        return
     for k, v in spec['definitions'].items():        
         if "x-kubernetes-group-version-kind" not in v:
             continue
@@ -393,9 +396,9 @@ def add_openapi_codegen_x_implement_extension(spec, client_language):
             continue
         if "metadata" not in v['properties']:
             continue # not a legitimate kubernetes api object
-        if v["properties"]["metadata"]["$ref"] == "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta":  
+        if v["properties"]["metadata"]["$ref"] == "#/definitions/v1.ListMeta":  
             v["x-implements"] = ["io.kubernetes.client.common.KubernetesListObject"]
-        elif v["properties"]["metadata"]["$ref"] == "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta":
+        elif v["properties"]["metadata"]["$ref"] == "#/definitions/v1.ObjectMeta":
             v["x-implements"] = ["io.kubernetes.client.common.KubernetesObject"]
 
 

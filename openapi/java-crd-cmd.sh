@@ -4,24 +4,27 @@ PACKAGE_NAME=${PACKAGE_NAME:-io.kubernetes.client}
 CLIENT_VERSION=${CLIENT_VERSION:-5.0-SNAPSHOT}
 OUTPUT_DIR=${OUTPUT_DIR:-java}
 OPENAPI_MODEL_LENGTH=${OPENAPI_MODEL_LENGTH:-}
+OPENAPI_SKIP_BASE_INTERFACE=
 KUBERNETES_CRD_GROUP_PREFIX=
 
 print_usage() {
   echo "Usage: generate a java project using input openapi spec from stdin" >& 2
   echo " -c: project version of the generated java project." >& 2
+  echo " -x: skips implementing kubernetes common interface (this is for backward compatibility w/ client-java lower than 9.0.0)" >& 2
   echo " -n: the prefix of the target CRD's api group to generate." >& 2
   echo " -p: the base package name of the generated java project. " >& 2
   echo " -o: output directory of the generated java project. " >& 2
   echo " -l: keep the n last segments for the generated class name. " >& 2
 }
 
-while getopts 'c:n:l:p:o:' flag; do
+while getopts 'c:n:l:p:o:x' flag; do
   case "${flag}" in
     c) CLIENT_VERSION="${CLIENT_VERSION}" ;;
     n) KUBERNETES_CRD_GROUP_PREFIX="${OPTARG}" ;;
     l) OPENAPI_MODEL_LENGTH="${OPTARG}" ;;
     p) PACKAGE_NAME="${OPTARG}" ;;
     o) OUTPUT_DIR="${OPTARG}" ;;
+    x) OPENAPI_SKIP_BASE_INTERFACE=1 ;;
     *) print_usage
        exit 1 ;;
   esac
@@ -58,4 +61,5 @@ KUBERNETES_CRD_MODE=true \
 OPENAPI_SKIP_FETCH_SPEC=true \
 OPENAPI_MODEL_LENGTH=${OPENAPI_MODEL_LENGTH} \
 KUBERNETES_CRD_GROUP_PREFIX=${KUBERNETES_CRD_GROUP_PREFIX} \
+OPENAPI_SKIP_BASE_INTERFACE=${OPENAPI_SKIP_BASE_INTERFACE} \
 $(pwd)/java.sh ${OUTPUT_DIR} /tmp/settings
