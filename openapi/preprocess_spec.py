@@ -385,7 +385,7 @@ def add_custom_typing(spec, custom_types):
 def add_openapi_codegen_x_implement_extension(spec, client_language):
     if client_language != "java":
         return
-    if os.environ.get('OPENAPI_SKIP_BASE_INTERFACE') or True:
+    if os.environ.get('OPENAPI_SKIP_BASE_INTERFACE') or False:
         return
     for k, v in spec['definitions'].items():        
         if "x-kubernetes-group-version-kind" not in v:
