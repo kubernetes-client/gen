@@ -51,6 +51,7 @@
             </goals>
             <configuration>
               <inputSpec>${generator.spec.path}</inputSpec>
+              <httpUserAgent>Kubernetes Java Client/${generator.client.version}</httpUserAgent>
               <generatorName>java</generatorName>
               <gitUserId>kubernetes-client</gitUserId>
               <gitRepoId>client-java</gitRepoId>
