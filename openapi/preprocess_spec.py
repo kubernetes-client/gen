@@ -390,7 +390,7 @@ def add_openapi_codegen_x_implement_extension(spec, client_language):
     for k, v in spec['definitions'].items():        
         if "x-kubernetes-group-version-kind" not in v:
             continue
-        if k == "io.k8s.apimachinery.pkg.apis.meta.v1.Status":
+        if k == "v1.Status":
             # Status is explicitly exlucded because it's obviously not a list object
             # but it has ListMeta.
             continue
