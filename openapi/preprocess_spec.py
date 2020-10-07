@@ -111,6 +111,11 @@ def strip_delete_collection_operation_watch_params(op, parent):
     return False
 
 
+def strip_401_response(operation, _):
+    if operation.has_key('responses'):
+        operation['responses'].pop('401', None)
+        if len(operation['responses']) == 0:
+            operation['responses']['200'] = { 'description': 'OK' }
 
 def strip_tags_from_operation_id(operation, _):
     operation_id = operation['operationId']
@@ -153,6 +158,10 @@ def process_swagger(spec, client_language, crd_mode=False):
         drop_paths(spec)
 
     apply_func_to_spec_operations(spec, strip_tags_from_operation_id)
+
+    if client_language == "csharp":
+        # 401s in the spec block the csharp code generator from throwing on 401
+        apply_func_to_spec_operations(spec, strip_401_response)
 
     apply_func_to_spec_operations(spec, strip_delete_collection_operation_watch_params)
 
