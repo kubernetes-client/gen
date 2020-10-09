@@ -33,6 +33,7 @@
         <arguments>
           <argument>--max-old-space-size=8192</argument> <!-- fix oom -->
           <argument>/usr/bin/autorest</argument>
+          <argument>/output_dir/config.yaml</argument>
           <argument>--input-file=${generator.spec.path}</argument>
           <argument>--csharp</argument>
           <argument>--namespace=${generator.package.name}</argument>
@@ -41,12 +42,6 @@
           <argument>--add-credentials</argument>
           <argument>--debug</argument>
           <argument>--verbose</argument>
-          <argument>--directive={from: "swagger-document", where: "$..*[?(@.consumes[0] === \"*/*\")]", transform: "$.consumes[0] = \"application/json\""}</argument>
-          <argument>--directive={from: "swagger-document", where: "$..*[?(@.operationId === \"readNamespacedPodLog\")]", transform: "$.responses[\"200\"].schema = { \"type\": \"object\", \"format\": \"file\" }"}</argument>
-          <argument>--directive={from: "swagger-document", where: "$..*[?(@[\"x-kubernetes-action\"]=== \"proxy\")]", transform: "$.responses[\"200\"].schema = { \"type\": \"object\", \"format\": \"file\" }"}</argument>
-          <argument>--directive={from: "swagger-document", where: "$.definitions", transform: "$[\"intstr.IntOrString\"] = {\"properties\": { \"value\": { \"type\": \"string\" }}}"}</argument>
-          <argument>--directive={from: "swagger-document", where: "$.definitions", transform: "$[\"resource.Quantity\"] = {\"properties\": { \"value\": { \"type\": \"string\" }}}"}</argument>
-          <argument>--directive={from: "swagger-document", where: "$.definitions", transform: "$[\"v1.Patch\"] = {\"properties\": { \"content\": { \"type\": \"object\" }}}"}</argument>
         </arguments>
       </configuration>
     </plugin>

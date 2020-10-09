@@ -22,13 +22,13 @@ RUN apt-get update && apt-get -y install git python-pip && pip install urllib3==
 
 # Install Autorest
 RUN apt-get update && apt-get -qq -y install libunwind8 libicu57 libssl1.0 liblttng-ust0 libcurl3 libuuid1 libkrb5-3 zlib1g
-RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
+RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
 RUN apt-get update && apt-get -y install \
     nodejs \
     libunwind8-dev \
     && rm -rf /var/lib/apt/lists/*
 
-RUN npm install -g autorest@2
+RUN npm install -g autorest@3
 
 # Check out specific commit of openapi-generator
 RUN mkdir /source && \
