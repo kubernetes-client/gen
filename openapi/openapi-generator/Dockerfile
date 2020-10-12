@@ -21,7 +21,7 @@ ARG OPENAPI_GENERATOR_USER_ORG=OpenAPITools
 RUN apt-get update && apt-get -y install git python-pip && pip install urllib3==1.24.2
 
 # Install Autorest
-RUN apt-get update && apt-get -qq -y install libunwind8 libicu57 libssl1.0 liblttng-ust0 libcurl3 libuuid1 libkrb5-3 zlib1g
+RUN apt-get update && apt-get -qq -y install libunwind8 libicu57 libssl1.0 liblttng-ust0 libcurl3 libuuid1 libkrb5-3 zlib1g gnupg2
 RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
 RUN apt-get update && apt-get -y install \
     nodejs \
