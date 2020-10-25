@@ -117,6 +117,15 @@ def strip_401_response(operation, _):
         if len(operation['responses']) == 0:
             operation['responses']['200'] = { 'description': 'OK' }
 
+
+def transform_to_csharp_stream_response(operation, _):
+    if operation.get('operationId', None) == 'readNamespacedPodLog' or operation.get('x-kubernetes-action', None) == 'connect':
+        operation['responses']['200']["schema"] = {
+            "type": "object", 
+            "format": "file" ,
+        }
+
+
 def strip_tags_from_operation_id(operation, _):
     operation_id = operation['operationId']
     if 'tags' in operation:
@@ -162,6 +171,9 @@ def process_swagger(spec, client_language, crd_mode=False):
     if client_language == "csharp":
         # 401s in the spec block the csharp code generator from throwing on 401
         apply_func_to_spec_operations(spec, strip_401_response)
+
+        # force to autorest to generate stream
+        apply_func_to_spec_operations(spec, transform_to_csharp_stream_response)
 
     apply_func_to_spec_operations(spec, strip_delete_collection_operation_watch_params)
 
