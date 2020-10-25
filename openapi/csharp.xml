@@ -33,7 +33,6 @@
         <arguments>
           <argument>--max-old-space-size=8192</argument> <!-- fix oom -->
           <argument>/usr/bin/autorest</argument>
-          <argument>/output_dir/config.yaml</argument>
           <argument>--input-file=${generator.spec.path}</argument>
           <argument>--csharp</argument>
           <argument>--namespace=${generator.package.name}</argument>

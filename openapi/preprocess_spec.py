@@ -214,7 +214,13 @@ def format_for_language(client_language):
 
 def type_for_language(client_language):
     if client_language == "java":
-        return {"v1.Patch": "string"}
+        return {"v1.Patch": { "type": "string"}}
+    elif client_language == "csharp":
+        return {
+                "v1.Patch": { "type": "object", "properties": {"content": { "type": "object"}} }, 
+                "resource.Quantity": { "type": "object", "properties": {"value": { "type": "string"}} }, 
+                "intstr.IntOrString" : { "type": "object", "properties": {"value": { "type": "string"}} },
+               }
     else:
         return {}
 
@@ -389,7 +395,7 @@ def add_custom_typing(spec, custom_types):
     for k, v in spec['definitions'].items():
         if k not in custom_types:
             continue
-        v["type"] = custom_types[k]
+        v.update(custom_types[k])
 
 def add_openapi_codegen_x_implement_extension(spec, client_language):
     if client_language != "java":
