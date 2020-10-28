@@ -117,6 +117,15 @@ def strip_401_response(operation, _):
         if len(operation['responses']) == 0:
             operation['responses']['200'] = { 'description': 'OK' }
 
+
+def transform_to_csharp_stream_response(operation, _):
+    if operation.get('operationId', None) == 'readNamespacedPodLog' or operation.get('x-kubernetes-action', None) == 'connect':
+        operation['responses']['200']["schema"] = {
+            "type": "object", 
+            "format": "file" ,
+        }
+
+
 def strip_tags_from_operation_id(operation, _):
     operation_id = operation['operationId']
     if 'tags' in operation:
@@ -162,6 +171,9 @@ def process_swagger(spec, client_language, crd_mode=False):
     if client_language == "csharp":
         # 401s in the spec block the csharp code generator from throwing on 401
         apply_func_to_spec_operations(spec, strip_401_response)
+
+        # force to autorest to generate stream
+        apply_func_to_spec_operations(spec, transform_to_csharp_stream_response)
 
     apply_func_to_spec_operations(spec, strip_delete_collection_operation_watch_params)
 
@@ -214,7 +226,13 @@ def format_for_language(client_language):
 
 def type_for_language(client_language):
     if client_language == "java":
-        return {"v1.Patch": "string"}
+        return {"v1.Patch": { "type": "string"}}
+    elif client_language == "csharp":
+        return {
+                "v1.Patch": { "type": "object", "properties": {"content": { "type": "object"}} }, 
+                "resource.Quantity": { "type": "object", "properties": {"value": { "type": "string"}} }, 
+                "intstr.IntOrString" : { "type": "object", "properties": {"value": { "type": "string"}} },
+               }
     else:
         return {}
 
@@ -389,7 +407,7 @@ def add_custom_typing(spec, custom_types):
     for k, v in spec['definitions'].items():
         if k not in custom_types:
             continue
-        v["type"] = custom_types[k]
+        v.update(custom_types[k])
 
 def add_openapi_codegen_x_implement_extension(spec, client_language):
     if client_language != "java":
