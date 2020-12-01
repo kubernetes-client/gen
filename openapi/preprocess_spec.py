@@ -144,6 +144,9 @@ def clean_crd_meta(spec):
             v['properties']['metadata'].pop('properties', None)
         find_rename_ref_recursive(spec, '#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta', '#/definitions/v1.ListMeta')
         find_rename_ref_recursive(spec, '#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta', '#/definitions/v1.ObjectMeta')
+        find_rename_ref_recursive(spec, '#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Status', '#/definitions/v1.Status')
+        find_rename_ref_recursive(spec, '#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Patch', '#/definitions/v1.Patch')
+        find_rename_ref_recursive(spec, '#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions', '#/definitions/v1.DeleteOptions')
 
 
 def add_custom_objects_spec(spec):
@@ -160,8 +163,17 @@ def add_codegen_request_body(operation, _):
             operation['x-codegen-request-body-name'] = 'body'
 
 def drop_paths(spec):
-    spec['paths'] = {}
-    
+    paths = {}
+    if (os.environ.get('GENERATE_APIS') or False):
+        group_prefix = os.environ.get('KUBERNETES_CRD_GROUP_PREFIX')
+        group_prefix_reversed = '.'.join(group_prefix.split('.')[::-1])
+        for k, v in spec['paths'].items():
+            if k.startswith('/apis/' + group_prefix_reversed):
+                paths[k] = v
+            else:
+                print("Ignoring non Custom Resource api path %s" %k)
+    spec['paths'] = paths
+
 
 def process_swagger(spec, client_language, crd_mode=False):
     spec = add_custom_objects_spec(spec)
@@ -419,7 +431,7 @@ def add_openapi_codegen_x_implement_extension(spec, client_language):
         return
     if os.environ.get('OPENAPI_SKIP_BASE_INTERFACE') or False:
         return
-    for k, v in spec['definitions'].items():        
+    for k, v in spec['definitions'].items():
         if "x-kubernetes-group-version-kind" not in v:
             continue
         if k == "v1.Status":
@@ -428,7 +440,7 @@ def add_openapi_codegen_x_implement_extension(spec, client_language):
             continue
         if "metadata" not in v['properties']:
             continue # not a legitimate kubernetes api object
-        if v["properties"]["metadata"]["$ref"] == "#/definitions/v1.ListMeta":  
+        if v["properties"]["metadata"]["$ref"] == "#/definitions/v1.ListMeta":
             v["x-implements"] = ["io.kubernetes.client.common.KubernetesListObject"]
         elif v["properties"]["metadata"]["$ref"] == "#/definitions/v1.ObjectMeta":
             v["x-implements"] = ["io.kubernetes.client.common.KubernetesObject"]

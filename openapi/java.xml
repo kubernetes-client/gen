@@ -27,9 +27,20 @@
                   <goal>generate</goal>
                 </goals>
                 <configuration>
-                  <generateApis>false</generateApis>
+                  <generateApis>${env.GENERATE_APIS}</generateApis>
                   <generateModelDocumentation>false</generateModelDocumentation>
-                  <importMappings>V1ListMeta=io.kubernetes.client.openapi.models.V1ListMeta,V1ObjectMeta=io.kubernetes.client.openapi.models.V1ObjectMeta,IntOrString=io.kubernetes.client.custom.IntOrString,Quantity=io.kubernetes.client.custom.Quantity,V1Patch=io.kubernetes.client.custom.V1Patch</importMappings>
+                  <importMappings>
+                    V1ListMeta=io.kubernetes.client.openapi.models.V1ListMeta,
+                    V1ObjectMeta=io.kubernetes.client.openapi.models.V1ObjectMeta,
+                    IntOrString=io.kubernetes.client.custom.IntOrString,
+                    Quantity=io.kubernetes.client.custom.Quantity,
+                    V1Patch=io.kubernetes.client.custom.V1Patch,
+                    V1DeleteOptions=io.kubernetes.client.openapi.models.V1DeleteOptions,
+                    V1Status=io.kubernetes.client.openapi.models.V1Status,
+                  </importMappings>
+                  <configOptions>
+                    <invokerPackage>io.kubernetes.client.openapi</invokerPackage>
+                  </configOptions>
                 </configuration>
               </execution>
             </executions>
