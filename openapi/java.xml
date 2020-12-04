@@ -88,7 +88,7 @@
                 <bigDecimalAsString>false</bigDecimalAsString>
                 <fullJavaUtil>false</fullJavaUtil>
                 <hideGenerationTimestamp>false</hideGenerationTimestamp>
-                <dateLibrary>joda</dateLibrary>
+                <dateLibrary>java8</dateLibrary>
                 <useRxJava>false</useRxJava>
                 <library>okhttp-gson</library>
                 <useReflectionEqualsHashCode>false</useReflectionEqualsHashCode>
