@@ -37,6 +37,7 @@
                     V1Patch=io.kubernetes.client.custom.V1Patch,
                     V1DeleteOptions=io.kubernetes.client.openapi.models.V1DeleteOptions,
                     V1Status=io.kubernetes.client.openapi.models.V1Status,
+                    V1Scale=io.kubernetes.client.openapi.models.V1Scale,
                   </importMappings>
                   <configOptions>
                     <invokerPackage>io.kubernetes.client.openapi</invokerPackage>

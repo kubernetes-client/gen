@@ -147,6 +147,7 @@ def clean_crd_meta(spec):
         find_rename_ref_recursive(spec, '#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Status', '#/definitions/v1.Status')
         find_rename_ref_recursive(spec, '#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Patch', '#/definitions/v1.Patch')
         find_rename_ref_recursive(spec, '#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions', '#/definitions/v1.DeleteOptions')
+        find_rename_ref_recursive(spec, '#/definitions/io.k8s.api.autoscaling.v1.Scale', '#/definitions/v1.Scale')
 
 
 def add_custom_objects_spec(spec):
