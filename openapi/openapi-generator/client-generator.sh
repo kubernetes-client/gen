@@ -48,6 +48,7 @@ kubeclient::generator::generate_client() {
     KUBERNETES_CRD_MODE="${KUBERNETES_CRD_MODE:-}"
     KUBERNETES_CRD_GROUP_PREFIX="${KUBERNETES_CRD_GROUP_PREFIX:-}"
     GENERATE_APIS="${GENERATE_APIS:-true}"
+    HIDE_GENERATION_TIMESTAMP="${HIDE_GENERATION_TIMESTAMP:-false}"
     USERNAME="${USERNAME:-kubernetes}"
     REPOSITORY="${REPOSITORY:-kubernetes}"
 
@@ -93,6 +94,8 @@ kubeclient::generator::generate_client() {
         -e KUBERNETES_CRD_GROUP_PREFIX="${KUBERNETES_CRD_GROUP_PREFIX}" \
         -e GENERATE_APIS="${GENERATE_APIS}" \
         -e OPENAPI_SKIP_BASE_INTERFACE="${OPENAPI_SKIP_BASE_INTERFACE}" \
+        -e HIDE_GENERATION_TIMESTAMP="${HIDE_GENERATION_TIMESTAMP}" \
+        -e LIBRARY="${LIBRARY}" \
         -e USERNAME="${USERNAME}" \
         -e REPOSITORY="${REPOSITORY}" \
         -v "${output_dir}:/output_dir" \
