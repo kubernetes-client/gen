@@ -46,7 +46,7 @@ popd > /dev/null
 source "${SCRIPT_ROOT}/openapi-generator/client-generator.sh"
 source "${SETTING_FILE}"
 
-OPENAPI_GENERATOR_COMMIT="${OPENAPI_GENERATOR_COMMIT:-v3.3.4}" \
+OPENAPI_GENERATOR_COMMIT="${OPENAPI_GENERATOR_COMMIT:-v4.3.1}" \
 CLIENT_LANGUAGE=go; \
 CLEANUP_DIRS=(pkg); \
 kubeclient::generator::generate_client "${OUTPUT_DIR}"

@@ -21,6 +21,7 @@
                             <language>perl</language>
                             <gitUserId>kubernetes-client</gitUserId>
                             <gitRepoId>perl</gitRepoId>
+                            <skipValidateSpec>true</skipValidateSpec>
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
                             <configOptions>

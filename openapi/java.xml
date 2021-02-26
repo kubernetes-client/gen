@@ -109,15 +109,9 @@
       <artifactId>swagger-annotations</artifactId>
       <version>${swagger-annotations-version}</version>
     </dependency>
-    <dependency>
-      <groupId>org.openapitools</groupId>
-      <artifactId>openapi-generator-maven-plugin</artifactId>
-      <version>${openapi-generator-version}</version>
-    </dependency>
   </dependencies>
   <properties>
     <swagger-annotations-version>1.5.0</swagger-annotations-version>
-    <maven-plugin-version>1.0.0</maven-plugin-version>
     <!-- Default values for the generator parameters. -->
     <generator.output.path>.</generator.output.path>
     <generator.spec.path>swagger.json</generator.spec.path>

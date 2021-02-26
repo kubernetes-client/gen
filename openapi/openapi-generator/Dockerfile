@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM maven:3.5-jdk-8-slim
+FROM maven:3.6.3-openjdk-11-slim
 ARG OPENAPI_GENERATOR_COMMIT
 ARG GENERATION_XML_FILE
 ARG OPENAPI_GENERATOR_USER_ORG=OpenAPITools
@@ -21,7 +21,7 @@ ARG OPENAPI_GENERATOR_USER_ORG=OpenAPITools
 RUN apt-get update && apt-get -y install git python-pip && pip install urllib3==1.24.2
 
 # Install Autorest
-RUN apt-get update && apt-get -qq -y install libunwind8 libicu57 libssl1.0 liblttng-ust0 libcurl3 libuuid1 libkrb5-3 zlib1g
+RUN apt-get update && apt-get -qq -y install libunwind8 libssl1.0 liblttng-ust0 libcurl4 libuuid1 libkrb5-3 zlib1g
 RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
 RUN apt-get update && apt-get -y install \
     nodejs \
@@ -46,15 +46,13 @@ RUN mkdir -p /node_modules && chmod -R go+rwx /node_modules
 RUN npm install @microsoft.azure/autorest.csharp \
                 @microsoft.azure/autorest.modeler
 
-RUN curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.asc.gpg
-RUN mv microsoft.asc.gpg /etc/apt/trusted.gpg.d/
-RUN curl https://packages.microsoft.com/config/debian/9/prod.list > prod.list
-RUN mv prod.list /etc/apt/sources.list.d/microsoft-prod.list
-RUN chown root:root /etc/apt/trusted.gpg.d/microsoft.asc.gpg
-RUN chown root:root /etc/apt/sources.list.d/microsoft-prod.list
-
-RUN apt-get update
-RUN apt-get install -yy -q dotnet-hosting-2.0.8
+# Install dotnet
+RUN curl https://packages.microsoft.com/config/debian/10/packages-microsoft-prod.deb --output packages-microsoft-prod.deb
+RUN dpkg -i packages-microsoft-prod.deb
+RUN apt-get update; \
+  apt-get install -y apt-transport-https && \
+  apt-get update && \
+  apt-get install -y dotnet-sdk-5.0
 
 
 # Copy required files
