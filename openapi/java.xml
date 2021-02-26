@@ -87,10 +87,10 @@
                 <serializableModel>false</serializableModel>
                 <bigDecimalAsString>false</bigDecimalAsString>
                 <fullJavaUtil>false</fullJavaUtil>
-                <hideGenerationTimestamp>false</hideGenerationTimestamp>
+                <hideGenerationTimestamp>${env.HIDE_GENERATION_TIMESTAMP}</hideGenerationTimestamp>
                 <dateLibrary>java8</dateLibrary>
                 <useRxJava>false</useRxJava>
-                <library>okhttp-gson</library>
+                <library>${env.LIBRARY}</library>
                 <useReflectionEqualsHashCode>false</useReflectionEqualsHashCode>
               </configOptions>
               <typeMappings>int-or-string=IntOrString,quantity=Quantity,patch=V1Patch</typeMappings>
