@@ -51,6 +51,8 @@ kubeclient::generator::generate_client() {
     HIDE_GENERATION_TIMESTAMP="${HIDE_GENERATION_TIMESTAMP:-false}"
     USERNAME="${USERNAME:-kubernetes}"
     REPOSITORY="${REPOSITORY:-kubernetes}"
+    # LIBRARY is used by Java client generation.
+    LIBRARY="${LIBRARY:-okhttp-gson}"
 
     local output_dir=$1
     pushd "${output_dir}" > /dev/null
