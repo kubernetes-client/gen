@@ -17,7 +17,13 @@
 echo 'Installing proto compiler'
 
 version=3.6.1
-file=protoc-${version}-linux-x86_64.zip
+platform="linux"
+
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    platform="osx"
+fi
+
+file=protoc-${version}-${platform}-x86_64.zip
 
 wget https://github.com/google/protobuf/releases/download/v${version}/${file}
 unzip ${file}
