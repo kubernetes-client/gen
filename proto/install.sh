@@ -25,7 +25,7 @@ fi
 
 file=protoc-${version}-${platform}-x86_64.zip
 
-wget https://github.com/google/protobuf/releases/download/v${version}/${file}
+wget https://github.com/protocolbuffers/protobuf/releases/download/v${version}/${file}
 unzip ${file}
 rm ${file}
 
