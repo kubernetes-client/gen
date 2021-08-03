@@ -214,6 +214,8 @@ def process_swagger(spec, client_language, crd_mode=False):
 
     inline_primitive_models(spec, preserved_primitives_for_language(client_language))
 
+    remove_bad_descriptions(spec, bad_description_pattern_for_language(client_language))
+
     if crd_mode:
         clean_crd_meta(spec)
 
@@ -235,6 +237,11 @@ def preserved_primitives_for_language(client_language):
         return ["intstr.IntOrString", "resource.Quantity"]
     else:
         return []
+
+def bad_description_pattern_for_language(client_language):
+    if client_language == 'typescript-fetch':
+        return '*/'
+    return None
 
 def format_for_language(client_language):
     if client_language == "java":
@@ -414,6 +421,21 @@ def inline_primitive_models(spec, excluded_primitives):
 
     for k in to_remove_models:
         del spec['definitions'][k]
+
+def remove_bad_descriptions_recursively(model, pattern):
+    desc = model.get('description', '')
+    if desc.find(pattern) >= 0:
+        model['description'] = ''
+    if 'properties' not in model:
+        return
+    for prop in model['properties'].values():
+        remove_bad_descriptions_recursively(prop, pattern)
+
+def remove_bad_descriptions(spec, pattern):
+    if not pattern:
+        return
+    for model in spec['definitions'].values():
+        remove_bad_descriptions_recursively(model, pattern)
 
 def add_custom_formatting(spec, custom_formats):
     for k, v in spec['definitions'].items():
