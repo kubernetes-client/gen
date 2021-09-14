@@ -464,9 +464,13 @@ def add_openapi_codegen_x_implement_extension(spec, client_language):
         if "metadata" not in v['properties']:
             continue # not a legitimate kubernetes api object
         if v["properties"]["metadata"]["$ref"] == "#/definitions/v1.ListMeta":
-            v["x-implements"] = ["io.kubernetes.client.common.KubernetesListObject"]
+            if "x-implements" not in v:
+                v["x-implements"] = []
+            v["x-implements"].append("io.kubernetes.client.common.KubernetesListObject")
         elif v["properties"]["metadata"]["$ref"] == "#/definitions/v1.ObjectMeta":
-            v["x-implements"] = ["io.kubernetes.client.common.KubernetesObject"]
+            if "x-implements" not in v:
+                v["x-implements"] = []
+            v["x-implements"].append("io.kubernetes.client.common.KubernetesObject")
 
 
 
