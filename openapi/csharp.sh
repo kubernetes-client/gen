@@ -49,17 +49,5 @@ popd > /dev/null
 source "${SCRIPT_ROOT}/openapi-generator/client-generator.sh"
 source "${SETTING_FILE}"
 
-# this is to ensure sed after docker build has perm to modify files generated
-mkdir -p ${OUTPUT_DIR}/Models/
-
 # TODO(brendandburns): Update CLEANUP_DIRS
 CLIENT_LANGUAGE=csharp; CLEANUP_DIRS=(docs src target gradle); kubeclient::generator::generate_client "${OUTPUT_DIR}"
-
-# hack for generating empty host url
-sed -i '/BaseUri = new System.Uri(\"\");/ d' ${OUTPUT_DIR}/Kubernetes.cs
-
-# remove public prop from Quantity, (autorest cannot generate empty class)
-sed -i '/JsonProperty/ d' ${OUTPUT_DIR}/Models/ResourceQuantity.cs
-sed -i 's/public string Value/private string Value/' ${OUTPUT_DIR}/Models/ResourceQuantity.cs
-sed -i 's/; set/; private set/' ${OUTPUT_DIR}/Models/V1Patch.cs
-sed -i 's/_httpRequest.Content.Headers.ContentType.*$/_httpRequest.Content.Headers.ContentType = GetHeader(body);/' ${OUTPUT_DIR}/Kubernetes.cs
