@@ -15,34 +15,53 @@
       <version>1.1.1</version>
       <executions>
         <execution>
+          <id>prepare</id>
+          <phase>generate-sources</phase>
+          <goals>
+            <goal>exec</goal>
+          </goals>
+          <configuration>
+            <executable>git</executable>
+            <arguments>
+              <argument>clone</argument>
+              <argument>https://github.com/kubernetes-client/csharp.git</argument>
+              <argument>/tmp/csrepo</argument>
+            </arguments>
+          </configuration>
+        </execution>      
+        <execution>
+          <id>prepare cp</id>
+          <phase>generate-sources</phase>
+          <goals>
+            <goal>exec</goal>
+          </goals>
+          <configuration>
+            <executable>cp</executable>
+            <arguments>
+              <argument>/tmp/csrepo/src/KubernetesClient/Versioning/VersionConverter.cs</argument>
+              <argument>/Versioning</argument>
+            </arguments>
+          </configuration>
+        </execution>        
+        <execution>
           <id>generate</id>
           <phase>generate-sources</phase>
           <goals>
             <goal>exec</goal>
           </goals>
+          <configuration>
+            <executable>dotnet</executable>
+            <workingDirectory>/tmp/csrepo/gen/KubernetesGenerator/</workingDirectory>
+            <arguments>
+              <argument>run</argument>
+              <argument>--project</argument>
+              <argument>KubernetesGenerator.csproj</argument>
+              <argument>${generator.output.path}</argument>
+              <argument>${generator.output.path}</argument>
+            </arguments>
+          </configuration>
         </execution>
       </executions>
-      <!--
-          Assumes 'autorest' is in your PATH
-          To install:  'sudo npm -g install autorest'
-
-          TODO: Containerize this.
-      -->
-      <configuration>
-        <executable>node</executable>
-        <arguments>
-          <argument>--max-old-space-size=8192</argument> <!-- fix oom -->
-          <argument>/usr/bin/autorest</argument>
-          <argument>--input-file=${generator.spec.path}</argument>
-          <argument>--csharp</argument>
-          <argument>--namespace=${generator.package.name}</argument>
-          <argument>--package-version=${generator.client.version}</argument>
-          <argument>--output-folder=${generator.output.path}</argument>
-          <argument>--add-credentials</argument>
-          <argument>--debug</argument>
-          <argument>--verbose</argument>
-        </arguments>
-      </configuration>
     </plugin>
     </plugins>
   </build>
