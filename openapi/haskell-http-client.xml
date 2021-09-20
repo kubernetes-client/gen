@@ -34,6 +34,7 @@
                                 <customTestInstanceModule>CustomInstances</customTestInstanceModule>
                                 <dateTimeFormat>%FT%T%6QZ</dateTimeFormat>
                                 <dateTimeParseFormat>%FT%T%QZ</dateTimeParseFormat>
+                                <queryExtraUnreserved>+</queryExtraUnreserved>
                             </configOptions>
                         </configuration>
                     </execution>
