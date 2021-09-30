@@ -12,10 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM maven:3.5-jdk-8-slim
+FROM maven:3.8.2-jdk-8-slim
 
 # Install Autorest
-RUN apt-get update && apt-get -qq -y install libunwind8 libicu57 libssl1.0 liblttng-ust0 libcurl3 libuuid1 libkrb5-3 zlib1g
+RUN apt-get update && apt-get -qq -y install libunwind8 libicu67 libssl1.0 liblttng-ust0 libcurl4 libuuid1 libkrb5-3 zlib1g
 RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
 RUN apt-get update && apt-get -y install \
     nodejs \
@@ -23,7 +23,7 @@ RUN apt-get update && apt-get -y install \
     && rm -rf /var/lib/apt/lists/*
 
 # Install preprocessing script requirements
-RUN apt-get update && apt-get -y install git python-pip && pip install urllib3==1.24.2
+RUN apt-get update && apt-get -y install git python3-pip && pip install urllib3==1.24.2
 
 RUN curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.asc.gpg
 RUN mv microsoft.asc.gpg /etc/apt/trusted.gpg.d/
