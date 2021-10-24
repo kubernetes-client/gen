@@ -30,20 +30,6 @@
           </configuration>
         </execution>      
         <execution>
-          <id>prepare cp</id>
-          <phase>generate-sources</phase>
-          <goals>
-            <goal>exec</goal>
-          </goals>
-          <configuration>
-            <executable>cp</executable>
-            <arguments>
-              <argument>/tmp/csrepo/src/KubernetesClient/Versioning/VersionConverter.cs</argument>
-              <argument>/Versioning</argument>
-            </arguments>
-          </configuration>
-        </execution>        
-        <execution>
           <id>generate</id>
           <phase>generate-sources</phase>
           <goals>
