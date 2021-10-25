@@ -57,7 +57,4 @@ COPY preprocess_spec.py /
 COPY custom_objects_spec.json /
 COPY ${GENERATION_XML_FILE} /generation_params.xml
 
-# TODO bolian remove after C# generator stop reading ../version 
-RUN mkdir /Versioning && chmod -R go+rwx /Versioning
-
 ENTRYPOINT ["mvn-entrypoint.sh", "/generate_client.sh"]
