@@ -18,7 +18,7 @@
                         </goals>
                         <configuration>
                             <inputSpec>${generator.spec.path}</inputSpec>
-                            <language>ruby</language>
+                            <generatorName>ruby</generatorName>
                             <gitUserId>kubernetes-client</gitUserId>
                             <gitRepoId>ruby</gitRepoId>
                             <generateApiTests>false</generateApiTests>
