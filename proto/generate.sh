@@ -39,12 +39,12 @@ files="k8s.io/apimachinery/pkg/api/resource/generated.proto;Resource \
        k8s.io/api/rbac/v1/generated.proto;V1Rbac \
        k8s.io/api/rbac/v1beta1/generated.proto;V1beta1Rbac \
        k8s.io/api/networking/v1/generated.proto;V1Networking \
-       k8s.io/api/settings/v1alpha1/generated.proto;V1alpha1Settings \
        k8s.io/api/admissionregistration/v1beta1/generated.proto;V1beta1Admissionregistration \
+       k8s.io/api/admissionregistration/v1/generated.proto;V1Admissionregistration \
        k8s.io/api/scheduling/v1alpha1/generated.proto;V1alpha1Scheduling \
+       k8s.io/api/scheduling/v1/generated.proto;V1Scheduling \
        k8s.io/api/storage/v1/generated.proto;V1Storage \
        k8s.io/api/storage/v1beta1/generated.proto;V1beta1Storage \
-       k8s.io/api/batch/v2alpha1/generated.proto;V2alpha1Batch \
        k8s.io/api/batch/v1/generated.proto;V1Batch \
        k8s.io/api/batch/v1beta1/generated.proto;V1beta1Batch \
        k8s.io/api/apps/v1beta2/generated.proto;V1beta2Apps \
@@ -52,13 +52,16 @@ files="k8s.io/apimachinery/pkg/api/resource/generated.proto;Resource \
        k8s.io/api/apps/v1beta1/generated.proto;V1beta1Apps \
        k8s.io/api/authentication/v1/generated.proto;V1Authentication \
        k8s.io/api/authentication/v1beta1/generated.proto;V1beta1Authentication \
+       k8s.io/api/admission/v1/generated.proto;V1Admission \
        k8s.io/api/admission/v1beta1/generated.proto;V1beta1Admission \
+       k8s.io/api/policy/v1/generated.proto;V1Policy \
        k8s.io/api/policy/v1beta1/generated.proto;V1beta1Policy \
        k8s.io/api/core/v1/generated.proto;V1 \
        k8s.io/api/autoscaling/v1/generated.proto;V1Autoscaling \
        k8s.io/api/autoscaling/v2beta1/generated.proto;V2beta1Autoscaling \
        k8s.io/api/autoscaling/v2beta2/generated.proto;V2beta2Autoscaling \
        k8s.io/api/extensions/v1beta1/generated.proto;V1beta1Extensions \
+       k8s.io/api/certificates/v1/generated.proto;V1Certificates \
        k8s.io/api/certificates/v1beta1/generated.proto;V1beta1Certificates \
        k8s.io/api/imagepolicy/v1alpha1/generated.proto;V1alpha1Imagepolicy \
        k8s.io/api/authorization/v1/generated.proto;V1Authorization \
