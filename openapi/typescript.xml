@@ -23,7 +23,7 @@
                             <skipValidateSpec>true</skipValidateSpec>
                             <generatorName>typescript-node</generatorName>
                             <importMappings>
-                              IntOrString=../../types,
+                              IntOrString=../../types
                             </importMappings>
                             <output>${generator.output.path}</output>
                             <configOptions>
