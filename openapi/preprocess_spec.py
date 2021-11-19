@@ -121,7 +121,7 @@ def strip_401_response(operation, _):
 def transform_to_csharp_stream_response(operation, _):
     if operation.get('operationId', None) == 'readNamespacedPodLog' or operation.get('x-kubernetes-action', None) == 'connect':
         operation['responses']['200']["schema"] = {
-            "type": "object", 
+            "type": "object",
             "format": "file" ,
         }
 
@@ -190,7 +190,7 @@ def process_swagger(spec, client_language, crd_mode=False):
 
         # force to autorest to generate stream
         apply_func_to_spec_operations(spec, transform_to_csharp_stream_response)
-        # force to consume json if */* 
+        # force to consume json if */*
         apply_func_to_spec_operations(spec, transform_to_csharp_consume_json)
 
     apply_func_to_spec_operations(spec, strip_delete_collection_operation_watch_params)
@@ -235,6 +235,8 @@ def preserved_primitives_for_language(client_language):
         return ["intstr.IntOrString", "resource.Quantity", "v1.Patch"]
     elif client_language == "haskell-http-client":
         return ["intstr.IntOrString", "resource.Quantity"]
+    elif client_language == "typescript":
+        return ["intstr.IntOrString"]
     else:
         return []
 
@@ -254,8 +256,8 @@ def type_for_language(client_language):
         return {"v1.Patch": { "type": "string"}}
     elif client_language == "csharp":
         return {
-                "v1.Patch": { "type": "object", "properties": {"content": { "type": "object"}} }, 
-                "resource.Quantity": { "type": "object", "properties": {"value": { "type": "string"}} }, 
+                "v1.Patch": { "type": "object", "properties": {"content": { "type": "object"}} },
+                "resource.Quantity": { "type": "object", "properties": {"value": { "type": "string"}} },
                 "intstr.IntOrString" : { "type": "object", "properties": {"value": { "type": "string"}} },
                }
     else:
