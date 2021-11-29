@@ -237,6 +237,8 @@ def preserved_primitives_for_language(client_language):
         return ["intstr.IntOrString", "resource.Quantity"]
     elif client_language == "typescript":
         return ["intstr.IntOrString"]
+    elif client_language == "c":
+        return ["intstr.IntOrString"]
     else:
         return []
 

@@ -27,6 +27,7 @@
                                 <packageVersion>${generator.client.version}</packageVersion>
                             </configOptions>
                             <output>${generator.output.path}</output>
+                            <typeMappings>int-or-string=IntOrString</typeMappings>
                         </configuration>
                     </execution>
                 </executions>
