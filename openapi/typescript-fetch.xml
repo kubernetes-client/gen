@@ -22,6 +22,9 @@
                             <inputSpec>${generator.spec.path}</inputSpec>
                             <skipValidateSpec>true</skipValidateSpec>
                             <generatorName>typescript-fetch</generatorName>
+                            <importMappings>
+                              IntOrString=../../types
+                            </importMappings>
                             <output>${generator.output.path}</output>
                             <configOptions>
                                 <sortParamsByRequiredFlag>true</sortParamsByRequiredFlag>
@@ -31,6 +34,7 @@
                                 <npmVersion>${generator.client.version}</npmVersion>
                                 <modelPropertyNaming>original</modelPropertyNaming>
                             </configOptions>
+                            <typeMappings>int-or-string=IntOrString</typeMappings>
                         </configuration>
                     </execution>
                 </executions>
