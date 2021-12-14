@@ -29,6 +29,7 @@
                             <configOptions>
                                 <sortParamsByRequiredFlag>true</sortParamsByRequiredFlag>
                                 <supportsES6>true</supportsES6>
+                                <typescriptThreePlus>true</typescriptThreePlus>
                                 <prefixParameterInterfaces>true</prefixParameterInterfaces>
                                 <npmName>kubernetes-client-typescript-fetch</npmName>
                                 <npmVersion>${generator.client.version}</npmVersion>
