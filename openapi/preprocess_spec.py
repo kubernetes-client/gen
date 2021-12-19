@@ -239,6 +239,8 @@ def preserved_primitives_for_language(client_language):
         # Checking with the prefix because there are variations of
         # typescript generators (e.g. typescript-fetch, typescript-jquery).
         return ["intstr.IntOrString"]
+    elif client_language == "c":
+        return ["intstr.IntOrString"]
     else:
         return []
 
