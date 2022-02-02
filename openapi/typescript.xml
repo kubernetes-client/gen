@@ -21,7 +21,7 @@
                         <configuration>
                             <inputSpec>${generator.spec.path}</inputSpec>
                             <skipValidateSpec>true</skipValidateSpec>
-                            <generatorName>typescript-node</generatorName>
+                            <generatorName>typescript</generatorName>
                             <importMappings>
                               IntOrString=../../types
                             </importMappings>
@@ -29,6 +29,9 @@
                             <configOptions>
                                 <sortParamsByRequiredFlag>true</sortParamsByRequiredFlag>
                                 <supportsES6>true</supportsES6>
+                                <useObjectParameters>true</useObjectParameters>
+                                <platform>node</platform>
+                                <framework>fetch-api</framework>
                                 <npmName>kubernetes-client-typescript</npmName>
                                 <npmVersion>${generator.client.version}</npmVersion>
                                 <modelPropertyNaming>original</modelPropertyNaming>
