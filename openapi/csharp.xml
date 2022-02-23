@@ -15,36 +15,15 @@
       <version>1.1.1</version>
       <executions>
         <execution>
-          <id>prepare</id>
-          <phase>generate-sources</phase>
-          <goals>
-            <goal>exec</goal>
-          </goals>
-          <configuration>
-            <executable>git</executable>
-            <arguments>
-              <argument>clone</argument>
-              <argument>https://github.com/kubernetes-client/csharp.git</argument>
-              <argument>/tmp/csrepo</argument>
-            </arguments>
-          </configuration>
-        </execution>      
-        <execution>
           <id>generate</id>
           <phase>generate-sources</phase>
           <goals>
             <goal>exec</goal>
           </goals>
           <configuration>
-            <executable>dotnet</executable>
-            <workingDirectory>/tmp/csrepo/gen/KubernetesGenerator/</workingDirectory>
-            <arguments>
-              <argument>run</argument>
-              <argument>--project</argument>
-              <argument>KubernetesGenerator.csproj</argument>
-              <argument>${generator.output.path}</argument>
-              <argument>${generator.output.path}</argument>
-            </arguments>
+            <!-- do nothing, .net client use compile swagger.json directly  -->
+            <!-- https://github.com/kubernetes-client/csharp/tree/master/gen/LibKubernetesGenerator -->
+            <executable>true</executable>
           </configuration>
         </execution>
       </executions>
