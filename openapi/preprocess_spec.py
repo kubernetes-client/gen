@@ -112,7 +112,7 @@ def strip_delete_collection_operation_watch_params(op, parent):
 
 
 def strip_401_response(operation, _):
-    if operation.has_key('responses'):
+    if 'responses' in operation:
         operation['responses'].pop('401', None)
         if len(operation['responses']) == 0:
             operation['responses']['200'] = { 'description': 'OK' }
