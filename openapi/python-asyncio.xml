@@ -19,7 +19,7 @@
                         <configuration>
                             <inputSpec>${generator.spec.path}</inputSpec>
                             <skipValidateSpec>true</skipValidateSpec>
-                            <generatorName>python</generatorName>
+                            <generatorName>python-legacy</generatorName>
                             <library>asyncio</library>
                             <gitUserId>kubernetes-client</gitUserId>
                             <gitRepoId>python</gitRepoId>
