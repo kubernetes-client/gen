@@ -311,12 +311,12 @@ def is_model_deprecated(m):
 def filter_api_group(spec):
     models = {}
     for k, v in spec['definitions'].items():
-        if k.startswith("io.k8s"):
-            print("Removing builtin Kubernetes Resource %s" %k)
-        elif not k.startswith(os.environ.get('KUBERNETES_CRD_GROUP_PREFIX')):
-            print("Ignoring Custom Resource %s" %k)
-        else:
+        if k.startswith(os.environ.get('KUBERNETES_CRD_GROUP_PREFIX')):
             models[k] = v
+        elif k.startswith("io.k8s"):
+            print("Removing builtin Kubernetes Resource %s" %k)
+        else:
+            print("Ignoring Custom Resource %s" %k)
     spec['definitions'] = models
 
 def remove_deprecated_models(spec):
