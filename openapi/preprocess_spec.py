@@ -236,7 +236,7 @@ def preserved_primitives_for_language(client_language):
     elif client_language == "haskell-http-client":
         return ["intstr.IntOrString", "resource.Quantity"]
     elif client_language == "typescript":
-        return ["intstr.IntOrString"]
+        return ["intstr.IntOrString", "v1.MicroTime"]
     elif client_language == "c":
         return ["intstr.IntOrString"]
     else:
@@ -256,6 +256,8 @@ def format_for_language(client_language):
 def type_for_language(client_language):
     if client_language == "java":
         return {"v1.Patch": { "type": "string"}}
+    elif client_language == "typescript":
+        return {"v1.MicroTime": { "type": "string", "format": "date-time-micro" }}
     elif client_language == "csharp":
         return {
                 "v1.Patch": { "type": "object", "properties": {"content": { "type": "object"}} },
