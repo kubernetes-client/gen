@@ -23,7 +23,7 @@
                             <skipValidateSpec>true</skipValidateSpec>
                             <generatorName>typescript</generatorName>
                             <importMappings>
-                              IntOrString=../../types
+                              IntOrString=../../types,V1MicroTime=../../types
                             </importMappings>
                             <output>${generator.output.path}</output>
                             <configOptions>
@@ -36,7 +36,7 @@
                                 <npmVersion>${generator.client.version}</npmVersion>
                                 <modelPropertyNaming>original</modelPropertyNaming>
                             </configOptions>
-                            <typeMappings>int-or-string=IntOrString</typeMappings>
+                            <typeMappings>int-or-string=IntOrString,date-time-micro=V1MicroTime</typeMappings>
                         </configuration>
                     </execution>
                 </executions>
