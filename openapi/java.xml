@@ -32,12 +32,16 @@
                   <importMappings>
                     V1ListMeta=io.kubernetes.client.openapi.models.V1ListMeta,
                     V1ObjectMeta=io.kubernetes.client.openapi.models.V1ObjectMeta,
+                    V1ObjectMeta_v2=io.kubernetes.client.openapi.models.V1ObjectMeta,
                     IntOrString=io.kubernetes.client.custom.IntOrString,
                     Quantity=io.kubernetes.client.custom.Quantity,
                     V1Patch=io.kubernetes.client.custom.V1Patch,
                     V1DeleteOptions=io.kubernetes.client.openapi.models.V1DeleteOptions,
+                    V1DeleteOptions_v2=io.kubernetes.client.openapi.models.V1DeleteOptions,
                     V1Status=io.kubernetes.client.openapi.models.V1Status,
+                    V1Status_v2=io.kubernetes.client.openapi.models.V1Status,
                     V1Scale=io.kubernetes.client.openapi.models.V1Scale,
+                    V1Scale_v2=io.kubernetes.client.openapi.models.V1Scale,
                   </importMappings>
                   <configOptions>
                     <invokerPackage>io.kubernetes.client.openapi</invokerPackage>

@@ -144,10 +144,14 @@ def clean_crd_meta(spec):
             v['properties']['metadata'].pop('properties', None)
         find_rename_ref_recursive(spec, '#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta', '#/definitions/v1.ListMeta')
         find_rename_ref_recursive(spec, '#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta', '#/definitions/v1.ObjectMeta')
+        find_rename_ref_recursive(spec, '#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta_v2', '#/definitions/v1.ObjectMeta')
         find_rename_ref_recursive(spec, '#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Status', '#/definitions/v1.Status')
+        find_rename_ref_recursive(spec, '#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Status_v2', '#/definitions/v1.Status')
         find_rename_ref_recursive(spec, '#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Patch', '#/definitions/v1.Patch')
         find_rename_ref_recursive(spec, '#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions', '#/definitions/v1.DeleteOptions')
+        find_rename_ref_recursive(spec, '#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions_v2', '#/definitions/v1.DeleteOptions')
         find_rename_ref_recursive(spec, '#/definitions/io.k8s.api.autoscaling.v1.Scale', '#/definitions/v1.Scale')
+        find_rename_ref_recursive(spec, '#/definitions/io.k8s.api.autoscaling.v1.Scale_v2', '#/definitions/v1.Scale')
 
 
 def add_custom_objects_spec(spec):
