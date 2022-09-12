@@ -47,7 +47,7 @@ source "${SCRIPT_ROOT}/openapi-generator/client-generator.sh"
 source "${SETTING_FILE}"
 OPENAPI_GENERATOR_COMMIT="${OPENAPI_GENERATOR_COMMIT:-v4.3.0}"
 
-CLIENT_LANGUAGE=python-experimental; \
+CLIENT_LANGUAGE=python; \
 CLEANUP_DIRS=(client/api client/apis client/models docs test); \
 kubeclient::generator::generate_client "${OUTPUT_DIR}"
 
