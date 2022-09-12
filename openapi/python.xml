@@ -18,7 +18,7 @@
                         </goals>
                         <configuration>
                             <inputSpec>${generator.spec.path}</inputSpec>
-                            <generatorName>python</generatorName>
+                            <generatorName>python-experimental</generatorName>
                             <gitUserId>kubernetes-client</gitUserId>
                             <gitRepoId>python</gitRepoId>
                             <skipValidateSpec>true</skipValidateSpec>
