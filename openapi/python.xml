@@ -19,6 +19,7 @@
                         <configuration>
                             <inputSpec>${generator.spec.path}</inputSpec>
                             <generatorName>python-experimental</generatorName>
+                            <engine>handlebars</engine>
                             <gitUserId>kubernetes-client</gitUserId>
                             <gitRepoId>python</gitRepoId>
                             <skipValidateSpec>true</skipValidateSpec>
