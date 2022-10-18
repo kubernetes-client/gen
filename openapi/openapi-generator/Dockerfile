@@ -24,7 +24,7 @@ ARG OPENAPI_GENERATOR_USER_ORG=OpenAPITools
 # Check out specific commit of openapi-generator
 RUN mkdir /source && \
     cd /source && \
-    git clone -n https://github.com/${OPENAPI_GENERATOR_USER_ORG}/openapi-generator.git && \
+    git clone --progress -n https://github.com/${OPENAPI_GENERATOR_USER_ORG}/openapi-generator.git && \
     cd openapi-generator && \
     git checkout $OPENAPI_GENERATOR_COMMIT
 
