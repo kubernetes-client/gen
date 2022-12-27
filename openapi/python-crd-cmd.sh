@@ -20,7 +20,7 @@ print_usage() {
   echo " -h: hide generation timestamp" >& 2
 }
 
-while getopts 'c:g:h:n:l:p:o' flag; do
+while getopts 'c:g:h:n:l:p:o:' flag; do
   case "${flag}" in
     c) CLIENT_VERSION="${CLIENT_VERSION}" ;;
     g) GENERATE_APIS="${OPTARG}" ;;
