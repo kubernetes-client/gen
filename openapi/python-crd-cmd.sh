@@ -22,7 +22,7 @@ print_usage() {
 
 while getopts 'c:g:h:n:l:p:o:' flag; do
   case "${flag}" in
-    c) CLIENT_VERSION="${CLIENT_VERSION}" ;;
+    c) CLIENT_VERSION="${OPTARG}" ;;
     g) GENERATE_APIS="${OPTARG}" ;;
     h) HIDE_GENERATION_TIMESTAMP="${OPTARG}" ;;
     n) KUBERNETES_CRD_GROUP_PREFIX="${OPTARG}" ;;
