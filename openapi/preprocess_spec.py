@@ -174,6 +174,7 @@ def drop_paths(spec):
         group_prefix_reversed = '.'.join(group_prefix.split('.')[::-1])
         for k, v in spec['paths'].items():
             if k.startswith('/apis/' + group_prefix_reversed):
+                print("Adding Custom Resource api path %s" %k)
                 paths[k] = v
             else:
                 print("Ignoring non Custom Resource api path %s" %k)
@@ -318,6 +319,7 @@ def filter_api_group(spec):
     models = {}
     for k, v in spec['definitions'].items():
         if k.startswith(os.environ.get('KUBERNETES_CRD_GROUP_PREFIX')):
+            print("Adding Custom Resource by prefix %s" %k)
             models[k] = v
         elif k.startswith("io.k8s"):
             print("Removing builtin Kubernetes Resource %s" %k)

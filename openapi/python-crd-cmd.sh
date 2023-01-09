@@ -20,9 +20,9 @@ print_usage() {
   echo " -h: hide generation timestamp" >& 2
 }
 
-while getopts 'c:g:h:n:l:p:o' flag; do
+while getopts 'c:g:h:n:l:p:o:' flag; do
   case "${flag}" in
-    c) CLIENT_VERSION="${CLIENT_VERSION}" ;;
+    c) CLIENT_VERSION="${OPTARG}" ;;
     g) GENERATE_APIS="${OPTARG}" ;;
     h) HIDE_GENERATION_TIMESTAMP="${OPTARG}" ;;
     n) KUBERNETES_CRD_GROUP_PREFIX="${OPTARG}" ;;
