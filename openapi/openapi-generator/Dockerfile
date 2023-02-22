@@ -26,7 +26,8 @@ RUN mkdir /source && \
     cd /source && \
     git clone --progress -n https://github.com/${OPENAPI_GENERATOR_USER_ORG}/openapi-generator.git && \
     cd openapi-generator && \
-    git checkout $OPENAPI_GENERATOR_COMMIT
+    git checkout $OPENAPI_GENERATOR_COMMIT && \
+    git config --system --add safe.directory /source/openapi-generator
 
 # Build it and persist local repository
 RUN chmod -R go+rwx /root && umask 0 && cd /source/openapi-generator && \
