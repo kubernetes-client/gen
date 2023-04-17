@@ -94,6 +94,7 @@
                 <hideGenerationTimestamp>${env.HIDE_GENERATION_TIMESTAMP}</hideGenerationTimestamp>
                 <dateLibrary>java8</dateLibrary>
                 <useRxJava>false</useRxJava>
+                <useJakartaEe>true</useJakartaEe>
                 <library>${env.LIBRARY}</library>
                 <useReflectionEqualsHashCode>false</useReflectionEqualsHashCode>
               </configOptions>
