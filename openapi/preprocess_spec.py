@@ -180,12 +180,34 @@ def drop_paths(spec):
                 print("Ignoring non Custom Resource api path %s" %k)
     spec['paths'] = paths
 
+def expand_parameters(spec):
+    if 'parameters' not in spec:
+        return
+    for path in spec['paths'].keys():
+        if 'parameters' in spec['paths'][path]:
+            for i in range(len(spec['paths'][path]['parameters'])):
+                param = spec['paths'][path]['parameters'][i]
+                if '$ref' in param:
+                    ref = param['$ref']
+                    param = spec['parameters'][ref.split('/')[-1]]
+                    spec['paths'][path]['parameters'][i] = param
+        for method in spec['paths'][path].keys():
+            if 'parameters' in spec['paths'][path][method]:
+                for i in range(len(spec['paths'][path][method]['parameters'])):
+                    param = spec['paths'][path][method]['parameters'][i]
+                    if '$ref' in param:
+                        ref = param['$ref']
+                        param = spec['parameters'][ref.split('/')[-1]]
+                        spec['paths'][path][method]['parameters'][i] = param
+    del spec['parameters']
 
 def process_swagger(spec, client_language, crd_mode=False):
     spec = add_custom_objects_spec(spec)
 
     if crd_mode:
         drop_paths(spec)
+
+    expand_parameters(spec)
 
     apply_func_to_spec_operations(spec, strip_tags_from_operation_id)
 
