@@ -49,7 +49,7 @@ popd > /dev/null
 source "${SCRIPT_ROOT}/openapi-generator/client-generator.sh"
 source "${SETTING_FILE}"
 
-OPENAPI_GENERATOR_COMMIT="${OPENAPI_GENERATOR_COMMIT:-v4.3.1}" \
+OPENAPI_GENERATOR_COMMIT="${OPENAPI_GENERATOR_COMMIT:-v6.6.0}" \
 CLIENT_LANGUAGE=java; \
 CLEANUP_DIRS=(docs src/test/java/io/kubernetes/client/openapi/apis src/main/java/io/kubernetes/client/openapi/apis src/main/java/io/kubernetes/client/openapi/models src/main/java/io/kubernetes/client/openapi/auth gradle); \
 kubeclient::generator::generate_client "${OUTPUT_DIR}"
