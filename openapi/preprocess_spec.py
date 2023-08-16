@@ -180,6 +180,18 @@ def drop_paths(spec):
                 print("Ignoring non Custom Resource api path %s" %k)
     spec['paths'] = paths
 
+def fix_paths(spec):
+    # see https://github.com/kubernetes/kubernetes/issues/117455
+    paths = spec['paths']
+    if '/.well-known/openid-configuration/' in paths:
+        paths['/.well-known/openid-configuration'] = paths['/.well-known/openid-configuration/']
+        del paths['/.well-known/openid-configuration/']
+    
+
+    if '/openid/v1/jwks/' in paths:
+        paths['/openid/v1/jwks'] = paths['/openid/v1/jwks/']
+        del paths['/openid/v1/jwks/']
+
 def expand_parameters(spec):
     if 'parameters' not in spec:
         return
@@ -206,6 +218,8 @@ def process_swagger(spec, client_language, crd_mode=False):
 
     if crd_mode:
         drop_paths(spec)
+    
+    fix_paths(spec)
 
     expand_parameters(spec)
 
