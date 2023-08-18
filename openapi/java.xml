@@ -3,9 +3,9 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.kubernetes</groupId>
-  <artifactId>client-java</artifactId>
-  <version>1.0-SNAPSHOT</version>
-  <name>client-java</name>
+  <artifactId>client-java-api</artifactId>
+  <version>${generator.client.version}</version>
+  <name>client-java-api</name>
   <url>http://kubernetes.io</url>
   <profiles>
     <profile>
@@ -70,23 +70,31 @@
               <httpUserAgent>Kubernetes Java Client/${generator.client.version}</httpUserAgent>
               <generatorName>java</generatorName>
               <gitUserId>kubernetes-client</gitUserId>
-              <gitRepoId>client-java</gitRepoId>
+              <gitRepoId>client-java-api</gitRepoId>
               <skipValidateSpec>true</skipValidateSpec>
               <generateApiTests>false</generateApiTests>
               <generateModelTests>false</generateModelTests>
               <configOptions>
+              <artifactDescription>Kubernetes Java Client API</artifactDescription>
+                <scmUrl>https://github.com/kubernetes-client/java</scmUrl>
+                <scmConnection>scm:git:git@github.com:kubernetes-client/java.git</scmConnection>
+                <scmDeveloperConnection>scm:git:git@github.com:kubernetes-client/java.git</scmDeveloperConnection>
+                <parentGroupId>io.kubernetes</parentGroupId>
+                <parentArtifactId>client-java-parent</parentArtifactId>
+                <parentVersion>${generator.client.version}</parentVersion>
                 <projectName>kubernetes-java-client</projectName>
-                <projectDescription>Java client for Kubernetes.</projectDescription>
+                <projectDescription>Java client API for Kubernetes.</projectDescription>
                 <projectVersion>${generator.client.version}</projectVersion>
-                <projectLicenseName>Apache V2</projectLicenseName>
+                <licenseName>Apache License 2.0</licenseName>
+                <licenseUrl>https://github.com/kubernetes-client/java/blob/master/LICENSE</licenseUrl>
                 <sortParamsByRequiredFlag>true</sortParamsByRequiredFlag>
                 <modelPackage>${generator.package.name}.models</modelPackage>
                 <apiPackage>${generator.package.name}.apis</apiPackage>
                 <invokerPackage>${generator.package.name}</invokerPackage>
                 <ensureUniqueParams>true</ensureUniqueParams>
                 <groupId>io.kubernetes</groupId>
-                <artifactId>client-java</artifactId>
-                <artifactVersion>1.0-SNAPSHOT</artifactVersion>
+                <artifactId>client-java-api</artifactId>
+                <artifactVersion>${generator.client.version}</artifactVersion>
                 <sourceFolder>src/main/java</sourceFolder>
                 <serializableModel>false</serializableModel>
                 <bigDecimalAsString>false</bigDecimalAsString>
@@ -110,23 +118,21 @@
   <dependencies>
     <!-- dependencies are needed for the client being generated -->
     <dependency>
-      <groupId>io.swagger</groupId>
-      <artifactId>swagger-annotations</artifactId>
-      <version>${swagger-annotations-version}</version>
-    </dependency>
-    <dependency>
       <groupId>org.openapitools</groupId>
       <artifactId>openapi-generator-maven-plugin</artifactId>
       <version>${openapi-generator-version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.openapitools</groupId>
+      <artifactId>client-java-api-openapi-generator</artifactId>
+      <version>${openapi-generator-version}</version>
+    </dependency>
   </dependencies>
   <properties>
-    <swagger-annotations-version>1.5.0</swagger-annotations-version>
-    <maven-plugin-version>1.0.0</maven-plugin-version>
     <!-- Default values for the generator parameters. -->
     <generator.output.path>.</generator.output.path>
     <generator.spec.path>swagger.json</generator.spec.path>
     <generator.package.name>client</generator.package.name>
-    <generator.client.version>1.0-snapshot</generator.client.version>
+    <generator.client.version>${generator.client.version}</generator.client.version>
   </properties>
 </project>
