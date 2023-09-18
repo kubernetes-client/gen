@@ -104,7 +104,7 @@ def strip_delete_collection_operation_watch_params(op, parent):
     params = []
     if 'parameters' in op:
         for i in range(len(op['parameters'])):
-            paramName = op['parameters'][i]['name']
+            paramName = op['parameters'][i].get('name', None)
             if paramName != WATCH_QUERY_PARAM_NAME and paramName != ALLOW_WATCH_BOOKMARKS_QUERY_PARAM_NAME:
                 params.append(op['parameters'][i])
     op['parameters'] = params
