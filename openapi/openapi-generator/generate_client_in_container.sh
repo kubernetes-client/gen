@@ -74,7 +74,6 @@ shopt -u nullglob
 # To make sure we can reproduce generation, we would also log code-gen exact commit
 pushd /source/openapi-generator
   OPENAPI_GENERATOR_COMMIT_ACTUAL=$(git rev-parse HEAD)
-  OPENAPI_GENERATOR_COMMIT_TAG="$(git describe --tags --exact-match HEAD)"
 popd
 
 mkdir -p "${output_dir}"
@@ -100,6 +99,5 @@ mvn -f "${SCRIPT_ROOT}/generation_params.xml" clean generate-sources \
 mkdir -p "${output_dir}/.openapi-generator"
 echo "Requested Commit/Tag : ${OPENAPI_GENERATOR_COMMIT}" > "${output_dir}/.openapi-generator/COMMIT"
 echo "Actual Commit        : ${OPENAPI_GENERATOR_COMMIT_ACTUAL}" >> "${output_dir}/.openapi-generator/COMMIT"
-echo "Actual Tag           : ${OPENAPI_GENERATOR_COMMIT_TAG}" >> "${output_dir}/.openapi-generator/COMMIT"
 
 echo "---Done."

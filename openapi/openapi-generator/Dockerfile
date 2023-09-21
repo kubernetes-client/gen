@@ -24,8 +24,11 @@ ARG OPENAPI_GENERATOR_USER_ORG=OpenAPITools
 # Check out specific commit of openapi-generator
 RUN mkdir /source && \
     cd /source && \
-    git clone --progress -n https://github.com/${OPENAPI_GENERATOR_USER_ORG}/openapi-generator.git && \
+    mkdir openapi-generator && \
     cd openapi-generator && \
+    git init && \
+    git remote add origin https://github.com/${OPENAPI_GENERATOR_USER_ORG}/openapi-generator.git && \
+    git fetch --progress --depth=1 origin $OPENAPI_GENERATOR_COMMIT && \
     git checkout $OPENAPI_GENERATOR_COMMIT && \
     git config --system --add safe.directory /source/openapi-generator
 
