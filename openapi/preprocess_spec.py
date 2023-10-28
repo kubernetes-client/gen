@@ -129,6 +129,9 @@ def transform_to_csharp_consume_json(operation, _):
     if operation.get('consumes', None) == ["*/*",] or operation.get('consumes', None) == "*/*":
         operation['consumes'] = ["application/json"]
 
+def transform_to_java_consume_json(operation, _):
+    operation['consumes'] = ["application/json"]
+
 def strip_tags_from_operation_id(operation, _):
     operation_id = operation['operationId']
     if 'tags' in operation:
@@ -233,6 +236,10 @@ def process_swagger(spec, client_language, crd_mode=False):
         apply_func_to_spec_operations(spec, transform_to_csharp_stream_response)
         # force to consume json if */*
         apply_func_to_spec_operations(spec, transform_to_csharp_consume_json)
+
+    if client_language == "java":
+        # force to consume json, need this change due to https://github.com/OpenAPITools/openapi-generator/pull/10769
+        apply_func_to_spec_operations(spec, transform_to_java_consume_json)
 
     apply_func_to_spec_operations(spec, strip_delete_collection_operation_watch_params)
 
