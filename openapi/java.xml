@@ -104,6 +104,7 @@
                 <useRxJava>false</useRxJava>
                 <useJakartaEe>true</useJakartaEe>
                 <library>${env.LIBRARY}</library>
+                <useSingleRequestParameter>${use-single-parameter}</useSingleRequestParameter>
                 <useReflectionEqualsHashCode>false</useReflectionEqualsHashCode>
               </configOptions>
               <typeMappings>int-or-string=IntOrString,quantity=Quantity,patch=V1Patch</typeMappings>
@@ -134,5 +135,6 @@
     <generator.spec.path>swagger.json</generator.spec.path>
     <generator.package.name>client</generator.package.name>
     <generator.client.version>${generator.client.version}</generator.client.version>
+    <use-single-parameter>true</use-single-parameter>
   </properties>
 </project>

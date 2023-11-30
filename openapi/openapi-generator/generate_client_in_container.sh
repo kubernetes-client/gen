@@ -36,6 +36,7 @@ set -o pipefail
 : "${CLIENT_LANGUAGE?Must set CLIENT_LANGUAGE env var}"
 : "${PACKAGE_NAME?Must set PACKAGE_NAME env var}"
 : "${OPENAPI_GENERATOR_COMMIT?Must set OPENAPI_GENERATOR_COMMIT env var}"
+: "${USE_SINGLE_PARAMETER?Must set USE_SINGLE_PARAMETER env var}"
 
 output_dir=$1
 pushd "${output_dir}" > /dev/null
@@ -94,6 +95,7 @@ mvn -f "${SCRIPT_ROOT}/generation_params.xml" clean generate-sources \
     -D=generator.client.version="${CLIENT_VERSION}" \
     -D=generator.package.name="${PACKAGE_NAME}" \
     -D=openapi-generator-version="${PLUGIN_VERSION}" \
+    -D=use-single-parameter="${USE_SINGLE_PARAMETER}" \
     -Duser.home=/root
 
 mkdir -p "${output_dir}/.openapi-generator"
