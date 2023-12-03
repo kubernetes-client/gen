@@ -241,6 +241,13 @@
           }
         },
         {
+          "uniqueItems": true,
+          "type": "string",
+          "description": "A selector to restrict the list of returned objects by their labels. Defaults to everything.",
+          "name": "labelSelector",
+          "in": "query"
+        },
+        {
           "name": "gracePeriodSeconds",
           "uniqueItems": true,
           "type": "integer",
@@ -484,6 +491,13 @@
           "schema": {
             "$ref": "#/definitions/v1.DeleteOptions"
           }
+        },
+        {
+          "uniqueItems": true,
+          "type": "string",
+          "description": "A selector to restrict the list of returned objects by their labels. Defaults to everything.",
+          "name": "labelSelector",
+          "in": "query"
         },
         {
           "name": "gracePeriodSeconds",
