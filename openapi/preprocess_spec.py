@@ -513,11 +513,11 @@ def add_openapi_codegen_x_implement_extension(spec, client_language):
         if "x-kubernetes-group-version-kind" not in v:
             continue
         if k == "v1.Status":
-            # Status is explicitly exlucded because it's obviously not a list object
+            # Status is explicitly excluded because it's obviously not a list object,
             # but it has ListMeta.
             continue
-        if "metadata" not in v['properties']:
-            continue # not a legitimate kubernetes api object
+        if not all(k in v['properties'] for k in ["metadata", "kind", "apiVersion"]) or "$ref" not in v['properties']['metadata']:
+            continue  # not a legitimate kubernetes api object (imperfect assumption)
         if v["properties"]["metadata"]["$ref"] == "#/definitions/v1.ListMeta":
             if "x-implements" not in v:
                 v["x-implements"] = []
