@@ -101,7 +101,7 @@ kubeclient::generator::generate_client() {
         -e LIBRARY="${LIBRARY}" \
         -e USERNAME="${USERNAME}" \
         -e REPOSITORY="${REPOSITORY}" \
-        -e USE_SINGLE_PARAMETER="${USE_SINGLE_PARAMETER}" \
+        -e USE_SINGLE_PARAMETER="${USE_SINGLE_PARAMETER:-}" \
         -v "${output_dir}:/output_dir" \
         "${image_name}" "/output_dir"
 
