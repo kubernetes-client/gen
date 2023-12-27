@@ -36,7 +36,6 @@ set -o pipefail
 : "${CLIENT_LANGUAGE?Must set CLIENT_LANGUAGE env var}"
 : "${PACKAGE_NAME?Must set PACKAGE_NAME env var}"
 : "${OPENAPI_GENERATOR_COMMIT?Must set OPENAPI_GENERATOR_COMMIT env var}"
-: "${USE_SINGLE_PARAMETER?Must set USE_SINGLE_PARAMETER env var}"
 
 output_dir=$1
 pushd "${output_dir}" > /dev/null
@@ -89,14 +88,21 @@ for i in ${CLEANUP_DIRS}; do
 done
 
 echo "--- Generating client ..."
-mvn -f "${SCRIPT_ROOT}/generation_params.xml" clean generate-sources \
-    -Dgenerator.spec.path="${output_dir}/swagger.json" \
-    -Dgenerator.output.path="${output_dir}" \
-    -D=generator.client.version="${CLIENT_VERSION}" \
-    -D=generator.package.name="${PACKAGE_NAME}" \
-    -D=openapi-generator-version="${PLUGIN_VERSION}" \
-    -D=use-single-parameter="${USE_SINGLE_PARAMETER}" \
+
+mvn_args=(
+    -Dgenerator.spec.path="${output_dir}/swagger.json"
+    -Dgenerator.output.path="${output_dir}"
+    -D=generator.client.version="${CLIENT_VERSION}"
+    -D=generator.package.name="${PACKAGE_NAME}"
+    -D=openapi-generator-version="${PLUGIN_VERSION}"
     -Duser.home=/root
+)
+
+if [ -n "${USE_SINGLE_PARAMETER:-}" ]; then
+    mvn_args+=("-D=use-single-parameter=${USE_SINGLE_PARAMETER}")
+fi
+
+mvn -f "${SCRIPT_ROOT}/generation_params.xml" clean generate-sources "${mvn_args[@]}"
 
 mkdir -p "${output_dir}/.openapi-generator"
 echo "Requested Commit/Tag : ${OPENAPI_GENERATOR_COMMIT}" > "${output_dir}/.openapi-generator/COMMIT"
