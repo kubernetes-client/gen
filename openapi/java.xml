@@ -105,7 +105,7 @@
                 <useJakartaEe>true</useJakartaEe>
                 <library>${env.LIBRARY}</library>
                 <useSingleRequestParameter>${use-single-parameter}</useSingleRequestParameter>
-                <useReflectionEqualsHashCode>false</useReflectionEqualsHashCode>
+                <useReflectionEqualsHashCode>true</useReflectionEqualsHashCode>
               </configOptions>
               <typeMappings>int-or-string=IntOrString,quantity=Quantity,patch=V1Patch</typeMappings>
               <importMappings>IntOrString=io.kubernetes.client.custom.IntOrString,Quantity=io.kubernetes.client.custom.Quantity,V1Patch=io.kubernetes.client.custom.V1Patch</importMappings>
