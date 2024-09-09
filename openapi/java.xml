@@ -29,6 +29,7 @@
                 <configuration>
                   <generateApis>${env.GENERATE_APIS}</generateApis>
                   <generateModelDocumentation>false</generateModelDocumentation>
+                  <openapiNormalizer>SET_CONTAINER_TO_NULLABLE="array|map"</openapiNormalizer>
                   <importMappings>
                     V1ListMeta=io.kubernetes.client.openapi.models.V1ListMeta,
                     V1ObjectMeta=io.kubernetes.client.openapi.models.V1ObjectMeta,
