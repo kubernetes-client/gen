@@ -104,6 +104,7 @@
                 <dateLibrary>java8</dateLibrary>
                 <useRxJava>false</useRxJava>
                 <useJakartaEe>true</useJakartaEe>
+                <annotationLibrary>swagger1</annotationLibrary>
                 <library>${env.LIBRARY}</library>
                 <useSingleRequestParameter>${use-single-parameter}</useSingleRequestParameter>
                 <useReflectionEqualsHashCode>false</useReflectionEqualsHashCode>
