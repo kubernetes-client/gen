@@ -665,6 +665,13 @@
           "name": "dryRun",
           "type": "string",
           "uniqueItems": true
+        },
+        {
+          "description": "A selector to restrict the list of returned objects by their fields. Defaults to everything.",
+          "in": "query",
+          "name": "fieldSelector",
+          "type": "string",
+          "uniqueItems": true
         }
       ],
       "responses": {
