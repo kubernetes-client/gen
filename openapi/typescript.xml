@@ -35,6 +35,7 @@
                                 <npmName>kubernetes-client-typescript</npmName>
                                 <npmVersion>${generator.client.version}</npmVersion>
                                 <modelPropertyNaming>original</modelPropertyNaming>
+                                <importFileExtension>.js</importFileExtension>
                             </configOptions>
                             <typeMappings>int-or-string=IntOrString,date-time-micro=V1MicroTime</typeMappings>
                         </configuration>
