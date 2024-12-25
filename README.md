@@ -26,9 +26,12 @@ are normally:
 
 Example settings file for python-client:
 
+```shell
 export KUBERNETES_BRANCH="master"
-export CLIENT_VERSION="8.0.0b1"
+export CLIENT_VERSION="31.0.0"
 export PACKAGE_NAME="client"
+
+```
 
 Note: For generating the client for any language, the PACKAGE_NAME should be "client".
       You can use the latest version for the CLIENT_VERSION. It's displayed here for

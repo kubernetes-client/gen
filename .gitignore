@@ -1,4 +1,8 @@
 # Intellij IDEA files
 .idea/*
 *.iml
-
+.venv/
+*.diff
+python-asyncio-client/
+python-client/
+python-pydantic-client/
