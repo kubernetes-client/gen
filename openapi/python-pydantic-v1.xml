@@ -19,8 +19,8 @@
                         <configuration>
                             <inputSpec>${generator.spec.path}</inputSpec>
                             <generatorName>python-pydantic-v1</generatorName>
-                            <gitUserId>kubernetes-client</gitUserId>
-                            <gitRepoId>python</gitRepoId>
+                            <gitUserId>kmambo</gitUserId>
+                            <gitRepoId>kubernetes-client-python-pydantic-v1</gitRepoId>
                             <skipValidateSpec>true</skipValidateSpec>
                             <configOptions>
                                 <packageName>${generator.package.name}</packageName>

@@ -17,6 +17,7 @@
 set -o errexit
 set -o nounset
 set -o pipefail
+set -x
 
 ARGC=$#
 
@@ -54,16 +55,16 @@ kubeclient::generator::generate_client "${OUTPUT_DIR}"
 echo "--- Patching generated code..."
 
 # Post-processing of the generated Python wrapper.
-find "${OUTPUT_DIR}/test" -type f -name \*.py -exec sed -i 's/\bclient/kubernetes.client/g' {} +
-find "${OUTPUT_DIR}" -path "${OUTPUT_DIR}/base" -prune -o -type f -a -name \*.md -exec sed -i 's/\bclient/kubernetes.client/g' {} +
-find "${OUTPUT_DIR}" -path "${OUTPUT_DIR}/base" -prune -o -type f -a -name \*.md -exec sed -i 's/kubernetes.client-python/client-python/g' {} +
-find "${OUTPUT_DIR}" -path "${OUTPUT_DIR}/base" -prune -o -type f -a -name \*.md -exec sed -i 's/kubernetes-kubernetes.client/kubernetes-client/g' {} +
+find "${OUTPUT_DIR}/test" -type f -name \*.py -exec gsed -i 's/\bclient/kubernetes.client/g' {} +
+find "${OUTPUT_DIR}" -path "${OUTPUT_DIR}/base" -prune -o -type f -a -name \*.md -exec gsed -i 's/\bclient/kubernetes.client/g' {} +
+find "${OUTPUT_DIR}" -path "${OUTPUT_DIR}/base" -prune -o -type f -a -name \*.md -exec gsed -i 's/kubernetes.client-python/client-python/g' {} +
+find "${OUTPUT_DIR}" -path "${OUTPUT_DIR}/base" -prune -o -type f -a -name \*.md -exec gsed -i 's/kubernetes-kubernetes.client/kubernetes-client/g' {} +
 
 # fix imports
 if [ "${PACKAGE_NAME}" = client ]; then
-    find "${OUTPUT_DIR}/client/" -type f -name \*.py -exec sed -i 's/import client\./import kubernetes.client./g' {} +
-    find "${OUTPUT_DIR}/client/" -type f -name \*.py -exec sed -i 's/from client/from kubernetes.client/g' {} +
-    find "${OUTPUT_DIR}/client/" -type f -name \*.py -exec sed -i 's/getattr(client\.models/getattr(kubernetes.client.models/g' {} +
+    find "${OUTPUT_DIR}/client/" -type f -name \*.py -exec gsed -i 's/import client\./import kubernetes.client./g' {} +
+    find "${OUTPUT_DIR}/client/" -type f -name \*.py -exec gsed -i 's/from client/from kubernetes.client/g' {} +
+    find "${OUTPUT_DIR}/client/" -type f -name \*.py -exec gsed -i 's/getattr(client\.models/getattr(kubernetes.client.models/g' {} +
 fi
 
 echo "---Done."

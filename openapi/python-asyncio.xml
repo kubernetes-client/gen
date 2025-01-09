@@ -21,8 +21,8 @@
                             <skipValidateSpec>true</skipValidateSpec>
                             <generatorName>python</generatorName>
                             <library>asyncio</library>
-                            <gitUserId>kubernetes-client</gitUserId>
-                            <gitRepoId>python</gitRepoId>
+                            <gitUserId>kmambo</gitUserId>
+                            <gitRepoId>kubernetes-client-python-asyncio-pydantic-v2</gitRepoId>
                             <configOptions>
                                 <packageName>${generator.package.name}</packageName>
                                 <packageVersion>${generator.client.version}</packageVersion>
