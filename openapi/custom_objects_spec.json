@@ -44,7 +44,7 @@
       }
     }
   },
-  "/apis/{group}/{version}/{plural}#‎": {
+  "/apis/{group}/{version}/{plural}": {
     "parameters": [
       {
         "uniqueItems": true,
