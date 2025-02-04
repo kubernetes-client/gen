@@ -44,7 +44,7 @@
       }
     }
   },
-  "/apis/{group}/{version}/{plural}": {
+  "/apis/{group}/{version}/{resource_plural}": {
     "parameters": [
       {
         "uniqueItems": true,
@@ -68,7 +68,7 @@
         "type": "string"
       },
       {
-        "name": "plural",
+        "name": "resource_plural",
         "in": "path",
         "required": true,
         "description": "The custom resource's plural name. For TPRs this would be lowercase plural kind.",
