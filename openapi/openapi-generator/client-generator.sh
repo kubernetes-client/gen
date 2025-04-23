@@ -83,6 +83,12 @@ kubeclient::generator::generate_client() {
     CLEANUP_DIRS_STRING="${CLEANUP_DIRS[@]}"
 
     echo "--- Running generator inside container..."
+    
+    local additional_args=()
+    if test -d "templates/${CLIENT_LANGUAGE}"; then
+        OPENAPI_TEMPLATE_DIR=$(realpath "templates/${CLIENT_LANGUAGE}")
+        additional_args+=("-v" "${OPENAPI_TEMPLATE_DIR}:/template")
+    fi
     docker run --rm --security-opt="label=disable" -u $(id -u) \
         -e CLEANUP_DIRS="${CLEANUP_DIRS_STRING}" \
         -e KUBERNETES_BRANCH="${KUBERNETES_BRANCH}" \
@@ -103,6 +109,7 @@ kubeclient::generator::generate_client() {
         -e REPOSITORY="${REPOSITORY}" \
         -e USE_SINGLE_PARAMETER="${USE_SINGLE_PARAMETER:-}" \
         -v "${output_dir}:/output_dir" \
+        "${additional_args[@]}" \
         "${image_name}" "/output_dir"
 
     echo "---Done."

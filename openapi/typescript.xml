@@ -26,6 +26,7 @@
                               IntOrString=../../types,V1MicroTime=../../types
                             </importMappings>
                             <output>${generator.output.path}</output>
+                            <templateDirectory>/template</templateDirectory>
                             <configOptions>
                                 <sortParamsByRequiredFlag>true</sortParamsByRequiredFlag>
                                 <supportsES6>true</supportsES6>
