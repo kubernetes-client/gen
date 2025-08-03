@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2017 The Kubernetes Authors.
+# Copyright 2025 The Kubernetes Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,19 +14,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-echo 'Installing proto compiler'
+os_platform=""
+release_tag="31.1"
+os_architecture="x86_64"
 
-version=3.6.1
-platform="linux"
-
-if [[ "$OSTYPE" == "darwin"* ]]; then
-    platform="osx"
+if [[ "${OSTYPE}" == "darwin"* ]]; then
+	os_platform="osx"
+else
+	os_platform="linux"
 fi
 
-file=protoc-${version}-${platform}-x86_64.zip
+echo "Installing proto compiler os_platform: ${os_platform}, os_architecture: ${os_architecture}, release_tag: ${release_tag} "
 
-wget https://github.com/protocolbuffers/protobuf/releases/download/v${version}/${file}
-unzip ${file}
-rm ${file}
+protoc_zip_file="protoc-${release_tag}-${os_platform}-x86_64.zip"
 
-
+wget "https://github.com/protocolbuffers/protobuf/releases/download/v${release_tag}/${protoc_zip_file}"
+unzip "${protoc_zip_file}"
+rm "${protoc_zip_file}"
