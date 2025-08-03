@@ -12,10 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM maven:3.9.6-eclipse-temurin-11
+FROM maven:3.9.11-eclipse-temurin-11
 
 # Install preprocessing script requirements
-RUN apt-get update && apt-get -y install git python3-pip && pip install urllib3==1.24.2
+RUN apt-get update && apt-get -y install git python3-full && apt install python3-pip && pip install urllib3==2.5.0
 
 ARG OPENAPI_GENERATOR_COMMIT
 ARG GENERATION_XML_FILE
@@ -26,9 +26,11 @@ RUN mkdir /source && \
     cd /source && \
     mkdir openapi-generator && \
     cd openapi-generator && \
-    git init && \
-    git remote add origin https://github.com/${OPENAPI_GENERATOR_USER_ORG}/openapi-generator.git && \
-    git fetch --progress --depth=1 origin $OPENAPI_GENERATOR_COMMIT && \
+    git init --initial-branch=master && \
+    git remote add origin https://github.com/OpenAPITools/openapi-generator.git && \
+    git fetch --tags && \
+    OPENAPI_GENERATOR_TAG=$(git describe --tags --abbrev=0) && \
+    git fetch --progress --depth=1 origin $OPENAPI_GENERATOR_TAG && \
     git checkout -b gen FETCH_HEAD && \
     git config --system --add safe.directory /source/openapi-generator
 
