@@ -17,6 +17,7 @@ FROM maven:3.9.11-eclipse-temurin-11
 # Install preprocessing script requirements
 RUN apt update && \
     apt -y upgrade && \
+    apt -y install git python3-pip && \
     apt -y install git python3-urllib3 && \
     pip cache purge && \
     apt autoremove && \
