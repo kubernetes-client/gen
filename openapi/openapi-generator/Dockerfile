@@ -15,7 +15,12 @@
 FROM maven:3.9.11-eclipse-temurin-11
 
 # Install preprocessing script requirements
-RUN apt-get update && apt-get -y install git python3-full && apt install python3-pip && pip install urllib3==2.5.0
+RUN apt-get update && \
+    apt-get -y install git python3-full && \
+    pip3 install urllib3==2.5.0 && \
+    pip cache purge && \
+    apt autoremove && \
+    apt clean
 
 ARG OPENAPI_GENERATOR_COMMIT
 ARG GENERATION_XML_FILE
