@@ -15,9 +15,9 @@
 FROM maven:3.9.11-eclipse-temurin-11
 
 # Install preprocessing script requirements
-RUN apt-get update && \
-    apt-get -y install git python3-full && \
-    pip3 install urllib3==2.5.0 && \
+RUN apt update && \
+    apt -y upgrade && \
+    apt -y install git python3-urllib3 && \
     pip cache purge && \
     apt autoremove && \
     apt clean
@@ -25,12 +25,11 @@ RUN apt-get update && \
 ARG OPENAPI_GENERATOR_COMMIT
 ARG GENERATION_XML_FILE
 ARG OPENAPI_GENERATOR_USER_ORG=OpenAPITools
+ARG OPENAPI_GENERATOR_SOURCE_DIR='source/openapi-generator'
 
 # Check out specific commit of openapi-generator
-RUN mkdir /source && \
-    cd /source && \
-    mkdir openapi-generator && \
-    cd openapi-generator && \
+RUN mkdir -p ${OPENAPI_GENERATOR_SOURCE_DIR} &&  \
+    cd ${OPENAPI_GENERATOR_SOURCE_DIR} && \
     git init --initial-branch=master && \
     git remote add origin https://github.com/OpenAPITools/openapi-generator.git && \
     git fetch --tags && \
