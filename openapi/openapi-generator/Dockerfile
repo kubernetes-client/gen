@@ -25,21 +25,21 @@ RUN apt update && \
 ARG OPENAPI_GENERATOR_COMMIT
 ARG GENERATION_XML_FILE
 ARG OPENAPI_GENERATOR_USER_ORG=OpenAPITools
-ARG OPENAPI_GENERATOR_SOURCE_DIR='source/openapi-generator'
+ARG OPENAPI_GENERATOR_SOURCE_DIR='/source/openapi-generator'
 
 # Check out specific commit of openapi-generator
 RUN mkdir -p ${OPENAPI_GENERATOR_SOURCE_DIR} &&  \
     cd ${OPENAPI_GENERATOR_SOURCE_DIR} && \
     git init --initial-branch=master && \
-    git remote add origin https://github.com/OpenAPITools/openapi-generator.git && \
-    git fetch --tags && \
-    OPENAPI_GENERATOR_TAG=$(git describe --tags --abbrev=0) && \
-    git fetch --progress --depth=1 origin $OPENAPI_GENERATOR_TAG && \
+    git remote add origin https://github.com/${OPENAPI_GENERATOR_USER_ORG}/openapi-generator.git && \
+    git fetch --progress --depth=1 origin ${OPENAPI_GENERATOR_COMMIT} && \
     git checkout -b gen FETCH_HEAD && \
-    git config --system --add safe.directory /source/openapi-generator
+    git config --system --add safe.directory ${OPENAPI_GENERATOR_SOURCE_DIR}
 
 # Build it and persist local repository
-RUN chmod -R go+rwx /root && umask 0 && cd /source/openapi-generator && \
+RUN chmod -R go+rwx /root && \
+    umask 0 && \
+    cd ${OPENAPI_GENERATOR_SOURCE_DIR} && \
     mvn install -DskipTests -Dmaven.test.skip=true -pl modules/openapi-generator-maven-plugin -am && \
     cp -r /root/.m2/* /usr/share/maven/ref
 
