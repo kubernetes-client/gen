@@ -16,7 +16,6 @@
 
 # Script to fetch latest swagger spec.
 # Puts the updated spec at api/swagger-spec/
-
 set -o errexit
 set -o nounset
 set -o pipefail

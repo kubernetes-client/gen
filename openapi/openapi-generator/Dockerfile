@@ -50,4 +50,4 @@ COPY preprocess_spec.py /
 COPY custom_objects_spec.json /
 COPY ${GENERATION_XML_FILE} /generation_params.xml
 
-ENTRYPOINT ["mvn-entrypoint.sh", "/generate_client.sh"]
+ENTRYPOINT ["/usr/local/bin/mvn-entrypoint.sh", "/generate_client.sh"]
