@@ -16,7 +16,7 @@
 
 # Script to fetch latest swagger spec.
 # Puts the updated spec at api/swagger-spec/
-
+set -x
 set -o errexit
 set -o nounset
 set -o pipefail
@@ -41,7 +41,7 @@ kubeclient::generator::generate_client() {
     : "${CLIENT_LANGUAGE?Must set CLIENT_LANGUAGE env var}"
 
     OPENAPI_GENERATOR_USER_ORG="${OPENAPI_GENERATOR_USER_ORG:-OpenAPITools}"
-    OPENAPI_GENERATOR_COMMIT="${OPENAPI_GENERATOR_COMMIT:-v5.1.0}"
+    OPENAPI_GENERATOR_COMMIT="${OPENAPI_GENERATOR_COMMIT:-v7.14.0}"
     OPENAPI_MODEL_LENGTH="${OPENAPI_MODEL_LENGTH:-}"
     OPENAPI_SKIP_FETCH_SPEC="${OPENAPI_SKIP_FETCH_SPEC:-}"
     OPENAPI_SKIP_BASE_INTERFACE="${OPENAPI_SKIP_BASE_INTERFACE:-}"
@@ -73,7 +73,7 @@ kubeclient::generator::generate_client() {
     fi
 
     echo "--- Building docker image ${image_name}..."
-    docker build "${SCRIPT_ROOT}"/../ -f "${SCRIPT_ROOT}/Dockerfile" -t "${image_name}" \
+    docker build --progress=plain "${SCRIPT_ROOT}"/../ -f "${SCRIPT_ROOT}/Dockerfile" -t "${image_name}" \
         --build-arg OPENAPI_GENERATOR_USER_ORG="${OPENAPI_GENERATOR_USER_ORG}" \
         --build-arg OPENAPI_GENERATOR_COMMIT="${OPENAPI_GENERATOR_COMMIT}" \
         --build-arg GENERATION_XML_FILE="${CLIENT_LANGUAGE}.xml"
