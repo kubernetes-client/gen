@@ -47,6 +47,7 @@
                   <configOptions>
                     <invokerPackage>io.kubernetes.client.openapi</invokerPackage>
                   </configOptions>
+                  <templateResourcePath>/generation_params.xml</templateResourcePath>
                 </configuration>
               </execution>
             </executions>
