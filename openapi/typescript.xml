@@ -36,6 +36,7 @@
                                 <npmVersion>${generator.client.version}</npmVersion>
                                 <modelPropertyNaming>original</modelPropertyNaming>
                                 <importFileExtension>.js</importFileExtension>
+                                <useErasableSyntax>true</useErasableSyntax>
                             </configOptions>
                             <typeMappings>int-or-string=IntOrString,date-time-micro=V1MicroTime</typeMappings>
                         </configuration>
