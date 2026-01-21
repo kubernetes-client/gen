@@ -38,30 +38,58 @@ files="k8s.io/apimachinery/pkg/api/resource/generated.proto;Resource \
        k8s.io/api/rbac/v1alpha1/generated.proto;V1alpha1Rbac \
        k8s.io/api/rbac/v1/generated.proto;V1Rbac \
        k8s.io/api/rbac/v1beta1/generated.proto;V1beta1Rbac \
+       k8s.io/api/networking/v1beta1/generated.proto;V1beta1Networking \
        k8s.io/api/networking/v1/generated.proto;V1Networking \
+       k8s.io/api/node/v1alpha1/generated.proto;V1alpha1Node \
+       k8s.io/api/node/v1beta1/generated.proto;V1beta1Node \
+       k8s.io/api/node/v1/generated.proto;V1Node \
+       k8s.io/api/admissionregistration/v1alpha1/generated.proto;V1alpha1Admissionregistration \
        k8s.io/api/admissionregistration/v1beta1/generated.proto;V1beta1Admissionregistration \
        k8s.io/api/admissionregistration/v1/generated.proto;V1Admissionregistration \
+       k8s.io/api/apidiscovery/v2beta1/generated.proto;V2beta1Apidiscovery \
+       k8s.io/api/apidiscovery/v2/generated.proto;V2Apidiscovery \
+       k8s.io/api/apiserverinternal/v1alpha1/generated.proto;V1alpha1Apiserverinternal \
        k8s.io/api/scheduling/v1alpha1/generated.proto;V1alpha1Scheduling \
+       k8s.io/api/scheduling/v1beta1/generated.proto;V1beta1Scheduling \
        k8s.io/api/scheduling/v1/generated.proto;V1Scheduling \
+       k8s.io/api/storage/v1alpha1/generated.proto;V1alpha1Storage \
        k8s.io/api/storage/v1/generated.proto;V1Storage \
        k8s.io/api/storage/v1beta1/generated.proto;V1beta1Storage \
+       k8s.io/api/storagemigration/v1beta1/generated.proto;V1beta1Storagemigration \
        k8s.io/api/batch/v1/generated.proto;V1Batch \
        k8s.io/api/batch/v1beta1/generated.proto;V1beta1Batch \
        k8s.io/api/apps/v1beta2/generated.proto;V1beta2Apps \
        k8s.io/api/apps/v1/generated.proto;V1Apps \
        k8s.io/api/apps/v1beta1/generated.proto;V1beta1Apps \
+       k8s.io/api/authentication/v1alpha1/generated.proto;V1alpha1Authentication \
        k8s.io/api/authentication/v1/generated.proto;V1Authentication \
        k8s.io/api/authentication/v1beta1/generated.proto;V1beta1Authentication \
        k8s.io/api/admission/v1/generated.proto;V1Admission \
        k8s.io/api/admission/v1beta1/generated.proto;V1beta1Admission \
        k8s.io/api/policy/v1/generated.proto;V1Policy \
        k8s.io/api/policy/v1beta1/generated.proto;V1beta1Policy \
+       k8s.io/api/resource/v1alpha3/generated.proto;V1alpha3Resource \
+       k8s.io/api/resource/v1beta2/generated.proto;V1beta2Resource \
+       k8s.io/api/resource/v1beta1/generated.proto;V1beta1Resource \
+       k8s.io/api/resource/v1/generated.proto;V1Resource \
        k8s.io/api/core/v1/generated.proto;V1 \
+       k8s.io/api/discovery/v1beta1/generated.proto;V1beta1Discovery \
+       k8s.io/api/discovery/v1/generated.proto;V1Discovery \
+       k8s.io/api/events/v1beta1/generated.proto;V1beta1Events \
+       k8s.io/api/events/v1/generated.proto;V1Events \
        k8s.io/api/autoscaling/v1/generated.proto;V1Autoscaling \
        k8s.io/api/autoscaling/v2/generated.proto;V2Autoscaling \
        k8s.io/api/extensions/v1beta1/generated.proto;V1beta1Extensions \
+       k8s.io/api/flowcontrol/v1beta3/generated.proto;V1beta3Flowcontrol \
+       k8s.io/api/flowcontrol/v1beta2/generated.proto;V1beta2Flowcontrol \
+       k8s.io/api/flowcontrol/v1beta1/generated.proto;V1beta1Flowcontrol \
+       k8s.io/api/flowcontrol/v1/generated.proto;V1Flowcontrol \
+       k8s.io/api/certificates/v1alpha1/generated.proto;V1alpha1Certificates \
        k8s.io/api/certificates/v1/generated.proto;V1Certificates \
        k8s.io/api/certificates/v1beta1/generated.proto;V1beta1Certificates \
+       k8s.io/api/coordination/v1alpha2/generated.proto;V1alpha2Coordination \
+       k8s.io/api/coordination/v1beta1/generated.proto;V1beta1Coordination \
+       k8s.io/api/coordination/v1/generated.proto;V1Coordination \
        k8s.io/api/imagepolicy/v1alpha1/generated.proto;V1alpha1Imagepolicy \
        k8s.io/api/authorization/v1/generated.proto;V1Authorization \
        k8s.io/api/authorization/v1beta1/generated.proto;V1beta1Authorization \
