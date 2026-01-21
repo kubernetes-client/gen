@@ -24,6 +24,7 @@ echo Downloading proto files for ${release}
 mkdir -p k8s.io/apimachinery/pkg/api/resource
 mkdir -p k8s.io/apimachinery/pkg/apis/meta/v1
 mkdir -p k8s.io/apimachinery/pkg/util/intstr
+mkdir -p k8s.io/apimachinery/pkg/runtime
 mkdir -p k8s.io/apimachinery/pkg/runtime/schema
 mkdir -p k8s.io/apis/meta/v1
 
