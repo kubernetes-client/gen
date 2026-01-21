@@ -58,15 +58,15 @@ files="k8s.io/apimachinery/pkg/api/resource/generated.proto;Resource \
        k8s.io/api/policy/v1beta1/generated.proto;V1beta1Policy \
        k8s.io/api/core/v1/generated.proto;V1 \
        k8s.io/api/autoscaling/v1/generated.proto;V1Autoscaling \
-       k8s.io/api/autoscaling/v2beta1/generated.proto;V2beta1Autoscaling \
-       k8s.io/api/autoscaling/v2beta2/generated.proto;V2beta2Autoscaling \
+       k8s.io/api/autoscaling/v2/generated.proto;V2Autoscaling \
        k8s.io/api/extensions/v1beta1/generated.proto;V1beta1Extensions \
        k8s.io/api/certificates/v1/generated.proto;V1Certificates \
        k8s.io/api/certificates/v1beta1/generated.proto;V1beta1Certificates \
        k8s.io/api/imagepolicy/v1alpha1/generated.proto;V1alpha1Imagepolicy \
        k8s.io/api/authorization/v1/generated.proto;V1Authorization \
        k8s.io/api/authorization/v1beta1/generated.proto;V1beta1Authorization \
-       k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1/generated.proto;V1beta1Apiextensions"
+       k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1/generated.proto;V1beta1Apiextensions \
+       k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1/generated.proto;V1Apiextensions"
 
 proto_files=""
 
