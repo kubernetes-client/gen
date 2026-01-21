@@ -2,3 +2,10 @@
 .idea/*
 *.iml
 
+# Proto generation artifacts (downloaded by dependencies.sh)
+proto/k8s.io/
+proto/bin/
+proto/include/
+proto/*.zip
+proto/*.zip.*
+proto/readme.txt
