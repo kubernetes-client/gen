@@ -50,8 +50,7 @@ mkdir -p k8s.io/api/policy/v1
 mkdir -p k8s.io/api/policy/v1beta1
 mkdir -p k8s.io/api/core/v1
 mkdir -p k8s.io/api/autoscaling/v1
-mkdir -p k8s.io/api/autoscaling/v2beta1
-mkdir -p k8s.io/api/autoscaling/v2beta2
+mkdir -p k8s.io/api/autoscaling/v2
 mkdir -p k8s.io/api/extensions/v1beta1
 mkdir -p k8s.io/api/certificates/v1
 mkdir -p k8s.io/api/certificates/v1beta1
@@ -59,6 +58,7 @@ mkdir -p k8s.io/api/imagepolicy/v1alpha1
 mkdir -p k8s.io/api/authorization/v1
 mkdir -p k8s.io/api/authorization/v1beta1
 mkdir -p k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1
+mkdir -p k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1
 
 base=https://raw.githubusercontent.com/kubernetes
 machinery_base=${base}/apimachinery/${release}
@@ -101,8 +101,7 @@ $curl_cmd ${base}/api/master/policy/v1/generated.proto > k8s.io/api/policy/v1/ge
 $curl_cmd ${base}/api/master/policy/v1beta1/generated.proto > k8s.io/api/policy/v1beta1/generated.proto
 $curl_cmd ${base}/api/master/core/v1/generated.proto > k8s.io/api/core/v1/generated.proto
 $curl_cmd ${base}/api/master/autoscaling/v1/generated.proto > k8s.io/api/autoscaling/v1/generated.proto
-$curl_cmd ${base}/api/master/autoscaling/v2beta1/generated.proto > k8s.io/api/autoscaling/v2beta1/generated.proto
-$curl_cmd ${base}/api/master/autoscaling/v2beta2/generated.proto > k8s.io/api/autoscaling/v2beta2/generated.proto
+$curl_cmd ${base}/api/master/autoscaling/v2/generated.proto > k8s.io/api/autoscaling/v2/generated.proto
 $curl_cmd ${base}/api/master/extensions/v1beta1/generated.proto > k8s.io/api/extensions/v1beta1/generated.proto
 $curl_cmd ${base}/api/master/certificates/v1/generated.proto > k8s.io/api/certificates/v1/generated.proto
 $curl_cmd ${base}/api/master/certificates/v1beta1/generated.proto > k8s.io/api/certificates/v1beta1/generated.proto
@@ -110,3 +109,4 @@ $curl_cmd ${base}/api/master/imagepolicy/v1alpha1/generated.proto > k8s.io/api/i
 $curl_cmd ${base}/api/master/authorization/v1/generated.proto > k8s.io/api/authorization/v1/generated.proto
 $curl_cmd ${base}/api/master/authorization/v1beta1/generated.proto > k8s.io/api/authorization/v1beta1/generated.proto
 $curl_cmd ${base}/apiextensions-apiserver/master/pkg/apis/apiextensions/v1beta1/generated.proto > k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1/generated.proto
+$curl_cmd ${base}/apiextensions-apiserver/master/pkg/apis/apiextensions/v1/generated.proto > k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1/generated.proto
