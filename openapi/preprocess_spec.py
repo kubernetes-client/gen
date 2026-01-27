@@ -163,7 +163,7 @@ def clean_crd_meta(spec):
 
 def add_custom_objects_spec(spec):
     with open(CUSTOM_OBJECTS_SPEC_PATH, 'r') as custom_objects_spec_file:
-        custom_objects_spec = json.loads(custom_objects_spec_file.read())
+        custom_objects_spec = json.load(custom_objects_spec_file)
     for path in custom_objects_spec.keys():
         if path not in spec['paths'].keys():
             spec['paths'][path] = custom_objects_spec[path]
@@ -177,7 +177,7 @@ def add_apidiscovery_definitions(spec):
     API discovery. This function adds them manually.
     """
     with open(APIDISCOVERY_DEFINITIONS_PATH, 'r') as apidiscovery_file:
-        apidiscovery_definitions = json.loads(apidiscovery_file.read())
+        apidiscovery_definitions = json.load(apidiscovery_file)
     for definition_name, definition in apidiscovery_definitions.items():
         if definition_name not in spec['definitions']:
             spec['definitions'][definition_name] = definition
