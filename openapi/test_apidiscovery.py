@@ -14,7 +14,7 @@
 # limitations under the License.
 
 """
-Test script to verify that apidiscovery.k8s.io/v2beta1 API definitions
+Test script to verify that apidiscovery.k8s.io/v2beta1 and v2 API definitions
 are properly included in the processed OpenAPI spec.
 """
 
@@ -135,7 +135,7 @@ def test_apidiscovery_structure():
 def main():
     """Run all tests."""
     print("=" * 70)
-    print("Testing apidiscovery.k8s.io/v2beta1 API definitions")
+    print("Testing apidiscovery.k8s.io/v2beta1 and v2 API definitions")
     print("=" * 70 + "\n")
     
     tests = [
