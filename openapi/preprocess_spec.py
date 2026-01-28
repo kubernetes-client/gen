@@ -36,6 +36,10 @@ CUSTOM_OBJECTS_SPEC_PATH = os.path.join(
     os.path.dirname(__file__),
     'custom_objects_spec.json')
 
+APIDISCOVERY_DEFINITIONS_PATH = os.path.join(
+    os.path.dirname(__file__),
+    'apidiscovery_definitions.json')
+
 _ops = ['get', 'put', 'post', 'delete', 'options', 'head', 'patch']
 
 
@@ -159,10 +163,24 @@ def clean_crd_meta(spec):
 
 def add_custom_objects_spec(spec):
     with open(CUSTOM_OBJECTS_SPEC_PATH, 'r') as custom_objects_spec_file:
-        custom_objects_spec = json.loads(custom_objects_spec_file.read())
+        custom_objects_spec = json.load(custom_objects_spec_file)
     for path in custom_objects_spec.keys():
         if path not in spec['paths'].keys():
             spec['paths'][path] = custom_objects_spec[path]
+    return spec
+
+def add_apidiscovery_definitions(spec):
+    """Add apidiscovery API definitions to the spec.
+    
+    The apidiscovery.k8s.io/v2beta1 API group types are not included in the
+    Kubernetes OpenAPI spec by default, but they exist and are used for 
+    API discovery. This function adds them manually.
+    """
+    with open(APIDISCOVERY_DEFINITIONS_PATH, 'r') as apidiscovery_file:
+        apidiscovery_definitions = json.load(apidiscovery_file)
+    for definition_name, definition in apidiscovery_definitions.items():
+        if definition_name not in spec['definitions']:
+            spec['definitions'][definition_name] = definition
     return spec
 
 def add_codegen_request_body(operation, _):
@@ -218,6 +236,7 @@ def expand_parameters(spec):
 
 def process_swagger(spec, client_language, crd_mode=False):
     spec = add_custom_objects_spec(spec)
+    spec = add_apidiscovery_definitions(spec)
 
     if crd_mode:
         drop_paths(spec)

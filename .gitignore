@@ -2,6 +2,11 @@
 .idea/*
 *.iml
 
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
 # Proto generation artifacts (downloaded by dependencies.sh)
 proto/k8s.io/
 proto/bin/
