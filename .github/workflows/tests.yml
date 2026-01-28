@@ -20,10 +20,13 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: Install dependencies
+      - name: Install system dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y jq curl
+
+      - name: Install Python dependencies
+        run: pip install urllib3
 
       - name: Run unit tests
         working-directory: ./openapi
