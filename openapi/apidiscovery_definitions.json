@@ -172,5 +172,193 @@
       "subresource",
       "verbs"
     ]
+  },
+  "io.k8s.api.apidiscovery.v2.APIGroupDiscoveryList": {
+    "type": "object",
+    "description": "APIGroupDiscoveryList is a resource containing a list of APIGroupDiscovery. This is one of the types able to be returned from the /api and /apis endpoint and contains an aggregated list of API resources (built-ins, Custom Resource Definitions, resources from aggregated servers) that a cluster supports.",
+    "x-kubernetes-group-version-kind": [
+      {
+        "group": "apidiscovery.k8s.io",
+        "kind": "APIGroupDiscoveryList",
+        "version": "v2"
+      }
+    ],
+    "properties": {
+      "apiVersion": {
+        "type": "string"
+      },
+      "kind": {
+        "type": "string"
+      },
+      "metadata": {
+        "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"
+      },
+      "items": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/io.k8s.api.apidiscovery.v2.APIGroupDiscovery"
+        }
+      }
+    },
+    "required": [
+      "items"
+    ]
+  },
+  "io.k8s.api.apidiscovery.v2.APIGroupDiscovery": {
+    "type": "object",
+    "description": "APIGroupDiscovery holds information about which resources are being served for all version of the API Group. It contains a list of APIVersionDiscovery that holds a list of APIResourceDiscovery types served for a version. Versions are in descending order of preference, with the first version being the preferred entry.",
+    "x-kubernetes-group-version-kind": [
+      {
+        "group": "apidiscovery.k8s.io",
+        "kind": "APIGroupDiscovery",
+        "version": "v2"
+      }
+    ],
+    "properties": {
+      "apiVersion": {
+        "type": "string"
+      },
+      "kind": {
+        "type": "string"
+      },
+      "metadata": {
+        "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+      },
+      "versions": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/io.k8s.api.apidiscovery.v2.APIVersionDiscovery"
+        },
+        "x-kubernetes-list-type": "map",
+        "x-kubernetes-list-map-keys": [
+          "version"
+        ]
+      }
+    }
+  },
+  "io.k8s.api.apidiscovery.v2.APIVersionDiscovery": {
+    "type": "object",
+    "description": "APIVersionDiscovery holds a list of APIResourceDiscovery types that are served for a particular version within an API Group.",
+    "properties": {
+      "version": {
+        "type": "string",
+        "description": "version is the name of the version within a group version."
+      },
+      "resources": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/io.k8s.api.apidiscovery.v2.APIResourceDiscovery"
+        },
+        "x-kubernetes-list-type": "map",
+        "x-kubernetes-list-map-keys": [
+          "resource"
+        ]
+      },
+      "freshness": {
+        "type": "string",
+        "description": "freshness marks whether a group version's discovery document is up to date."
+      }
+    },
+    "required": [
+      "version"
+    ]
+  },
+  "io.k8s.api.apidiscovery.v2.APIResourceDiscovery": {
+    "type": "object",
+    "description": "APIResourceDiscovery provides information about an API resource for discovery.",
+    "properties": {
+      "resource": {
+        "type": "string",
+        "description": "resource is the plural name of the resource."
+      },
+      "responseKind": {
+        "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.GroupVersionKind"
+      },
+      "scope": {
+        "type": "string",
+        "description": "scope indicates the scope of a resource, either Cluster or Namespaced"
+      },
+      "singularResource": {
+        "type": "string",
+        "description": "singularResource is the singular name of the resource."
+      },
+      "verbs": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "description": "verbs is a list of supported API operation types",
+        "x-kubernetes-list-type": "set"
+      },
+      "shortNames": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "description": "shortNames is a list of suggested short names of the resource.",
+        "x-kubernetes-list-type": "set"
+      },
+      "categories": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "description": "categories is a list of the grouped resources this resource belongs to.",
+        "x-kubernetes-list-type": "set"
+      },
+      "subresources": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/io.k8s.api.apidiscovery.v2.APISubresourceDiscovery"
+        },
+        "x-kubernetes-list-type": "map",
+        "x-kubernetes-list-map-keys": [
+          "subresource"
+        ]
+      }
+    },
+    "required": [
+      "resource",
+      "scope",
+      "singularResource",
+      "verbs"
+    ]
+  },
+  "io.k8s.api.apidiscovery.v2.APISubresourceDiscovery": {
+    "type": "object",
+    "description": "APISubresourceDiscovery provides information about an API subresource for discovery.",
+    "properties": {
+      "subresource": {
+        "type": "string",
+        "description": "subresource is the name of the subresource."
+      },
+      "responseKind": {
+        "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.GroupVersionKind"
+      },
+      "acceptedTypes": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.GroupVersionKind"
+        },
+        "x-kubernetes-list-type": "map",
+        "x-kubernetes-list-map-keys": [
+          "group",
+          "version",
+          "kind"
+        ]
+      },
+      "verbs": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "description": "verbs is a list of supported API operation types",
+        "x-kubernetes-list-type": "set"
+      }
+    },
+    "required": [
+      "subresource",
+      "verbs"
+    ]
   }
 }

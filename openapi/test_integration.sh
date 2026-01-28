@@ -32,11 +32,11 @@ echo "   ✓ Processed $(wc -c < "$TEST_DIR/swagger_output.json") bytes"
 
 # Verify apidiscovery definitions are present
 echo "3. Verifying apidiscovery definitions..."
-APIDISCOVERY_COUNT=$(jq '[.definitions | keys[] | select(contains("Discovery") and (contains("v2beta1") or contains("APIGroup")))] | length' "$TEST_DIR/swagger_output.json")
+APIDISCOVERY_COUNT=$(jq '[.definitions | keys[] | select(contains("Discovery") and (contains("v2beta1") or contains("v2.") or contains("APIGroup")))] | length' "$TEST_DIR/swagger_output.json")
 
-if [ "$APIDISCOVERY_COUNT" -ge 5 ]; then
+if [ "$APIDISCOVERY_COUNT" -ge 10 ]; then
   echo "   ✓ Found $APIDISCOVERY_COUNT apidiscovery definitions"
-  jq -r '.definitions | keys[] | select(contains("Discovery") and (contains("v2beta1") or contains("APIGroup")))' "$TEST_DIR/swagger_output.json" | head -10 | while read def; do
+  jq -r '.definitions | keys[] | select(contains("Discovery") and (contains("v2beta1") or contains("v2.") or contains("APIGroup")))' "$TEST_DIR/swagger_output.json" | head -15 | while read def; do
     echo "     - $def"
   done
   echo ""
@@ -44,6 +44,6 @@ if [ "$APIDISCOVERY_COUNT" -ge 5 ]; then
   echo "✓ Integration test PASSED"
   exit 0
 else
-  echo "   ✗ FAILED: Expected at least 5 apidiscovery definitions, found $APIDISCOVERY_COUNT"
+  echo "   ✗ FAILED: Expected at least 10 apidiscovery definitions (5 v2beta1 + 5 v2), found $APIDISCOVERY_COUNT"
   exit 1
 fi

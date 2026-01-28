@@ -38,7 +38,12 @@ def test_apidiscovery_definitions_loaded():
         'io.k8s.api.apidiscovery.v2beta1.APIGroupDiscovery',
         'io.k8s.api.apidiscovery.v2beta1.APIVersionDiscovery',
         'io.k8s.api.apidiscovery.v2beta1.APIResourceDiscovery',
-        'io.k8s.api.apidiscovery.v2beta1.APISubresourceDiscovery'
+        'io.k8s.api.apidiscovery.v2beta1.APISubresourceDiscovery',
+        'io.k8s.api.apidiscovery.v2.APIGroupDiscoveryList',
+        'io.k8s.api.apidiscovery.v2.APIGroupDiscovery',
+        'io.k8s.api.apidiscovery.v2.APIVersionDiscovery',
+        'io.k8s.api.apidiscovery.v2.APIResourceDiscovery',
+        'io.k8s.api.apidiscovery.v2.APISubresourceDiscovery'
     ]
     
     for def_name in expected_defs:
@@ -80,18 +85,18 @@ def test_apidiscovery_in_processed_spec():
     processed_spec = process_swagger(minimal_spec, 'python', crd_mode=False)
     
     # After processing, the names should be shortened (remove prefix)
-    # Check for v2beta1.* definitions
+    # Check for both v2beta1.* and v2.* definitions
     apidiscovery_defs = [
         k for k in processed_spec['definitions'].keys() 
-        if k.startswith('v2beta1.') and 'API' in k and 'Discovery' in k
+        if (k.startswith('v2beta1.') or k.startswith('v2.')) and 'API' in k and 'Discovery' in k
     ]
     
-    if len(apidiscovery_defs) < 5:
-        print(f"  ✗ FAILED: Expected at least 5 apidiscovery definitions, found {len(apidiscovery_defs)}")
+    if len(apidiscovery_defs) < 10:
+        print(f"  ✗ FAILED: Expected at least 10 apidiscovery definitions (5 v2beta1 + 5 v2), found {len(apidiscovery_defs)}")
         print(f"  Found: {apidiscovery_defs}")
         return False
     
-    for def_name in apidiscovery_defs:
+    for def_name in sorted(apidiscovery_defs):
         print(f"  ✓ {def_name}")
     
     print("  ✓ Test 2 PASSED\n")
@@ -105,21 +110,23 @@ def test_apidiscovery_structure():
     spec = {'definitions': {}}
     spec = add_apidiscovery_definitions(spec)
     
-    # Check APIGroupDiscoveryList structure
-    list_def = spec['definitions']['io.k8s.api.apidiscovery.v2beta1.APIGroupDiscoveryList']
-    
-    required_checks = [
-        ('type' in list_def and list_def['type'] == 'object', "type is object"),
-        ('properties' in list_def, "has properties"),
-        ('items' in list_def['properties'], "has items property"),
-        ('x-kubernetes-group-version-kind' in list_def, "has group-version-kind"),
-    ]
-    
-    for check, description in required_checks:
-        if not check:
-            print(f"  ✗ FAILED: {description}")
-            return False
-        print(f"  ✓ {description}")
+    # Check APIGroupDiscoveryList structure for both v2beta1 and v2
+    for version in ['v2beta1', 'v2']:
+        print(f"  Checking {version} definitions...")
+        list_def = spec['definitions'][f'io.k8s.api.apidiscovery.{version}.APIGroupDiscoveryList']
+        
+        required_checks = [
+            ('type' in list_def and list_def['type'] == 'object', f"{version}: type is object"),
+            ('properties' in list_def, f"{version}: has properties"),
+            ('items' in list_def['properties'], f"{version}: has items property"),
+            ('x-kubernetes-group-version-kind' in list_def, f"{version}: has group-version-kind"),
+        ]
+        
+        for check, description in required_checks:
+            if not check:
+                print(f"  ✗ FAILED: {description}")
+                return False
+            print(f"  ✓ {description}")
     
     print("  ✓ Test 3 PASSED\n")
     return True
