@@ -41,6 +41,7 @@ RUN chmod -R go+rwx /root && umask 0 && cd /source/openapi-generator && \
 COPY openapi-generator/generate_client_in_container.sh /generate_client.sh
 COPY preprocess_spec.py /
 COPY custom_objects_spec.json /
+COPY apidiscovery_definitions.json /
 COPY ${GENERATION_XML_FILE} /generation_params.xml
 
 ENTRYPOINT ["mvn-entrypoint.sh", "/generate_client.sh"]
