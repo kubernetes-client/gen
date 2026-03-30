@@ -51,3 +51,15 @@ source "${SETTING_FILE}"
 
 # TODO(brendandburns): Update CLEANUP_DIRS
 CLIENT_LANGUAGE=csharp; CLEANUP_DIRS=(docs src target gradle); kubeclient::generator::generate_client "${OUTPUT_DIR}"
+
+echo ""
+echo "NOTE: Unlike other generators, the C# client does not generate code directly."
+echo "The swagger.json has been placed in: ${OUTPUT_DIR}"
+echo ""
+echo "To generate the C# client code, clone the C# client repository and run dotnet build:"
+echo "  git clone https://github.com/kubernetes-client/csharp"
+echo "  cp ${OUTPUT_DIR}/swagger.json csharp/src/KubernetesClient/swagger.json"
+echo "  cd csharp"
+echo "  dotnet build"
+echo ""
+echo "For more details, see: https://github.com/kubernetes-client/csharp/tree/master/gen/LibKubernetesGenerator"
