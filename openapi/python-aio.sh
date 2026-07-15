@@ -65,6 +65,8 @@ if [ ${PACKAGE_NAME} == "client" ]; then
   find "${OUTPUT_DIR}/client/" -type f -name \*.py -exec sed -i 's/import client\./import kubernetes.aio.client./g' {} +
   find "${OUTPUT_DIR}/client/" -type f -name \*.py -exec sed -i 's/from client/from kubernetes.aio.client/g' {} +
   find "${OUTPUT_DIR}/client/" -type f -name \*.py -exec sed -i 's/getattr(client\.models/getattr(kubernetes.aio.client.models/g' {} +
+  patch "${OUTPUT_DIR}/client/rest.py" "${SCRIPT_ROOT}/python-aio-client-go-retry-rest.patch"
+  patch "${OUTPUT_DIR}/client/configuration.py" "${SCRIPT_ROOT}/python-aio-client-go-retry-configuration.patch"
 
 else
 

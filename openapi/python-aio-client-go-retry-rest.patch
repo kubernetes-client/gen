@@ -1,0 +1,56 @@
+--- rest.py
++++ rest.py
+@@ -15,0 +16,5 @@
++from kubernetes.aio.utils.retry import (
++    async_on_retry_after_error,
++    is_retry_after_response,
++    retry_after_backoff,
++)
+@@ -39,0 +45 @@
++        self.configuration = configuration
+@@ -159 +165,17 @@
+-        r = await self.pool_manager.request(**args)
++        async def read_request(check_retry_status=False):
++            response = await self.pool_manager.request(**args)
++            if check_retry_status and self._should_retry_response(response):
++                await self._raise_for_status(response)
++            return response
++
++        if (method in ['GET', 'HEAD'] and _preload_content and
++                getattr(self.configuration, 'client_go_retries', False)):
++            backoff = retry_after_backoff(
++                getattr(self.configuration, 'retries', None),
++                getattr(self.configuration, 'client_go_retry_backoff', None),
++            )
++            r = await async_on_retry_after_error(
++                backoff, self._is_read_retryable,
++                lambda: read_request(True))
++        else:
++            r = await read_request()
+@@ -168,2 +190 @@
+-            if not 200 <= r.status <= 299:
+-                raise ApiException(http_resp=r)
++            await self._raise_for_status(r)
+@@ -171,0 +193,22 @@
++
++    @classmethod
++    def _is_read_retryable(cls, error):
++        return is_retry_after_response(error)
++
++    @staticmethod
++    def _should_retry_response(response):
++        error = ApiException(status=response.status, reason=response.reason)
++        error.headers = response.headers
++        return is_retry_after_response(error)
++
++    @staticmethod
++    async def _response_for_exception(response):
++        if isinstance(response, RESTResponse):
++            return response
++        return RESTResponse(response, await response.read())
++
++    @classmethod
++    async def _raise_for_status(cls, response):
++        if not 200 <= response.status <= 299:
++            response = await cls._response_for_exception(response)
++            raise ApiException(http_resp=response)

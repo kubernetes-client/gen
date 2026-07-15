@@ -64,6 +64,8 @@ if [ "${PACKAGE_NAME}" = client ]; then
     find "${OUTPUT_DIR}/client/" -type f -name \*.py -exec sed -i 's/import client\./import kubernetes.client./g' {} +
     find "${OUTPUT_DIR}/client/" -type f -name \*.py -exec sed -i 's/from client/from kubernetes.client/g' {} +
     find "${OUTPUT_DIR}/client/" -type f -name \*.py -exec sed -i 's/getattr(client\.models/getattr(kubernetes.client.models/g' {} +
+    patch "${OUTPUT_DIR}/client/rest.py" "${SCRIPT_ROOT}/python-client-go-retry-rest.patch"
+    patch "${OUTPUT_DIR}/client/configuration.py" "${SCRIPT_ROOT}/python-client-go-retry-configuration.patch"
 fi
 
 echo "---Done."

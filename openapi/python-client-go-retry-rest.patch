@@ -1,0 +1,110 @@
+--- rest.py
++++ rest.py
+@@ -18,0 +19,6 @@
++from kubernetes.utils.retry import (
++    is_retry_after_response,
++    on_retry_after_error,
++    retry_after_backoff,
++)
++from urllib3.util.retry import Retry
+@@ -43,0 +50,2 @@
++        self.configuration = configuration
++
+@@ -143,0 +152,23 @@
++        client_go_retries = getattr(self.configuration, 'client_go_retries',
++                                    False)
++        request_retries = None
++        if client_go_retries:
++            request_retries = self._urllib3_retries_without_status(
++                getattr(self.configuration, 'retries', None))
++
++        def pool_request(*args, **kwargs):
++            if request_retries is not None:
++                kwargs['retries'] = request_retries
++            return self.pool_manager.request(*args, **kwargs)
++
++        def read_request(check_retry_status=False):
++            response = pool_request(
++                method, url,
++                fields=query_params,
++                preload_content=_preload_content,
++                timeout=timeout,
++                headers=headers)
++            if check_retry_status and self._should_retry_response(response):
++                self._raise_for_status(response)
++            return response
++
+@@ -153 +184 @@
+-                    r = self.pool_manager.request(
++                    r = pool_request(
+@@ -160 +191 @@
+-                    r = self.pool_manager.request(
++                    r = pool_request(
+@@ -172 +203 @@
+-                    r = self.pool_manager.request(
++                    r = pool_request(
+@@ -184 +215 @@
+-                    r = self.pool_manager.request(
++                    r = pool_request(
+@@ -213,14 +244 @@
+-        if not 200 <= r.status <= 299:
+-            if r.status == 401:
+-                raise UnauthorizedException(http_resp=r)
+-
+-            if r.status == 403:
+-                raise ForbiddenException(http_resp=r)
+-
+-            if r.status == 404:
+-                raise NotFoundException(http_resp=r)
+-
+-            if 500 <= r.status <= 599:
+-                raise ServiceException(http_resp=r)
+-
+-            raise ApiException(http_resp=r)
++        self._raise_for_status(r)
+@@ -228,0 +247,45 @@
++
++    @classmethod
++    def _is_read_retryable(cls, error):
++        return is_retry_after_response(error)
++
++    @staticmethod
++    def _should_retry_response(response):
++        error = ApiException(status=response.status, reason=response.reason)
++        error.headers = response.getheaders()
++        return is_retry_after_response(error)
++
++    @staticmethod
++    def _urllib3_retries_without_status(retries):
++        if retries is False:
++            return False
++        if retries is None:
++            retries = Retry.DEFAULT
++        elif retries is True:
++            retries = Retry.DEFAULT
++        elif isinstance(retries, int):
++            retries = Retry.from_int(retries)
++        if isinstance(retries, Retry):
++            return retries.new(
++                status=0,
++                status_forcelist=(),
++                respect_retry_after_header=False,
++            )
++        return retries
++
++    @classmethod
++    def _raise_for_status(cls, response):
++        if not 200 <= response.status <= 299:
++            if response.status == 401:
++                raise UnauthorizedException(http_resp=response)
++
++            if response.status == 403:
++                raise ForbiddenException(http_resp=response)
++
++            if response.status == 404:
++                raise NotFoundException(http_resp=response)
++
++            if 500 <= response.status <= 599:
++                raise ServiceException(http_resp=response)
++
++            raise ApiException(http_resp=response)
