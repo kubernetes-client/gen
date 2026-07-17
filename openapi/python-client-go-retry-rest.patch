@@ -46,6 +46,23 @@
 @@ -184 +215 @@
 -                    r = self.pool_manager.request(
 +                    r = pool_request(
+@@ -198,5 +229,11 @@
+-                r = self.pool_manager.request(method, url,
+-                                              fields=query_params,
+-                                              preload_content=_preload_content,
+-                                              timeout=timeout,
+-                                              headers=headers)
++                if _preload_content and client_go_retries:
++                    backoff = retry_after_backoff(
++                        getattr(self.configuration, 'retries', None),
++                        getattr(self.configuration, 'client_go_retry_backoff',
++                                None),
++                    )
++                    r = on_retry_after_error(
++                        backoff, self._is_read_retryable,
++                        lambda: read_request(True))
++                else:
++                    r = read_request()
 @@ -213,14 +244 @@
 -        if not 200 <= r.status <= 299:
 -            if r.status == 401:
