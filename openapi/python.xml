@@ -18,14 +18,32 @@
                         </goals>
                         <configuration>
                             <inputSpec>${generator.spec.path}</inputSpec>
-                            <generatorName>python-legacy</generatorName>
+                            <generatorName>python</generatorName>
                             <gitUserId>kubernetes-client</gitUserId>
                             <gitRepoId>python</gitRepoId>
                             <skipValidateSpec>true</skipValidateSpec>
+                            <generateApiTests>false</generateApiTests>
+                            <generateModelTests>false</generateModelTests>
+                            <nameMappings>
+                                <nameMapping>$schema=schema</nameMapping>
+                                <nameMapping>continue=_continue</nameMapping>
+                                <nameMapping>except=_except</nameMapping>
+                                <nameMapping>exec=_exec</nameMapping>
+                                <nameMapping>field=field</nameMapping>
+                                <nameMapping>from=_from</nameMapping>
+                                <nameMapping>not=_not</nameMapping>
+                                <nameMapping>schema=schema</nameMapping>
+                            </nameMappings>
+                            <parameterNameMappings>
+                                <parameterNameMapping>continue=_continue</parameterNameMapping>
+                            </parameterNameMappings>
                             <configOptions>
                                 <packageName>${generator.package.name}</packageName>
                                 <packageVersion>${generator.client.version}</packageVersion>
                                 <sortParamsByRequiredFlag>true</sortParamsByRequiredFlag>
+                                <lazyImports>true</lazyImports>
+                                <useIndependentImplicitClients>true</useIndependentImplicitClients>
+                                <compatibleWithPythonLegacy>true</compatibleWithPythonLegacy>
                             </configOptions>
                             <output>${generator.output.path}</output>
                         </configuration>

@@ -143,6 +143,58 @@ def strip_tags_from_operation_id(operation, _):
             operation_id = operation_id.replace(_to_camel_case(t), '')
         operation['operationId'] = operation_id
 
+
+def fix_exec_command_parameter(operation, parent):
+    if operation.get('operationId') not in {
+        'connectCoreV1GetNamespacedPodExec',
+        'connectCoreV1PostNamespacedPodExec',
+    }:
+        return
+    for parameter in parent.get('parameters', []) + operation.get(
+        'parameters', []
+    ):
+        if parameter.get('name') == 'command':
+            # PodExecOptions.Command is []string, but the published Swagger 2
+            # document describes it as a scalar:
+            # https://github.com/kubernetes/kubernetes/blob/1a4d068e60ecd4b467a04c37c86c4882e419f24d/staging/src/k8s.io/api/core/v1/types.go#L7361-L7363
+            parameter['type'] = 'array'
+            parameter['items'] = {'type': 'string'}
+            parameter['collectionFormat'] = 'multi'
+
+
+def fix_python_portforward_ports_parameter(operation, parent):
+    if operation.get('operationId') not in {
+        'connectCoreV1GetNamespacedPodPortforward',
+        'connectCoreV1PostNamespacedPodPortforward',
+    }:
+        return
+    for parameter in parent.get('parameters', []) + operation.get(
+        'parameters', []
+    ):
+        if parameter.get('name') == 'ports':
+            # This WebSocket query is comma-separated, while the published
+            # Swagger integer makes modern Python clients reject existing
+            # values such as "80,443":
+            # https://github.com/kubernetes/kubernetes/blob/1a4d068e60ecd4b467a04c37c86c4882e419f24d/staging/src/k8s.io/api/core/v1/types.go#L7373-L7383
+            parameter['type'] = 'string'
+            parameter.pop('format', None)
+
+
+def fix_python_namespace_delete_response(operation, _):
+    if operation.get('operationId') != 'deleteCoreV1Namespace':
+        return
+    # Namespace storage normally returns the deleted Namespace, but unsafe
+    # deletion cannot recover the object and returns a Status. Swagger 2
+    # cannot describe that union, so preserve either response as an object:
+    # https://github.com/kubernetes/kubernetes/blob/8ba6370120c1371ab70428be16341c3cf6ba8584/pkg/registry/core/namespace/storage/storage.go#L59-L73
+    # https://github.com/kubernetes/kubernetes/blob/8ba6370120c1371ab70428be16341c3cf6ba8584/staging/src/k8s.io/apiserver/pkg/registry/generic/registry/corrupt_obj_deleter.go#L104-L127
+    # https://github.com/kubernetes/kubernetes/blob/8ba6370120c1371ab70428be16341c3cf6ba8584/staging/src/k8s.io/apiserver/pkg/endpoints/handlers/delete.go#L194-L207
+    for status in ('200', '202'):
+        response = operation.get('responses', {}).get(status)
+        if response is not None:
+            response['schema'] = {'type': 'object'}
+
+
 def clean_crd_meta(spec):
     for k, v in spec['definitions'].items():
         if k.endswith('List'):
@@ -161,9 +213,21 @@ def clean_crd_meta(spec):
         find_rename_ref_recursive(spec, '#/definitions/io.k8s.api.autoscaling.v1.Scale_v2', '#/definitions/v1.Scale')
 
 
-def add_custom_objects_spec(spec):
+def add_custom_objects_spec(spec, client_language):
     with open(CUSTOM_OBJECTS_SPEC_PATH, 'r') as custom_objects_spec_file:
         custom_objects_spec = json.load(custom_objects_spec_file)
+    if client_language == 'python':
+        for path_item in custom_objects_spec.values():
+            patch = path_item.get('patch')
+            if patch is not None:
+                # Preserve merge patch as the default for Python custom
+                # objects; callers can still select JSON Patch explicitly:
+                # https://github.com/kubernetes-client/python/issues/866
+                patch['consumes'] = [
+                    content_type
+                    for content_type in patch.get('consumes', [])
+                    if content_type != 'application/json-patch+json'
+                ]
     for path in custom_objects_spec.keys():
         if path not in spec['paths'].keys():
             spec['paths'][path] = custom_objects_spec[path]
@@ -182,6 +246,18 @@ def add_apidiscovery_definitions(spec):
         if definition_name not in spec['definitions']:
             spec['definitions'][definition_name] = definition
     return spec
+
+
+def add_bearer_token_alias(spec, client_language):
+    if client_language != 'python':
+        return spec
+    bearer_token = spec.get('securityDefinitions', {}).get('BearerToken')
+    if bearer_token is not None:
+        # Preserve the api_key['authorization'] key accepted before v36:
+        # https://github.com/kubernetes-client/python/issues/2595
+        bearer_token['x-auth-id-alias'] = 'authorization'
+    return spec
+
 
 def add_codegen_request_body(operation, _):
     if 'parameters' in operation and len(operation['parameters']) > 0:
@@ -235,8 +311,9 @@ def expand_parameters(spec):
     del spec['parameters']
 
 def process_swagger(spec, client_language, crd_mode=False):
-    spec = add_custom_objects_spec(spec)
+    spec = add_custom_objects_spec(spec, client_language)
     spec = add_apidiscovery_definitions(spec)
+    spec = add_bearer_token_alias(spec, client_language)
 
     if crd_mode:
         drop_paths(spec)
@@ -244,6 +321,13 @@ def process_swagger(spec, client_language, crd_mode=False):
     fix_paths(spec)
 
     expand_parameters(spec)
+
+    if client_language == 'python':
+        apply_func_to_spec_operations(spec, fix_exec_command_parameter)
+        apply_func_to_spec_operations(
+            spec, fix_python_portforward_ports_parameter)
+        apply_func_to_spec_operations(
+            spec, fix_python_namespace_delete_response)
 
     apply_func_to_spec_operations(spec, strip_tags_from_operation_id)
 
