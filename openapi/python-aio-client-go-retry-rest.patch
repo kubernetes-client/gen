@@ -2,8 +2,8 @@
 +++ rest.py
 @@ -15,0 +16,5 @@
 +from kubernetes.aio.utils.retry import (
-+    async_on_retry_after_error,
 +    is_retry_after_response,
++    on_retry_after_error,
 +    retry_after_backoff,
 +)
 @@ -39,0 +45 @@
@@ -22,7 +22,7 @@
 +                getattr(self.configuration, 'retries', None),
 +                getattr(self.configuration, 'client_go_retry_backoff', None),
 +            )
-+            r = await async_on_retry_after_error(
++            r = await on_retry_after_error(
 +                backoff, self._is_read_retryable,
 +                lambda: read_request(True))
 +        else:
