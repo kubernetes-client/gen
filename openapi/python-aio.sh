@@ -45,34 +45,18 @@ source "${SETTING_FILE}"
 
 # use openapi-generator to generate library
 source "${SCRIPT_ROOT}/openapi-generator/client-generator.sh"
-OPENAPI_GENERATOR_COMMIT="${OPENAPI_GENERATOR_COMMIT:-v6.6.0}"
+OPENAPI_GENERATOR_COMMIT="${OPENAPI_GENERATOR_COMMIT:-830e9d156960bb7f51a5337f31636a7e73226474}"
 
-CLIENT_LANGUAGE=python-asyncio
-CLEANUP_DIRS=(client/apis client/models docs test)
+CLIENT_LANGUAGE=python-aio
+CLEANUP_DIRS=(client/api client/models docs)
 kubeclient::generator::generate_client "${OUTPUT_DIR}"
 
-# Generic patches to the generated Python code, most notably renaming the library.
-echo "--- Patching generated code..."
+echo "--- Post-processing generated code..."
 
-if [ ${PACKAGE_NAME} == "client" ]; then
-
-  # Post-processing of the generated Python wrapper.
-  find "${OUTPUT_DIR}/test" -type f -name \*.py -exec sed -i 's/\bclient/kubernetes.aio.client/g' {} +
-  find "${OUTPUT_DIR}" -path "${OUTPUT_DIR}/base" -prune -o -type f -a -name \*.md -exec sed -i 's/\bclient/kubernetes.aio.client/g' {} +
-  find "${OUTPUT_DIR}" -path "${OUTPUT_DIR}/base" -prune -o -type f -a -name \*.md -exec sed -i 's/kubernetes.aio.client-python/client-python/g' {} +
-
-  # fix imports
-  find "${OUTPUT_DIR}/client/" -type f -name \*.py -exec sed -i 's/import client\./import kubernetes.aio.client./g' {} +
-  find "${OUTPUT_DIR}/client/" -type f -name \*.py -exec sed -i 's/from client/from kubernetes.aio.client/g' {} +
-  find "${OUTPUT_DIR}/client/" -type f -name \*.py -exec sed -i 's/getattr(client\.models/getattr(kubernetes.aio.client.models/g' {} +
-
-else
-
-  # Post-processing of the generated Python wrapper.
-  find "${OUTPUT_DIR}/test" -type f -name \*.py -exec sed -i "s/\\bclient/${PACKAGE_NAME}.client/g" {} +
-  find "${OUTPUT_DIR}" -path "${OUTPUT_DIR}/base" -prune -o -type f -a -name \*.md -exec sed -i "s/\\bclient/${PACKAGE_NAME}.client/g" {} +
-  find "${OUTPUT_DIR}" -path "${OUTPUT_DIR}/base" -prune -o -type f -a -name \*.md -exec sed -i "s/${PACKAGE_NAME}.client-python/client-python/g" {} +
-
-fi
+python3 "${SCRIPT_ROOT}/postprocess_python.py" \
+    "${OUTPUT_DIR}" \
+    "${PACKAGE_NAME}" \
+    asyncio \
+    kubernetes.aio
 
 echo "---Done."
