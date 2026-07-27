@@ -159,11 +159,18 @@ class PythonPreprocessingTest(unittest.TestCase):
 
         processed = process_swagger(copy.deepcopy(spec), 'python')
         async_processed = process_swagger(
+            copy.deepcopy(spec), 'python-aio'
+        )
+        external_async_processed = process_swagger(
             copy.deepcopy(spec), 'python-asyncio'
         )
         non_python = process_swagger(copy.deepcopy(spec), 'java')
 
         self.assertEqual(processed, async_processed)
+        self.assertNotIn(
+            'x-auth-id-alias',
+            external_async_processed['securityDefinitions']['BearerToken'],
+        )
 
         command = processed['paths'][exec_path]['parameters'][0]
         self.assertEqual('array', command['type'])

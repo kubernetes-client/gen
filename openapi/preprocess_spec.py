@@ -220,7 +220,7 @@ def clean_crd_meta(spec):
 def add_custom_objects_spec(spec, client_language):
     with open(CUSTOM_OBJECTS_SPEC_PATH, 'r') as custom_objects_spec_file:
         custom_objects_spec = json.load(custom_objects_spec_file)
-    if client_language in ('python', 'python-asyncio'):
+    if client_language in ('python', 'python-aio'):
         for path_item in custom_objects_spec.values():
             patch = path_item.get('patch')
             if patch is not None:
@@ -253,7 +253,7 @@ def add_apidiscovery_definitions(spec):
 
 
 def add_bearer_token_alias(spec, client_language):
-    if client_language not in ('python', 'python-asyncio'):
+    if client_language not in ('python', 'python-aio'):
         return spec
     bearer_token = spec.get('securityDefinitions', {}).get('BearerToken')
     if bearer_token is not None:
@@ -326,7 +326,7 @@ def process_swagger(spec, client_language, crd_mode=False):
 
     expand_parameters(spec)
 
-    if client_language in ('python', 'python-asyncio'):
+    if client_language in ('python', 'python-aio'):
         apply_func_to_spec_operations(spec, fix_exec_command_parameter)
         apply_func_to_spec_operations(
             spec, fix_python_portforward_ports_parameter)
