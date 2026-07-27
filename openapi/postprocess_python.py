@@ -129,20 +129,6 @@ for path, file_type in [
             "@validate_call\n",
             "@validate_call(config={'defer_build': True})\n",
         )
-        if (
-            path.name == "__init__.py"
-            and "from lazy_imports import LazyModule, as_package, load" in text
-            and "_lazy_module.__spec__ = __spec__" not in text
-        ):
-            # LazyModule replaces sys.modules without carrying importlib's
-            # package metadata, which breaks find_spec and resources.files.
-            text += (
-                '\n    _lazy_module = __import__("sys").modules[__name__]\n'
-                "    _lazy_module.__package__ = __package__\n"
-                "    _lazy_module.__loader__ = __loader__\n"
-                "    _lazy_module.__spec__ = __spec__\n"
-            )
-
     # Generated files otherwise fail git diff --check on trailing whitespace
     # and extra blank lines at EOF.
     lines = text.splitlines()

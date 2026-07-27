@@ -66,11 +66,21 @@ class PythonPostprocessingTest(unittest.TestCase):
                 "**properties** | **Dict[str, object]** | props | [optional]\n"
             )
             package_init.write_text(
-                'if __import__("typing").TYPE_CHECKING:\n'
+                '__all__ = ["ApiClient"]\n\n'
+                "import typing as _typing\n\n"
+                "if _typing.TYPE_CHECKING:\n"
                 "    from client.api_client import ApiClient\n"
                 "else:\n"
-                "    from lazy_imports import LazyModule, as_package, load\n"
-                "    load(LazyModule(*as_package(__file__), name=__name__))\n"
+                "    from importlib import import_module\n\n"
+                '    _exports = {"ApiClient": ".api_client"}\n\n'
+                "    def __getattr__(name: str) -> object:\n"
+                "        if (module_name := _exports.get(name)) is None:\n"
+                '            raise AttributeError(f"module {__name__!r} has no attribute {name!r}")\n'
+                "        value = getattr(import_module(module_name, __name__), name)\n"
+                "        globals()[name] = value\n"
+                "        return value\n\n"
+                "    def __dir__() -> list[str]:\n"
+                "        return sorted(globals().keys() | _exports.keys())\n"
             )
             module.write_text(
                 "from pydantic import validate_call, Field\n"
@@ -158,15 +168,21 @@ class PythonPostprocessingTest(unittest.TestCase):
                 json_schema_doc.read_text(),
             )
             self.assertEqual(
-                'if __import__("typing").TYPE_CHECKING:\n'
+                '__all__ = ["ApiClient"]\n\n'
+                "import typing as _typing\n\n"
+                "if _typing.TYPE_CHECKING:\n"
                 "    from kubernetes.client.api_client import ApiClient\n"
                 "else:\n"
-                "    from lazy_imports import LazyModule, as_package, load\n"
-                "    load(LazyModule(*as_package(__file__), name=__name__))\n"
-                '\n    _lazy_module = __import__("sys").modules[__name__]\n'
-                "    _lazy_module.__package__ = __package__\n"
-                "    _lazy_module.__loader__ = __loader__\n"
-                "    _lazy_module.__spec__ = __spec__\n",
+                "    from importlib import import_module\n\n"
+                '    _exports = {"ApiClient": ".api_client"}\n\n'
+                "    def __getattr__(name: str) -> object:\n"
+                "        if (module_name := _exports.get(name)) is None:\n"
+                '            raise AttributeError(f"module {__name__!r} has no attribute {name!r}")\n'
+                "        value = getattr(import_module(module_name, __name__), name)\n"
+                "        globals()[name] = value\n"
+                "        return value\n\n"
+                "    def __dir__() -> list[str]:\n"
+                "        return sorted(globals().keys() | _exports.keys())\n",
                 package_init.read_text(),
             )
             self.assertEqual(
