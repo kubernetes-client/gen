@@ -180,18 +180,22 @@ def fix_python_portforward_ports_parameter(operation, parent):
             parameter.pop('format', None)
 
 
-def fix_python_namespace_delete_response(operation, _):
-    if operation.get('operationId') != 'deleteCoreV1Namespace':
+def fix_python_delete_response(operation, _):
+    if operation.get('x-kubernetes-action') != 'delete':
         return
-    # Namespace storage normally returns the deleted Namespace, but unsafe
-    # deletion cannot recover the object and returns a Status. Swagger 2
-    # cannot describe that union, so preserve either response as an object:
-    # https://github.com/kubernetes/kubernetes/blob/8ba6370120c1371ab70428be16341c3cf6ba8584/pkg/registry/core/namespace/storage/storage.go#L59-L73
+    # Resource deletion can return the deleted object or Status, but Swagger 2
+    # cannot describe that union. Preserve either response as an object:
     # https://github.com/kubernetes/kubernetes/blob/8ba6370120c1371ab70428be16341c3cf6ba8584/staging/src/k8s.io/apiserver/pkg/registry/generic/registry/corrupt_obj_deleter.go#L104-L127
     # https://github.com/kubernetes/kubernetes/blob/8ba6370120c1371ab70428be16341c3cf6ba8584/staging/src/k8s.io/apiserver/pkg/endpoints/handlers/delete.go#L194-L207
     for status in ('200', '202'):
         response = operation.get('responses', {}).get(status)
-        if response is not None:
+        if (
+            response is not None
+            and response.get('schema', {}).get('$ref') in {
+                '#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Status',
+                '#/definitions/v1.Status',
+            }
+        ):
             response['schema'] = {'type': 'object'}
 
 
@@ -216,7 +220,7 @@ def clean_crd_meta(spec):
 def add_custom_objects_spec(spec, client_language):
     with open(CUSTOM_OBJECTS_SPEC_PATH, 'r') as custom_objects_spec_file:
         custom_objects_spec = json.load(custom_objects_spec_file)
-    if client_language == 'python':
+    if client_language in ('python', 'python-asyncio'):
         for path_item in custom_objects_spec.values():
             patch = path_item.get('patch')
             if patch is not None:
@@ -249,7 +253,7 @@ def add_apidiscovery_definitions(spec):
 
 
 def add_bearer_token_alias(spec, client_language):
-    if client_language != 'python':
+    if client_language not in ('python', 'python-asyncio'):
         return spec
     bearer_token = spec.get('securityDefinitions', {}).get('BearerToken')
     if bearer_token is not None:
@@ -322,12 +326,12 @@ def process_swagger(spec, client_language, crd_mode=False):
 
     expand_parameters(spec)
 
-    if client_language == 'python':
+    if client_language in ('python', 'python-asyncio'):
         apply_func_to_spec_operations(spec, fix_exec_command_parameter)
         apply_func_to_spec_operations(
             spec, fix_python_portforward_ports_parameter)
         apply_func_to_spec_operations(
-            spec, fix_python_namespace_delete_response)
+            spec, fix_python_delete_response)
 
     apply_func_to_spec_operations(spec, strip_tags_from_operation_id)
 
