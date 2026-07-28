@@ -45,25 +45,16 @@ popd > /dev/null
 
 source "${SCRIPT_ROOT}/openapi-generator/client-generator.sh"
 source "${SETTING_FILE}"
-OPENAPI_GENERATOR_COMMIT="${OPENAPI_GENERATOR_COMMIT:-v6.6.0}"
+OPENAPI_GENERATOR_COMMIT="${OPENAPI_GENERATOR_COMMIT:-830e9d156960bb7f51a5337f31636a7e73226474}"
 
 CLIENT_LANGUAGE=python; \
-CLEANUP_DIRS=(client/api client/apis client/models docs test); \
+CLEANUP_DIRS=(client/api client/models docs); \
 kubeclient::generator::generate_client "${OUTPUT_DIR}"
 
-echo "--- Patching generated code..."
+echo "--- Post-processing generated code..."
 
-# Post-processing of the generated Python wrapper.
-find "${OUTPUT_DIR}/test" -type f -name \*.py -exec sed -i 's/\bclient/kubernetes.client/g' {} +
-find "${OUTPUT_DIR}" -path "${OUTPUT_DIR}/base" -prune -o -type f -a -name \*.md -exec sed -i 's/\bclient/kubernetes.client/g' {} +
-find "${OUTPUT_DIR}" -path "${OUTPUT_DIR}/base" -prune -o -type f -a -name \*.md -exec sed -i 's/kubernetes.client-python/client-python/g' {} +
-find "${OUTPUT_DIR}" -path "${OUTPUT_DIR}/base" -prune -o -type f -a -name \*.md -exec sed -i 's/kubernetes-kubernetes.client/kubernetes-client/g' {} +
-
-# fix imports
-if [ "${PACKAGE_NAME}" = client ]; then
-    find "${OUTPUT_DIR}/client/" -type f -name \*.py -exec sed -i 's/import client\./import kubernetes.client./g' {} +
-    find "${OUTPUT_DIR}/client/" -type f -name \*.py -exec sed -i 's/from client/from kubernetes.client/g' {} +
-    find "${OUTPUT_DIR}/client/" -type f -name \*.py -exec sed -i 's/getattr(client\.models/getattr(kubernetes.client.models/g' {} +
-fi
+python3 "${SCRIPT_ROOT}/postprocess_python.py" \
+    "${OUTPUT_DIR}" \
+    "${PACKAGE_NAME}"
 
 echo "---Done."

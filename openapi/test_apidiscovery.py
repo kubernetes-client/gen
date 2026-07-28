@@ -34,6 +34,7 @@ def test_apidiscovery_definitions_loaded():
     spec = add_apidiscovery_definitions(spec)
     
     expected_defs = [
+        'io.k8s.apimachinery.pkg.apis.meta.v1.GroupVersionKind',
         'io.k8s.api.apidiscovery.v2beta1.APIGroupDiscoveryList',
         'io.k8s.api.apidiscovery.v2beta1.APIGroupDiscovery',
         'io.k8s.api.apidiscovery.v2beta1.APIVersionDiscovery',
@@ -51,6 +52,13 @@ def test_apidiscovery_definitions_loaded():
             print(f"  ✗ FAILED: {def_name} not found")
             return False
         print(f"  ✓ {def_name}")
+
+    gvk = spec['definitions'][
+        'io.k8s.apimachinery.pkg.apis.meta.v1.GroupVersionKind'
+    ]
+    if set(gvk.get('properties', {})) != {'group', 'version', 'kind'}:
+        print("  ✗ FAILED: GroupVersionKind has incomplete properties")
+        return False
     
     print("  ✓ Test 1 PASSED\n")
     return True
@@ -71,10 +79,6 @@ def test_apidiscovery_in_processed_spec():
                 'properties': {}
             },
             'io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta': {
-                'type': 'object',
-                'properties': {}
-            },
-            'io.k8s.apimachinery.pkg.apis.meta.v1.GroupVersionKind': {
                 'type': 'object',
                 'properties': {}
             }

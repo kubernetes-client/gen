@@ -1,4 +1,19 @@
 {
+  "io.k8s.apimachinery.pkg.apis.meta.v1.GroupVersionKind": {
+    "type": "object",
+    "description": "GroupVersionKind unambiguously identifies a kind.",
+    "properties": {
+      "group": {
+        "type": "string"
+      },
+      "version": {
+        "type": "string"
+      },
+      "kind": {
+        "type": "string"
+      }
+    }
+  },
   "io.k8s.api.apidiscovery.v2beta1.APIGroupDiscoveryList": {
     "type": "object",
     "description": "APIGroupDiscoveryList is a resource containing a list of APIGroupDiscovery. This is one of the types able to be returned from the /api and /apis endpoint and contains an aggregated list of API resources (built-ins, Custom Resource Definitions, resources from aggregated servers) that a cluster supports.",
