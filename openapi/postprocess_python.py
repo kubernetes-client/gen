@@ -23,7 +23,14 @@ parser = argparse.ArgumentParser(
 )
 parser.add_argument("output_directory", type=Path)
 parser.add_argument("package_name")
+parser.add_argument("library", choices=("urllib3", "asyncio"))
+parser.add_argument(
+    "namespace",
+    choices=("kubernetes", "kubernetes.aio", "kubernetes_asyncio"),
+)
 args = parser.parse_args()
+
+qualified_package_name = f"{args.namespace}.{args.package_name}"
 
 # Swagger 2 exposes these IntOrString fields as free-form objects, which makes
 # the generated Pydantic validators reject valid scalar values. Kubernetes
@@ -91,16 +98,18 @@ for path, file_type in [
     if file_type == "markdown":
         if path.name == "README.md":
             text = re.sub(
-                r"\A# client(?=\r?\n|\Z)", "# kubernetes.client", text
+                r"\A# client(?=\r?\n|\Z)",
+                f"# {qualified_package_name}",
+                text,
             )
         text = re.sub(
             r"(?<![\w.-])client(?=\.[A-Za-z_])",
-            "kubernetes.client",
+            qualified_package_name,
             text,
         )
         text = re.sub(
             r"(?m)^(\s*(?:from|import)\s+)client(?=[.\s]|$)",
-            r"\1kubernetes.client",
+            rf"\1{qualified_package_name}",
             text,
         )
         for field in int_or_string_fields.get(path.stem.lower(), ()):
@@ -117,10 +126,15 @@ for path, file_type in [
                     f"**{field}** | **{new_type}** |",
                 )
     elif args.package_name == "client":
-        text = text.replace("import client.", "import kubernetes.client.")
-        text = text.replace("from client", "from kubernetes.client")
         text = text.replace(
-            "getattr(client.models", "getattr(kubernetes.client.models"
+            "import client.", f"import {qualified_package_name}."
+        )
+        text = text.replace(
+            "from client", f"from {qualified_package_name}"
+        )
+        text = text.replace(
+            "getattr(client.models",
+            f"getattr({qualified_package_name}.models",
         )
         # Building every API method's Pydantic schema at import time is
         # expensive. defer_build is supported for validate_call since 2.11:
@@ -129,6 +143,164 @@ for path, file_type in [
             "@validate_call\n",
             "@validate_call(config={'defer_build': True})\n",
         )
+        if args.library == "asyncio":
+            # Carry forward the v6 asyncio compatibility patches:
+            # https://github.com/kubernetes-client/python/tree/ed9ffd4c3c4bee083c1a585a9559257ea02700eb/scripts/asyncio
+            if path.name == "configuration.py":
+                # client_configuration_async_refresh_api_key_hook.diff:
+                # Await token hooks and the resulting authentication settings.
+                if "import asyncio\n" not in text:
+                    text = text.replace(
+                        "import aiohttp\n", "import asyncio\nimport aiohttp\n"
+                    )
+                text = text.replace(
+                    "    def get_api_key_with_prefix(",
+                    "    async def get_api_key_with_prefix(",
+                )
+                text = text.replace(
+                    "        if self.refresh_api_key_hook is not None:\n"
+                    "            self.refresh_api_key_hook(self)\n",
+                    "        if self.refresh_api_key_hook is not None:\n"
+                    "            result = self.refresh_api_key_hook(self)\n"
+                    "            if asyncio.iscoroutine(result):\n"
+                    "                await result\n",
+                )
+                text = text.replace(
+                    "    def auth_settings(", "    async def auth_settings("
+                )
+                text = text.replace(
+                    "'value': self.get_api_key_with_prefix(\n",
+                    "'value': await self.get_api_key_with_prefix(\n",
+                )
+                # client_configuration_disable_ssl_strict_verification_patch.diff:
+                # Expose the opt-in setting consumed by the REST transport.
+                if "self.disable_strict_ssl_verification = False\n" not in text:
+                    text = text.replace(
+                        "        self.verify_ssl = verify_ssl\n",
+                        "        self.verify_ssl = verify_ssl\n"
+                        "        self.disable_strict_ssl_verification = False\n",
+                    )
+            elif path.name == "api_client.py":
+                # api_client_async_refresh_api_key_hook.diff:
+                # Propagate asynchronous authentication into serialization.
+                text = text.replace(
+                    "    def param_serialize(",
+                    "    async def param_serialize(",
+                )
+                text = text.replace(
+                    "        self.update_params_for_auth(\n",
+                    "        await self.update_params_for_auth(\n",
+                )
+                text = text.replace(
+                    "    def update_params_for_auth(\n",
+                    "    async def update_params_for_auth(\n",
+                )
+                text = text.replace(
+                    "self.configuration.auth_settings().get(auth)",
+                    "(await self.configuration.auth_settings()).get(auth)",
+                )
+                # Keep raw WebSocket responses available to exec and attach.
+                text = text.replace(
+                    "        _request_timeout=None\n"
+                    "    ) -> rest.RESTResponse:\n",
+                    "        _request_timeout=None,\n"
+                    "        _preload_content=True,\n"
+                    "    ) -> rest.RESTResponse:\n",
+                )
+            elif path.name == "rest.py":
+                # rest_client_patch_read_bufsize.diff:
+                # Accept Kubernetes watch events larger than the aiohttp default.
+                if '"read_bufsize": 2**21,' not in text:
+                    text = text.replace(
+                        '            "trust_env": True,\n',
+                        '            "trust_env": True,\n'
+                        "            # Kubernetes watch events can exceed "
+                        "aiohttp's default buffer.\n"
+                        '            "read_bufsize": 2**21,\n',
+                    )
+                # rest_client_disable_ssl_strict_verification_patch.diff:
+                # Apply the explicit certificate-verification opt-out.
+                if "if configuration.disable_strict_ssl_verification:\n" not in text:
+                    text = text.replace(
+                        "        self.proxy = configuration.proxy\n",
+                        "        if configuration.disable_strict_ssl_verification:\n"
+                        "            self.ssl_context.verify_flags "
+                        "&= ~ssl.VERIFY_X509_STRICT\n\n"
+                        "        self.proxy = configuration.proxy\n",
+                    )
+                # rest_client_server_hostname_patch.diff:
+                # Forward the configured Kubernetes API TLS server name.
+                if 'args["server_hostname"]' not in text:
+                    text = text.replace(
+                        "        if self.proxy:\n",
+                        "        if self.configuration.tls_server_name:\n"
+                        '            args["server_hostname"] = '
+                        "self.configuration.tls_server_name\n\n"
+                        "        if self.proxy:\n",
+                    )
+                # api_client_strategic_merge_patch.diff:
+                # Select strategic merge for object-valued PATCH requests.
+                if (
+                    "# JSON Patch contains operations; "
+                    "object patches use strategic merge.\n"
+                ) not in text:
+                    text = text.replace(
+                        "        # For `POST`, `PUT`, `PATCH`, `OPTIONS`, `DELETE`\n",
+                        "        # JSON Patch contains operations; "
+                        "object patches use strategic merge.\n"
+                        "        # https://kubernetes.io/docs/reference/using-api/api-concepts/#updates-to-existing-resources\n"
+                        "        if (\n"
+                        "            method == 'PATCH'\n"
+                        "            and headers['Content-Type'] == "
+                        "'application/json-patch+json'\n"
+                        "            and not isinstance(body, list)\n"
+                        "        ):\n"
+                        "            headers['Content-Type'] = "
+                        "'application/strategic-merge-patch+json'\n\n"
+                        "        # For `POST`, `PUT`, `PATCH`, `OPTIONS`, `DELETE`\n",
+                    )
+                # rest_client_apply_patch_patch.diff:
+                # Serialize server-side apply bodies as YAML.
+                if (
+                    "headers['Content-Type'] == "
+                    "'application/apply-patch+yaml'"
+                ) not in text:
+                    text = text.replace(
+                        "            if re.search('json', headers['Content-Type'], "
+                        "re.IGNORECASE):\n",
+                        "            if (\n"
+                        "                re.search('json', headers['Content-Type'], "
+                        "re.IGNORECASE)\n"
+                        "                or headers['Content-Type'] == "
+                        "'application/apply-patch+yaml'\n"
+                        "            ):\n",
+                    )
+            elif path.parent.name == "api":
+                text = re.sub(
+                    r"(?m)^    def (_[A-Za-z_][A-Za-z0-9_]*_serialize\()",
+                    r"    async def \1",
+                    text,
+                )
+                text = text.replace(
+                    "        _param = self._",
+                    "        _param = await self._",
+                )
+                text = text.replace(
+                    "        return self.api_client.param_serialize(\n",
+                    "        return await self.api_client.param_serialize(\n",
+                )
+                # Websocket exec and attach must distinguish buffered calls
+                # from the generated raw-response operations.
+                text = re.sub(
+                    r"(?ms)(^    async def "
+                    r"[A-Za-z_][A-Za-z0-9_]*_without_preload_content\("
+                    r".*?^        response_data = "
+                    r"await self\.api_client\.call_api\(\n"
+                    r"            \*_param,\n)"
+                    r"(?!            _preload_content=False,\n)",
+                    r"\1            _preload_content=False,\n",
+                    text,
+                )
     # Generated files otherwise fail git diff --check on trailing whitespace
     # and extra blank lines at EOF.
     lines = text.splitlines()
@@ -172,7 +344,10 @@ for path, file_type in [
                     )
                     for line in lines
                 ]
-        if any(line.startswith("    def patch_") for line in lines):
+        if any(
+            line.startswith(("    def patch_", "    async def patch_"))
+            for line in lines
+        ):
             lines = [
                 line.replace(
                     "from pydantic import validate_call, ",
@@ -182,8 +357,10 @@ for path, file_type in [
             ]
         patch_method = False
         for index, line in enumerate(lines):
-            if line.startswith("    def "):
-                patch_method = line.startswith("    def patch_")
+            if line.startswith(("    def ", "    async def ")):
+                patch_method = line.startswith(
+                    ("    def patch_", "    async def patch_")
+                )
             if patch_method:
                 # Swagger 2 describes PATCH bodies as objects, but RFC 6902
                 # represents a JSON Patch document as an array of operations:

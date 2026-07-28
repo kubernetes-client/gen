@@ -55,6 +55,8 @@ echo "--- Post-processing generated code..."
 
 python3 "${SCRIPT_ROOT}/postprocess_python.py" \
     "${OUTPUT_DIR}" \
-    "${PACKAGE_NAME}"
+    "${PACKAGE_NAME}" \
+    urllib3 \
+    kubernetes
 
 echo "---Done."

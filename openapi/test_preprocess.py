@@ -26,6 +26,21 @@ class PythonPreprocessingTest(unittest.TestCase):
             '/api/v1/namespaces/{namespace}/pods/{name}/portforward'
         )
         namespace_path = '/api/v1/namespaces/{name}'
+        job_path = '/apis/batch/v1/namespaces/{namespace}/jobs/{name}'
+        job_collection_path = '/apis/batch/v1/namespaces/{namespace}/jobs'
+        pod_path = '/api/v1/namespaces/{namespace}/pods/{name}'
+        status_responses = {
+            status: {
+                'description': 'OK',
+                'schema': {
+                    '$ref': (
+                        '#/definitions/io.k8s.apimachinery.'
+                        'pkg.apis.meta.v1.Status'
+                    ),
+                },
+            }
+            for status in ('200', '202')
+        }
         spec = {
             'swagger': '2.0',
             'info': {'version': 'v1.0.0'},
@@ -62,19 +77,48 @@ class PythonPreprocessingTest(unittest.TestCase):
                 namespace_path: {
                     'delete': {
                         'operationId': 'deleteCoreV1Namespace',
+                        'responses': copy.deepcopy(status_responses),
+                        'tags': ['core_v1'],
+                        'x-kubernetes-action': 'delete',
+                    },
+                },
+                job_path: {
+                    'delete': {
+                        'operationId': 'deleteBatchV1NamespacedJob',
+                        'responses': copy.deepcopy(status_responses),
+                        'tags': ['batch_v1'],
+                        'x-kubernetes-action': 'delete',
+                    },
+                },
+                job_collection_path: {
+                    'delete': {
+                        'operationId': (
+                            'deleteCollectionBatchV1NamespacedJob'
+                        ),
+                        'responses': {
+                            '200': copy.deepcopy(status_responses['200']),
+                        },
+                        'tags': ['batch_v1'],
+                        'x-kubernetes-action': 'deletecollection',
+                    },
+                },
+                pod_path: {
+                    'delete': {
+                        'operationId': 'deleteCoreV1NamespacedPod',
                         'responses': {
                             status: {
                                 'description': 'OK',
                                 'schema': {
                                     '$ref': (
-                                        '#/definitions/io.k8s.apimachinery.'
-                                        'pkg.apis.meta.v1.Status'
+                                        '#/definitions/'
+                                        'io.k8s.api.core.v1.Pod'
                                     ),
                                 },
                             }
                             for status in ('200', '202')
                         },
                         'tags': ['core_v1'],
+                        'x-kubernetes-action': 'delete',
                     },
                 },
             },
@@ -99,6 +143,10 @@ class PythonPreprocessingTest(unittest.TestCase):
                     'type': 'object',
                     'properties': {},
                 },
+                'io.k8s.api.core.v1.Pod': {
+                    'type': 'object',
+                    'properties': {},
+                },
             },
             'securityDefinitions': {
                 'BearerToken': {
@@ -110,7 +158,25 @@ class PythonPreprocessingTest(unittest.TestCase):
         }
 
         processed = process_swagger(copy.deepcopy(spec), 'python')
+        async_processed = process_swagger(
+            copy.deepcopy(spec), 'python-aio'
+        )
+        # python-asyncio.sh owns a separate, independent client.
+        external_async_processed = process_swagger(
+            copy.deepcopy(spec), 'python-asyncio'
+        )
         non_python = process_swagger(copy.deepcopy(spec), 'java')
+
+        for path in (exec_path, portforward_path):
+            with self.subTest(path=path):
+                self.assertEqual(
+                    processed['paths'][path],
+                    async_processed['paths'][path],
+                )
+        self.assertNotIn(
+            'x-auth-id-alias',
+            external_async_processed['securityDefinitions']['BearerToken'],
+        )
 
         command = processed['paths'][exec_path]['parameters'][0]
         self.assertEqual('array', command['type'])
@@ -144,18 +210,67 @@ class PythonPreprocessingTest(unittest.TestCase):
             non_python['paths'][portforward_path]['parameters'][0]['type'],
         )
         for status in ('200', '202'):
-            self.assertEqual(
-                {'type': 'object'},
-                processed['paths'][namespace_path]['delete'][
-                    'responses'
-                ][status]['schema'],
-            )
-            self.assertEqual(
-                {'$ref': '#/definitions/v1.Status'},
-                non_python['paths'][namespace_path]['delete'][
-                    'responses'
-                ][status]['schema'],
-            )
+            with self.subTest(path=namespace_path, status=status):
+                self.assertEqual(
+                    {'type': 'object'},
+                    processed['paths'][namespace_path]['delete'][
+                        'responses'
+                    ][status]['schema'],
+                )
+                self.assertEqual(
+                    {'type': 'object'},
+                    async_processed['paths'][namespace_path]['delete'][
+                        'responses'
+                    ][status]['schema'],
+                )
+            with self.subTest(path=job_path, status=status):
+                self.assertEqual(
+                    {'$ref': '#/definitions/v1.Status'},
+                    processed['paths'][job_path]['delete'][
+                        'responses'
+                    ][status]['schema'],
+                )
+                self.assertEqual(
+                    {'type': 'object'},
+                    async_processed['paths'][job_path]['delete'][
+                        'responses'
+                    ][status]['schema'],
+                )
+            for path in (namespace_path, job_path):
+                with self.subTest(language='java', path=path, status=status):
+                    self.assertEqual(
+                        {'$ref': '#/definitions/v1.Status'},
+                        non_python['paths'][path]['delete'][
+                            'responses'
+                        ][status]['schema'],
+                    )
+
+        self.assertEqual(
+            {'$ref': '#/definitions/v1.Status'},
+            processed['paths'][job_collection_path]['delete'][
+                'responses'
+            ]['200']['schema'],
+        )
+        self.assertEqual(
+            {'$ref': '#/definitions/v1.Status'},
+            async_processed['paths'][job_collection_path]['delete'][
+                'responses'
+            ]['200']['schema'],
+        )
+        for status in ('200', '202'):
+            with self.subTest(status=status):
+                self.assertEqual(
+                    {'$ref': '#/definitions/v1.Pod'},
+                    processed['paths'][pod_path]['delete'][
+                        'responses'
+                    ][status]['schema'],
+                )
+                self.assertEqual(
+                    {'$ref': '#/definitions/v1.Pod'},
+                    async_processed['paths'][pod_path]['delete'][
+                        'responses'
+                    ][status]['schema'],
+                )
 
 
 if __name__ == '__main__':
