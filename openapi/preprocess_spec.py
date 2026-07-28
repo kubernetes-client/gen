@@ -180,7 +180,22 @@ def fix_python_portforward_ports_parameter(operation, parent):
             parameter.pop('format', None)
 
 
-def fix_python_delete_response(operation, _):
+def fix_python_namespace_delete_response(operation, _):
+    if operation.get('operationId') != 'deleteCoreV1Namespace':
+        return
+    # Namespace storage normally returns the deleted Namespace, but unsafe
+    # deletion cannot recover the object and returns a Status. Swagger 2
+    # cannot describe that union, so preserve either response as an object:
+    # https://github.com/kubernetes/kubernetes/blob/8ba6370120c1371ab70428be16341c3cf6ba8584/pkg/registry/core/namespace/storage/storage.go#L59-L73
+    # https://github.com/kubernetes/kubernetes/blob/8ba6370120c1371ab70428be16341c3cf6ba8584/staging/src/k8s.io/apiserver/pkg/registry/generic/registry/corrupt_obj_deleter.go#L104-L127
+    # https://github.com/kubernetes/kubernetes/blob/8ba6370120c1371ab70428be16341c3cf6ba8584/staging/src/k8s.io/apiserver/pkg/endpoints/handlers/delete.go#L194-L207
+    for status in ('200', '202'):
+        response = operation.get('responses', {}).get(status)
+        if response is not None:
+            response['schema'] = {'type': 'object'}
+
+
+def fix_python_aio_delete_response(operation, _):
     if operation.get('x-kubernetes-action') != 'delete':
         return
     # Resource deletion can return the deleted object or Status, but Swagger 2
@@ -331,7 +346,11 @@ def process_swagger(spec, client_language, crd_mode=False):
         apply_func_to_spec_operations(
             spec, fix_python_portforward_ports_parameter)
         apply_func_to_spec_operations(
-            spec, fix_python_delete_response)
+            spec,
+            fix_python_aio_delete_response
+            if client_language == 'python-aio'
+            else fix_python_namespace_delete_response,
+        )
 
     apply_func_to_spec_operations(spec, strip_tags_from_operation_id)
 

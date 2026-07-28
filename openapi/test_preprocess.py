@@ -161,12 +161,18 @@ class PythonPreprocessingTest(unittest.TestCase):
         async_processed = process_swagger(
             copy.deepcopy(spec), 'python-aio'
         )
+        # python-asyncio.sh owns a separate, independent client.
         external_async_processed = process_swagger(
             copy.deepcopy(spec), 'python-asyncio'
         )
         non_python = process_swagger(copy.deepcopy(spec), 'java')
 
-        self.assertEqual(processed, async_processed)
+        for path in (exec_path, portforward_path):
+            with self.subTest(path=path):
+                self.assertEqual(
+                    processed['paths'][path],
+                    async_processed['paths'][path],
+                )
         self.assertNotIn(
             'x-auth-id-alias',
             external_async_processed['securityDefinitions']['BearerToken'],
@@ -203,15 +209,35 @@ class PythonPreprocessingTest(unittest.TestCase):
             'integer',
             non_python['paths'][portforward_path]['parameters'][0]['type'],
         )
-        for path in (namespace_path, job_path):
-            for status in ('200', '202'):
-                with self.subTest(path=path, status=status):
-                    self.assertEqual(
-                        {'type': 'object'},
-                        processed['paths'][path]['delete'][
-                            'responses'
-                        ][status]['schema'],
-                    )
+        for status in ('200', '202'):
+            with self.subTest(path=namespace_path, status=status):
+                self.assertEqual(
+                    {'type': 'object'},
+                    processed['paths'][namespace_path]['delete'][
+                        'responses'
+                    ][status]['schema'],
+                )
+                self.assertEqual(
+                    {'type': 'object'},
+                    async_processed['paths'][namespace_path]['delete'][
+                        'responses'
+                    ][status]['schema'],
+                )
+            with self.subTest(path=job_path, status=status):
+                self.assertEqual(
+                    {'$ref': '#/definitions/v1.Status'},
+                    processed['paths'][job_path]['delete'][
+                        'responses'
+                    ][status]['schema'],
+                )
+                self.assertEqual(
+                    {'type': 'object'},
+                    async_processed['paths'][job_path]['delete'][
+                        'responses'
+                    ][status]['schema'],
+                )
+            for path in (namespace_path, job_path):
+                with self.subTest(language='java', path=path, status=status):
                     self.assertEqual(
                         {'$ref': '#/definitions/v1.Status'},
                         non_python['paths'][path]['delete'][
@@ -225,11 +251,23 @@ class PythonPreprocessingTest(unittest.TestCase):
                 'responses'
             ]['200']['schema'],
         )
+        self.assertEqual(
+            {'$ref': '#/definitions/v1.Status'},
+            async_processed['paths'][job_collection_path]['delete'][
+                'responses'
+            ]['200']['schema'],
+        )
         for status in ('200', '202'):
             with self.subTest(status=status):
                 self.assertEqual(
                     {'$ref': '#/definitions/v1.Pod'},
                     processed['paths'][pod_path]['delete'][
+                        'responses'
+                    ][status]['schema'],
+                )
+                self.assertEqual(
+                    {'$ref': '#/definitions/v1.Pod'},
+                    async_processed['paths'][pod_path]['delete'][
                         'responses'
                     ][status]['schema'],
                 )

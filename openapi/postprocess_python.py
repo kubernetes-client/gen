@@ -144,7 +144,11 @@ for path, file_type in [
             "@validate_call(config={'defer_build': True})\n",
         )
         if args.library == "asyncio":
+            # Carry forward the v6 asyncio compatibility patches:
+            # https://github.com/kubernetes-client/python/tree/ed9ffd4c3c4bee083c1a585a9559257ea02700eb/scripts/asyncio
             if path.name == "configuration.py":
+                # client_configuration_async_refresh_api_key_hook.diff:
+                # Await token hooks and the resulting authentication settings.
                 if "import asyncio\n" not in text:
                     text = text.replace(
                         "import aiohttp\n", "import asyncio\nimport aiohttp\n"
@@ -153,8 +157,6 @@ for path, file_type in [
                     "    def get_api_key_with_prefix(",
                     "    async def get_api_key_with_prefix(",
                 )
-                # Kubernetes token hooks can perform asynchronous refresh:
-                # https://github.com/kubernetes-client/python/blob/ed9ffd4c3c4bee083c1a585a9559257ea02700eb/scripts/asyncio/client_configuration_async_refresh_api_key_hook.diff
                 text = text.replace(
                     "        if self.refresh_api_key_hook is not None:\n"
                     "            self.refresh_api_key_hook(self)\n",
@@ -170,6 +172,8 @@ for path, file_type in [
                     "'value': self.get_api_key_with_prefix(\n",
                     "'value': await self.get_api_key_with_prefix(\n",
                 )
+                # client_configuration_disable_ssl_strict_verification_patch.diff:
+                # Expose the opt-in setting consumed by the REST transport.
                 if "self.disable_strict_ssl_verification = False\n" not in text:
                     text = text.replace(
                         "        self.verify_ssl = verify_ssl\n",
@@ -177,6 +181,8 @@ for path, file_type in [
                         "        self.disable_strict_ssl_verification = False\n",
                     )
             elif path.name == "api_client.py":
+                # api_client_async_refresh_api_key_hook.diff:
+                # Propagate asynchronous authentication into serialization.
                 text = text.replace(
                     "    def param_serialize(",
                     "    async def param_serialize(",
@@ -193,6 +199,7 @@ for path, file_type in [
                     "self.configuration.auth_settings().get(auth)",
                     "(await self.configuration.auth_settings()).get(auth)",
                 )
+                # Keep raw WebSocket responses available to exec and attach.
                 text = text.replace(
                     "        _request_timeout=None\n"
                     "    ) -> rest.RESTResponse:\n",
@@ -201,6 +208,8 @@ for path, file_type in [
                     "    ) -> rest.RESTResponse:\n",
                 )
             elif path.name == "rest.py":
+                # rest_client_patch_read_bufsize.diff:
+                # Accept Kubernetes watch events larger than the aiohttp default.
                 if '"read_bufsize": 2**21,' not in text:
                     text = text.replace(
                         '            "trust_env": True,\n',
@@ -209,6 +218,8 @@ for path, file_type in [
                         "aiohttp's default buffer.\n"
                         '            "read_bufsize": 2**21,\n',
                     )
+                # rest_client_disable_ssl_strict_verification_patch.diff:
+                # Apply the explicit certificate-verification opt-out.
                 if "if configuration.disable_strict_ssl_verification:\n" not in text:
                     text = text.replace(
                         "        self.proxy = configuration.proxy\n",
@@ -217,6 +228,8 @@ for path, file_type in [
                         "&= ~ssl.VERIFY_X509_STRICT\n\n"
                         "        self.proxy = configuration.proxy\n",
                     )
+                # rest_client_server_hostname_patch.diff:
+                # Forward the configured Kubernetes API TLS server name.
                 if 'args["server_hostname"]' not in text:
                     text = text.replace(
                         "        if self.proxy:\n",
@@ -225,6 +238,8 @@ for path, file_type in [
                         "self.configuration.tls_server_name\n\n"
                         "        if self.proxy:\n",
                     )
+                # api_client_strategic_merge_patch.diff:
+                # Select strategic merge for object-valued PATCH requests.
                 if (
                     "# JSON Patch contains operations; "
                     "object patches use strategic merge.\n"
@@ -244,6 +259,8 @@ for path, file_type in [
                         "'application/strategic-merge-patch+json'\n\n"
                         "        # For `POST`, `PUT`, `PATCH`, `OPTIONS`, `DELETE`\n",
                     )
+                # rest_client_apply_patch_patch.diff:
+                # Serialize server-side apply bodies as YAML.
                 if (
                     "headers['Content-Type'] == "
                     "'application/apply-patch+yaml'"
