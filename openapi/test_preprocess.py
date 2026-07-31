@@ -225,7 +225,7 @@ class PythonPreprocessingTest(unittest.TestCase):
                 )
             with self.subTest(path=job_path, status=status):
                 self.assertEqual(
-                    {'$ref': '#/definitions/v1.Status'},
+                    {'type': 'object'},
                     processed['paths'][job_path]['delete'][
                         'responses'
                     ][status]['schema'],
@@ -236,6 +236,16 @@ class PythonPreprocessingTest(unittest.TestCase):
                         'responses'
                     ][status]['schema'],
                 )
+            for path in (namespace_path, job_path):
+                with self.subTest(
+                    language='python-asyncio', path=path, status=status
+                ):
+                    self.assertEqual(
+                        {'$ref': '#/definitions/v1.Status'},
+                        external_async_processed['paths'][path]['delete'][
+                            'responses'
+                        ][status]['schema'],
+                    )
             for path in (namespace_path, job_path):
                 with self.subTest(language='java', path=path, status=status):
                     self.assertEqual(
