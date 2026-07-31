@@ -301,6 +301,65 @@ for path, file_type in [
                     r"\1            _preload_content=False,\n",
                     text,
                 )
+        elif args.library == "urllib3":
+            if path.name == "configuration.py":
+                # client_configuration_proxy_ssl_context_patch.diff:
+                # Accept a separate SSL context for the proxy TLS handshake,
+                # distinct from the destination (Kubernetes API server) TLS
+                # settings. See https://urllib3.readthedocs.io/en/stable/advanced-usage.html#https-proxy-https-destination
+                if "proxy_ssl_context" not in text:
+                    text = text.replace(
+                        "    :param proxy_headers: Proxy headers.\n",
+                        "    :param proxy_headers: Proxy headers.\n"
+                        "    :param proxy_ssl_context: SSL context used only for the "
+                        "TLS handshake with the proxy itself, independent of the "
+                        "destination TLS settings.\n",
+                    )
+                    text = text.replace(
+                        "        proxy_headers: Optional[Any]=None,\n",
+                        "        proxy_headers: Optional[Any]=None,\n"
+                        "        proxy_ssl_context: Optional[ssl.SSLContext]=None,\n",
+                    )
+                    text = text.replace(
+                        "        self.proxy_headers = proxy_headers\n"
+                        "        \"\"\"Proxy headers\n"
+                        "        \"\"\"\n",
+                        "        self.proxy_headers = proxy_headers\n"
+                        "        \"\"\"Proxy headers\n"
+                        "        \"\"\"\n"
+                        "        self.proxy_ssl_context = proxy_ssl_context\n"
+                        "        \"\"\"SSL context used only for the TLS handshake with\n"
+                        "           the proxy itself (e.g. an HTTPS CONNECT tunnel),\n"
+                        "           independent of the destination TLS settings above.\n"
+                        "        \"\"\"\n",
+                    )
+                    if "\nimport ssl\n" not in text:
+                        text = text.replace(
+                            "\nimport copy\n", "\nimport copy\nimport ssl\n"
+                        )
+            elif path.name == "rest.py":
+                # rest_client_proxy_ssl_context_patch.diff:
+                # Pass the proxy-specific SSL context through to
+                # urllib3.ProxyManager, which keeps it separate from the
+                # destination connection pool's TLS settings.
+                if "proxy_ssl_context" not in text:
+                    text = text.replace(
+                        "                pool_args[\"proxy_url\"] = configuration.proxy\n"
+                        "                pool_args[\"proxy_headers\"] = "
+                        "configuration.proxy_headers\n"
+                        "                self.pool_manager = "
+                        "urllib3.ProxyManager(**pool_args)\n",
+                        "                pool_args[\"proxy_url\"] = configuration.proxy\n"
+                        "                pool_args[\"proxy_headers\"] = "
+                        "configuration.proxy_headers\n"
+                        "                if configuration.proxy_ssl_context "
+                        "is not None:\n"
+                        "                    pool_args[\"proxy_ssl_context\"] = (\n"
+                        "                        configuration.proxy_ssl_context\n"
+                        "                    )\n"
+                        "                self.pool_manager = "
+                        "urllib3.ProxyManager(**pool_args)\n",
+                    )
     # Generated files otherwise fail git diff --check on trailing whitespace
     # and extra blank lines at EOF.
     lines = text.splitlines()
