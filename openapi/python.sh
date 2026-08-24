@@ -45,7 +45,7 @@ popd > /dev/null
 
 source "${SCRIPT_ROOT}/openapi-generator/client-generator.sh"
 source "${SETTING_FILE}"
-OPENAPI_GENERATOR_COMMIT="${OPENAPI_GENERATOR_COMMIT:-830e9d156960bb7f51a5337f31636a7e73226474}"
+OPENAPI_GENERATOR_COMMIT="${OPENAPI_GENERATOR_COMMIT:-v7.25.0}"
 
 CLIENT_LANGUAGE=python; \
 CLEANUP_DIRS=(client/api client/models docs); \
