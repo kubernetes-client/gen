@@ -14,8 +14,12 @@
 # limitations under the License.
 
 import argparse
+import json
+import os
 import re
 from pathlib import Path
+
+import python_delete_results
 
 
 parser = argparse.ArgumentParser(
@@ -31,6 +35,14 @@ parser.add_argument(
 args = parser.parse_args()
 
 qualified_package_name = f"{args.namespace}.{args.package_name}"
+typed_deletes = {}
+if (
+    args.package_name == "client"
+    and args.namespace in ("kubernetes", "kubernetes.aio")
+    and not os.environ.get("KUBERNETES_CRD_MODE")
+):
+    with (args.output_directory / "swagger.json").open() as spec_file:
+        typed_deletes = python_delete_results.delete_results(json.load(spec_file))
 
 # Swagger 2 exposes these IntOrString fields as free-form objects, which makes
 # the generated Pydantic validators reject valid scalar values. Kubernetes
@@ -96,6 +108,8 @@ for path, file_type in [
 ]:
     text = path.read_text()
     if file_type == "markdown":
+        if results := typed_deletes.get(python_delete_results.key(path.stem)):
+            text = python_delete_results.update_docs(text, results)
         if path.name == "README.md":
             text = re.sub(
                 r"\A# client(?=\r?\n|\Z)",
@@ -136,6 +150,10 @@ for path, file_type in [
             "getattr(client.models",
             f"getattr({qualified_package_name}.models",
         )
+        if results := typed_deletes.get(python_delete_results.key(path.stem)):
+            text = python_delete_results.update_api(text, results, qualified_package_name)
+        elif typed_deletes and path.name == "api_client.py":
+            text = python_delete_results.update_decoder(text, typed_deletes)
         # Building every API method's Pydantic schema at import time is
         # expensive. defer_build is supported for validate_call since 2.11:
         # https://github.com/pydantic/pydantic/commit/8e98bc0a66379e693780eb6edd611f4177c60c30

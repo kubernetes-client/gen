@@ -28,6 +28,7 @@ class PythonPostprocessingTest(unittest.TestCase):
             package_directory = output_directory / "client"
             docs_directory.mkdir()
             package_directory.mkdir()
+            (output_directory / "swagger.json").write_text('{"paths": {}, "definitions": {}}')
 
             readme = output_directory / "README.md"
             model_doc = docs_directory / "V1Pod.md"
@@ -330,6 +331,7 @@ class PythonPostprocessingTest(unittest.TestCase):
             api_directory = package_directory / "api"
             docs_directory.mkdir()
             api_directory.mkdir(parents=True)
+            (output_directory / "swagger.json").write_text('{"paths": {}, "definitions": {}}')
 
             readme = output_directory / "README.md"
             model_doc = docs_directory / "V1Pod.md"
