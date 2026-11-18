@@ -482,6 +482,15 @@ class PythonPostprocessingTest(unittest.TestCase):
                 rest_text,
             )
             self.assertIn(
+                "            self.ssl_context.check_hostname = "
+                "bool(configuration.assert_hostname)\n\n"
+                "        self.proxy = configuration.proxy\n",
+                rest_text,
+            )
+            self.assertEqual(
+                1, rest_text.count("configuration.assert_hostname is not None")
+            )
+            self.assertIn(
                 'args["server_hostname"] = '
                 "self.configuration.tls_server_name\n",
                 rest_text,

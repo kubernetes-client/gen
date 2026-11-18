@@ -228,6 +228,19 @@ for path, file_type in [
                         "&= ~ssl.VERIFY_X509_STRICT\n\n"
                         "        self.proxy = configuration.proxy\n",
                     )
+                # Honor assert_hostname like the synchronous client. Only when
+                # verify_ssl is on: enabling check_hostname would otherwise turn
+                # certificate verification back on.
+                if "configuration.assert_hostname is not None" not in text:
+                    text = text.replace(
+                        "        self.proxy = configuration.proxy\n",
+                        "        if (configuration.verify_ssl\n"
+                        "                and configuration.assert_hostname "
+                        "is not None):\n"
+                        "            self.ssl_context.check_hostname = "
+                        "bool(configuration.assert_hostname)\n\n"
+                        "        self.proxy = configuration.proxy\n",
+                    )
                 # rest_client_server_hostname_patch.diff:
                 # Forward the configured Kubernetes API TLS server name.
                 if 'args["server_hostname"]' not in text:
